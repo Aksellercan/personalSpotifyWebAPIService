@@ -12,4 +12,6 @@ Each run it queries as explained in description then decides if it has to update
 
 Since queries are spaced with 6-hour breaks it won't run into too many queries error from the API.
 
+Spotify playlist id can be obtained from: https://open.spotify.com/playlist/playlist_id?si=user_id
+
 Next feature when it reaches 120 make a new playlist choose randomly a picture from a folder and put its description as 0/120 and make this the focus for the service.
