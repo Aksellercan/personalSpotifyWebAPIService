@@ -4,9 +4,14 @@ Using Spotify Web API get a playlist's amount of songs in number then update des
 
 - Spotify playlist id can be obtained from: https://open.spotify.com/playlist/**playlist_id**?si=user_id
 
-Using Systemd service can run at specific times:\
-Thrice a day\
-1. 1st at 12:00\
-2. 2nd at 18:00\
+Using Systemd service can run at specific times:
+Thrice a day
+1. 1st at 12:00
+2. 2nd at 18:00
 3. 3rd at 00:00\
+
+
+
+
+
 Each run it queries as explained in description then decides if it has to update or not. Since queries are spaced with 6-hour breaks it won't run into too many queries error from the API.
