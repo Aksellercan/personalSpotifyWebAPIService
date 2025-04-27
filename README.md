@@ -8,7 +8,7 @@ Using Systemd service can run at specific times:
 Thrice a day
 1. 1st at 12:00
 2. 2nd at 18:00
-3. 3rd at 00:00\
+3. 3rd at 00:00
 
 
 
