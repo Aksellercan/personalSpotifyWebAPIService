@@ -13,9 +13,11 @@ public class CLI_Interface {
     public void setClient_id(String client_id) {
         this.client_id = client_id;
     }
+
     public void setClient_secret(String client_secret) {
         this.client_secret = client_secret;
     }
+
     public void setPlaylist_id(String playlist_id) {
         this.playlist_id = playlist_id;
     }
