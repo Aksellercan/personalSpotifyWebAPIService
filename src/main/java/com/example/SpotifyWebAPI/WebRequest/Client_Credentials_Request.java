@@ -25,7 +25,7 @@ public class Client_Credentials_Request {
             String playlistDescription = node.get("description").asText();
             System.out.println("SpotifyWebAPI Playlist Details\nName: " + playlistName + "\nDescription: " + playlistDescription);
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("[ ERROR ] " + e.getMessage());
         }
     }
 }

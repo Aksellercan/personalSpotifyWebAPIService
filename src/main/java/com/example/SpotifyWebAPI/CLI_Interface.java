@@ -8,6 +8,8 @@ public class CLI_Interface {
     private String client_id;
     private String client_secret;
     private String playlist_id;
+    private String code;
+    private String redirect_url;
 
     //setters
     public void setClient_id(String client_id) {
@@ -18,6 +20,12 @@ public class CLI_Interface {
     }
     public void setPlaylist_id(String playlist_id) {
         this.playlist_id = playlist_id;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+    public void setRedirect_url(String redirect_url) {
+        this.redirect_url = redirect_url;
     }
 
     public void userInterface() {
@@ -46,15 +54,25 @@ public class CLI_Interface {
                 switch (scanner.nextLine()) {
                     case "1":
                         System.out.println("API Response: ");
-                        System.out.println("Get Playlist Details for " + playlist_id + ":\n");
+                        System.out.println("Get Playlist Details for " + playlist_id + ":");
                         Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request(httpConnect);
                         clientCredentialsRequest.getPlaylist(playlist_id);
                         break;
                     case "2":
+                        //Massive refactor needed here
                         System.out.println("API Response: ");
                         System.out.println("Set Playlist Description: \n");
-                        User_Request userRequest = new User_Request(httpConnect);
-                        userRequest.setPlaylistDescription(playlist_id, "Testing Java API");
+                        Authentication httpConnectRefresh = new Authentication();
+                        httpConnectRefresh.refresh_with_User_Token(client_id, client_secret, code, redirect_url);
+                        User_Request userRequest = new User_Request(httpConnectRefresh);
+                        userRequest.setToken(httpConnectRefresh.getToken());
+                        System.out.println("Get User Details for " + playlist_id + ":" + "token to be sent to the details: " +httpConnectRefresh.getToken());
+                        if (httpConnectRefresh.getSuccess()) {
+                            userRequest.setPlaylistDescription(playlist_id, "Testing Java API");
+                            System.out.println("[ SUCCESS ]");
+                            break;
+                        }
+                        System.out.println("[ FAIL ]");
                         break;
                     case "3":
                         System.out.println("Set Http Debug Output:\nCurrent State is " + isDebugEnabled + "\nPress y to enable debug output\nPress n to disable debug output");

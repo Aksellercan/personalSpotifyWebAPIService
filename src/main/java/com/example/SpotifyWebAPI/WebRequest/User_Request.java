@@ -16,7 +16,10 @@ public class User_Request {
         this.token = authConnect.getToken();
     }
 
-    //TODO implement Authorization Code Flow
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     //Needs playlist-modify-public Scope
     public void setPlaylistDescription(String playlist_id, String description) {
         try {
