@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI;
+package com.example.SpotifyWebAPI.Objects;
 
 public class Playlist {
     private String description;
@@ -20,6 +20,6 @@ public class Playlist {
     //toString
     @Override
     public String toString() {
-        return "com.example.SpotifyWebAPI.Playlist Description: " + description;
+        return "com.example.SpotifyWebAPI.Objects.Playlist Description: " + description;
     }
 }

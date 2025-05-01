@@ -1,0 +1,38 @@
+package com.example.SpotifyWebAPI.Connection;
+
+import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.HttpURLConnection;
+
+public class Client_Credentials_Token {
+    private HTTPConnection httpConnection;
+    private SpotifySession spotifySession;
+
+    public Client_Credentials_Token(HTTPConnection httpConnection, SpotifySession spotifySession) {
+        this.httpConnection = httpConnection;
+        this.spotifySession = spotifySession;
+    }
+
+    public void post_Access_Request() {
+        boolean success = false;
+        try {
+            HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type","application/x-www-form-urlencoded");
+            http.setDoOutput(true);
+            http.connect();
+            String postBody = "grant_type=client_credentials&client_id=" + spotifySession.getClient_id() + "&client_secret=" + spotifySession.getClient_secret();
+            httpConnection.postBody(http, postBody);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(http.getInputStream());
+            spotifySession.setAccess_token(node.get("access_token").asText());
+            System.out.println("Token: " + spotifySession.getAccess_token() + " Success: " + (success = true));
+        } catch (Exception e) {
+            Logger.ERROR.Log(e.getMessage());
+            return;
+        }
+        if (spotifySession.getAccess_token() == null) {
+            Logger.WARN.Log("Token couldn't be acquired. Success: " + success);
+        }
+    }
+}
