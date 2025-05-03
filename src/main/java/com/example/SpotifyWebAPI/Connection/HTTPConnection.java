@@ -8,29 +8,27 @@ import java.net.URL;
 
 public class HTTPConnection {
     private boolean debugOutput;
-    private boolean writeDebugtoFile = false;
+    private boolean debugWrite;
 
     public void setDebugOutput(boolean debugOutput) {
         this.debugOutput = debugOutput;
     }
-
     public boolean getDebugOutput() {
         return debugOutput;
     }
-    public void setWriteDebugtoFile(boolean writeDebugtoFile) {
-        this.writeDebugtoFile = writeDebugtoFile;
+    public void setDebugWrite(boolean debugWrite) {
+        this.debugWrite = debugWrite;
     }
-    public boolean getWriteDebugtoFile() {
-        return writeDebugtoFile;
+    public boolean getDebugWrite() {
+        return debugWrite;
     }
 
     public HttpURLConnection connectHTTP(String requestURL, String postType, String... Headers) {
         try {
             if (debugOutput) {
-                Logger.DEBUG.Log("requestURL: " + requestURL + "\n" + "postType: " + postType, writeDebugtoFile);
-                Logger.DEBUG.Log("Headers: ", writeDebugtoFile);
+                Logger.DEBUG.Log("requestURL: " + requestURL + "\n" + "postType: " + postType, debugWrite);
+                Logger.DEBUG.Log("Headers: ", debugWrite);
             }
-
             URL url = new URL(requestURL);
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(postType);
@@ -39,7 +37,7 @@ public class HTTPConnection {
             } else {
                 for (int i = 0; i < Headers.length; i += 2) {
                     if (debugOutput) {
-                        Logger.DEBUG.Log(Headers[i] + "\n" + Headers[i+1], writeDebugtoFile);
+                        Logger.DEBUG.Log(Headers[i] + "\n" + Headers[i+1], debugWrite);
                     }
                     http.setRequestProperty(Headers[i], Headers[i + 1]);
                 }
@@ -53,7 +51,7 @@ public class HTTPConnection {
 
     public void postBody(HttpURLConnection http, String postBody) {
         try (OutputStream os = http.getOutputStream()) {
-            if (debugOutput) Logger.DEBUG.Log("Full PostBody: " + postBody, writeDebugtoFile);
+            if (debugOutput) Logger.DEBUG.Log("Full PostBody: " + postBody, debugWrite);
             os.write(postBody.getBytes());
         } catch (IOException e) {
             Logger.ERROR.Log(e.getMessage());

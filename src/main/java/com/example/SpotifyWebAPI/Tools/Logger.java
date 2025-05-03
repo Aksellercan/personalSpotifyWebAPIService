@@ -55,7 +55,7 @@ public enum Logger {
                 writer.write(fullMessage + "\n");
             }
         } catch (IOException e) {
-            System.out.println("writeLog(String fullMessage) Error! Error: " + e.getMessage());
+            ERROR.Log("writeLog(String fullMessage) Error: " + e.getMessage(), false);
         }
     }
 }
