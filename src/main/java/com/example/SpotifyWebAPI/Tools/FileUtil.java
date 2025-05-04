@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class FileUtil {
     private final File configPath = new File("Config");
-    private File configFile = new File(configPath + File.separator + "config.txt");;
+    private final File configFile = new File(configPath + File.separator + "config.txt");;
     private final HashMap<String, String> configMap = new HashMap<>();
 
     private void checkExist() {
@@ -51,7 +51,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.Log("readConfig() Error: " + e.getMessage(), false);
+            Logger.ERROR.Log("readConfig() Error: " + e.getMessage(), true);
         }
     }
 
@@ -64,7 +64,7 @@ public class FileUtil {
             try (FileWriter writer = new FileWriter(configFile, false)) {
                 for (int i = 0; i < option.length; i += 2) {
                     if (option[i + 1] == null || option[i + 1].isEmpty()) {
-                        Logger.ERROR.Log("Invalid value for key: " + option[i].trim(), false);
+                        Logger.ERROR.Log("Invalid value for key: " + option[i], false);
                     } else {
                         String key = option[i].trim();
                         String value = option[i + 1].trim();

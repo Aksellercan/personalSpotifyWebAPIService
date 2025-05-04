@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.Connection;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -45,7 +46,7 @@ public class HTTPConnection {
             return http;
         } catch (IOException e) {
             Logger.ERROR.Log(e.getMessage());
-            return null;
+            throw new RuntimeException("Connection failed: " + e.getMessage());
         }
     }
 

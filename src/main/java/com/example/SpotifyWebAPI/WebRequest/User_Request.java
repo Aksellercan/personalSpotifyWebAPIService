@@ -6,12 +6,11 @@ import com.example.SpotifyWebAPI.Objects.Playlist;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.net.HttpURLConnection;
 
 public class User_Request {
-    private HTTPConnection httpConnection;
-    private SpotifySession spotifySession;
+    private final HTTPConnection httpConnection;
+    private final SpotifySession spotifySession;
 
     public User_Request(HTTPConnection httpConnection, SpotifySession spotifySession) {
         this.httpConnection = httpConnection;

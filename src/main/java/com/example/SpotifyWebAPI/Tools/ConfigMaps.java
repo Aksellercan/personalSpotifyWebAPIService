@@ -3,7 +3,7 @@ package com.example.SpotifyWebAPI.Tools;
 import java.util.HashMap;
 
 public class ConfigMaps {
-    private HashMap<String,String> configMap;
+    private final HashMap<String,String> configMap;
     private String client_id;
     private String client_secret;
     private String redirect_uri;

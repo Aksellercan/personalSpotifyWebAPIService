@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI;
+package com.example.SpotifyWebAPI.Run_Modes;
 
 import com.example.SpotifyWebAPI.Connection.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.Connection.HTTPConnection;
@@ -19,10 +19,10 @@ public class CLI_Interface {
     private String refresh_token;
     private String code;
     private String playlist_id;
-    private HTTPConnection httpConnection = new HTTPConnection();
+    private final HTTPConnection httpConnection = new HTTPConnection();
     private final Scanner scanner = new Scanner(System.in);
     private final FileUtil fileUtil;
-    private ConfigMaps configMaps;
+    private final ConfigMaps configMaps;
     private boolean auto_mode = false;
     private boolean output_debug = false;
 
@@ -31,7 +31,7 @@ public class CLI_Interface {
         this.configMaps = configMaps;
     }
 
-    //Set these to skip questions
+    //Set these to skip questions - Old
     public void setClient_id(String client_id) {
         this.client_id = client_id;
     }
@@ -88,7 +88,8 @@ public class CLI_Interface {
             System.out.println("1. Basic auth Functions");
             System.out.println("2. Oauth2 Functions");
             System.out.println("3. Set Http Debug Output" + (httpConnection.getDebugOutput() ? " - Debug Output Enabled" : ""));
-            System.out.println("4. Save Config");
+            System.out.println("4. Set Auto Mode" + (auto_mode ? " - Auto Mode Enabled, Program won't launch to CLI on next run" : ""));
+            System.out.println("5. Save Config");
             System.out.println("0. Exit the program");
             switch (scanner.nextLine()) {
                 case "1":
@@ -109,11 +110,20 @@ public class CLI_Interface {
                     }
                     break;
                 case "4":
+                    System.out.println("Set Auto Mode:\nCurrent State is " + auto_mode +
+                            "\nPress y to enable Auto Mode\nPress n to disable Auto Mode");
+                    if (scanner.nextLine().equals("y")) {
+                        auto_mode = true;
+                        Logger.INFO.Log("Auto Mode set to true");
+                        setupAutoMode();
+                    } else {
+                        auto_mode = false;
+                        System.out.println("Auto Mode set to false");
+                    }
+                    break;
+                case "5":
                     System.out.println("Saving Config...");
-                    fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
-                            redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
-                            Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()));
-                    Logger.INFO.Log("Saved Config successfully!");
+                    saveConfig();
                     break;
                 case "0":
                     System.out.println("Exiting the program...");
@@ -123,6 +133,51 @@ public class CLI_Interface {
                     break;
             }
         }
+    }
+
+    private void setupAutoMode() {
+        while (((refresh_token == null || refresh_token.isEmpty()) || (redirect_uri == null || redirect_uri.isEmpty()))
+                || ((client_id == null || client_id.isEmpty()) ||
+                (client_secret == null || client_secret.isEmpty())) || (playlist_id == null || playlist_id.isEmpty())) {
+            if (client_id == null || client_id.isEmpty()) {
+                System.out.println("Enter Spotify client_id:");
+                client_id = scanner.nextLine().trim();
+                continue;
+            }
+            if (client_secret == null || client_secret.isEmpty()) {
+                System.out.println("Enter Spotify client_secret:");
+                client_secret = scanner.nextLine().trim();
+                continue;
+            }
+            if (refresh_token == null || refresh_token.isEmpty()) {
+                System.out.println("Enter Refresh Token:");
+                refresh_token = scanner.nextLine().trim();
+                continue;
+            }
+            if (redirect_uri == null || redirect_uri.isEmpty()) {
+                System.out.println("Enter Redirect URI:");
+                redirect_uri = scanner.nextLine().trim();
+                continue;
+            }
+            if (playlist_id == null || playlist_id.isEmpty()) {
+                System.out.println("Enter Playlist ID:");
+                playlist_id = scanner.nextLine().trim();
+                continue;
+            }
+        }
+        spotify_session.setRefresh_token(refresh_token);
+        spotify_session.setRedirect_uri(redirect_uri);
+        spotify_session.setClient_id(client_id);
+        spotify_session.setClient_secret(client_secret);
+        saveConfig();
+        System.out.println("Done");
+    }
+
+    private void saveConfig() {
+        fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
+                redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
+                Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()));
+        Logger.INFO.Log("Saved Config successfully!");
     }
 
     private void Basic_auth_Functions() {

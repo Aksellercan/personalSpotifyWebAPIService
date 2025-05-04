@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
 
 public class Client_Credentials_Request {
-    private HTTPConnection httpConnection;
-    private SpotifySession spotifySession;
+    private final HTTPConnection httpConnection;
+    private final SpotifySession spotifySession;
 
     public Client_Credentials_Request(HTTPConnection httpConnection, SpotifySession spotifySession) {
         this.httpConnection = httpConnection;
