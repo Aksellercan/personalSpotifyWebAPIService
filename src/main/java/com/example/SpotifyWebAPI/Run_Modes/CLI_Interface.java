@@ -84,6 +84,7 @@ public class CLI_Interface {
 
     private void userInterface() {
         while (true) {
+            clearScreen();
             System.out.println("Spotify Web API CLI Interface");
             System.out.println("1. Basic auth Functions");
             System.out.println("2. Oauth2 Functions");
@@ -181,6 +182,7 @@ public class CLI_Interface {
     }
 
     private void Basic_auth_Functions() {
+        clearScreen();
         System.out.println("1. Get Playlist by ID");
         System.out.println("0. Go Back");
         Client_Credentials_Token clientCredentialsToken = new Client_Credentials_Token(httpConnection, spotify_session);
@@ -204,6 +206,7 @@ public class CLI_Interface {
     }
 
     private void Oauth2_Functions() {
+        clearScreen();
         System.out.println("1. Get Refresh Token to access User Requests");
         System.out.println("2. Refresh access token using refresh token");
         System.out.println("3. Edit Details of a Playlist");
@@ -265,5 +268,19 @@ public class CLI_Interface {
         String newDescription = scanner.nextLine();
         System.out.println("New Description: " + newDescription);
         userRequest.setPlaylistDescription(playlist_id, newDescription);
+    }
+
+    private void clearScreen() {
+        final String getOS = System.getProperty("os.name").toLowerCase();
+        try {
+            if (getOS.contains("windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            Logger.ERROR.Log("Error clearing screen, Operating System: " + getOS + ", " + e.getMessage());
+        }
     }
 }

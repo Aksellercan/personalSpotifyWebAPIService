@@ -55,6 +55,7 @@ public class AutoMode {
             int readDescCount = Integer.parseInt(readString(clientCredentialsRequest.getplaylistDescription()));
             if (playlistSize == readDescCount) {
                 Logger.INFO.Log("Playlist size is already set to " + playlistSize);
+                Logger.INFO.Log("Completed the automated run, no changes made");
                 return;
             } else if (playlistSize == 120) {
                 Logger.INFO.Log("Maximum playlist size reached");

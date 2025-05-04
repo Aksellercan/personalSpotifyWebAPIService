@@ -27,7 +27,7 @@ public class User_Request {
 
             ObjectMapper mapper = new ObjectMapper();
             String postBody = mapper.writeValueAsString(new Playlist(description));
-            System.out.println("postBody: " + postBody);
+            if (httpConnection.getDebugOutput()) Logger.DEBUG.Log("postBody: " + postBody);
             httpConnection.postBody(http, postBody);
             int responseCode = http.getResponseCode();
             if (responseCode == 200) {
