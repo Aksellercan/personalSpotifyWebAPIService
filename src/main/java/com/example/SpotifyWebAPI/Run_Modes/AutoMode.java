@@ -50,8 +50,13 @@ public class AutoMode {
             Logger.INFO.Log("Received the access token");
             //Get the size of the playlist
             Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request(httpConnection, spotify_session);
-            int playlistSize = clientCredentialsRequest.getPlaylistSize(playlist_id);
-            if (playlistSize == 120) {
+            clientCredentialsRequest.getPlaylist(playlist_id);
+            int playlistSize = clientCredentialsRequest.getplaylistSize();
+            int readDescCount = Integer.parseInt(readString(clientCredentialsRequest.getplaylistDescription()));
+            if (playlistSize == readDescCount) {
+                Logger.INFO.Log("Playlist size is already set to " + playlistSize);
+                return;
+            } else if (playlistSize == 120) {
                 Logger.INFO.Log("Maximum playlist size reached");
                 auto_mode = false;
                 fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
@@ -68,5 +73,17 @@ public class AutoMode {
         } catch (Exception e) {
             Logger.ERROR.Log("Auto Mode Error: " + e.getMessage());
         }
+    }
+
+    private String readString(String str) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '&') { // assuming '/' is encoded to '&#x2F;'
+                break;
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 }

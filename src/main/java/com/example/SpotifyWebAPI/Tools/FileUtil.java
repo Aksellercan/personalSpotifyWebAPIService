@@ -64,7 +64,7 @@ public class FileUtil {
             try (FileWriter writer = new FileWriter(configFile, false)) {
                 for (int i = 0; i < option.length; i += 2) {
                     if (option[i + 1] == null || option[i + 1].isEmpty()) {
-                        Logger.ERROR.Log("Invalid value for key: " + option[i], false);
+                        Logger.ERROR.Log("Invalid value for key: " + option[i]);
                     } else {
                         String key = option[i].trim();
                         String value = option[i + 1].trim();
