@@ -18,18 +18,27 @@ public enum Logger {
         this.severity = severity;
     }
 
+    private String logFormat(String message) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return now.format(formatter) + severity + message;
+    }
+
     public void Log(String message) {
         Log(message, true);
     }
 
     public void Log(String message, boolean writetoFile) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        String fullMessage = now.format(formatter) + severity + message;
+        String fullMessage = logFormat(message);
         if (writetoFile) {
             writeLog(fullMessage);
         }
         System.out.println(fullMessage);
+    }
+
+    public void LogSilently(String message) {
+        String fullMessage = logFormat(message);
+        writeLog(fullMessage);
     }
 
     private void writeLog(String fullMessage) {

@@ -63,6 +63,19 @@ public class CLI_Interface {
         auto_mode = configMaps.isAutoMode();
     }
 
+    private void setProperties() {
+        if (redirect_uri == null || redirect_uri.isEmpty()) {
+            Logger.INFO.LogSilently("redirect_uri is null or empty");
+        } else {
+            spotify_session.setRedirect_uri(redirect_uri);
+        }
+        if (refresh_token == null || refresh_token.isEmpty()) {
+            Logger.INFO.LogSilently("refresh_token is null or empty");
+        } else {
+            spotify_session.setRefresh_token(refresh_token);
+        }
+    }
+
     public void initSession() {
         setConfigs();
         while ((client_id == null || client_id.isEmpty()) || (client_secret == null || client_secret.isEmpty())) {
@@ -79,6 +92,7 @@ public class CLI_Interface {
         }
         System.out.println("Done");
         spotify_session = new SpotifySession(client_id, client_secret);
+        setProperties();
         userInterface();
     }
 

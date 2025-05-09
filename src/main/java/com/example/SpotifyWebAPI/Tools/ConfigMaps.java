@@ -70,7 +70,7 @@ public class ConfigMaps {
                         break;
                 }
             } else {
-                Logger.WARN.Log("Credential " + credential + " not found in config map");
+                Logger.WARN.LogSilently("Credential " + credential + " not found in config map");
             }
         }
     }

@@ -45,7 +45,6 @@ public class FileUtil {
                     String key = splitLine[0].trim();
                     String value = splitLine[1].trim();
                     configMap.put(key, value);
-                    Logger.DEBUG.Log(key + " = " + value, false);
                 } else {
                     throw new IOException("Invalid config line: " + line);
                 }
