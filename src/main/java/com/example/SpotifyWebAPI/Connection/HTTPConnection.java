@@ -3,7 +3,6 @@ package com.example.SpotifyWebAPI.Connection;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
