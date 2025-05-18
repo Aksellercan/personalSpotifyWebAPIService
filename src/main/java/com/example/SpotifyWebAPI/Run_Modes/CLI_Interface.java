@@ -25,7 +25,7 @@ public class CLI_Interface {
     private final FileUtil fileUtil;
     private final ConfigMaps configMaps;
     private boolean auto_mode = false;
-    private boolean output_debug = false;
+    private boolean changesSaved = true;
 
     public CLI_Interface(FileUtil fileUtil, ConfigMaps configMaps) {
         this.fileUtil = fileUtil;
@@ -41,8 +41,6 @@ public class CLI_Interface {
         redirect_uri = configMaps.getRedirect_uri();
         refresh_token = configMaps.getRefresh_token();
         playlist_id = configMaps.getPlaylist_id();
-        output_debug = configMaps.isOutputDebug();
-        httpConnection.setDebugOutput(output_debug);
         auto_mode = configMaps.isAutoMode();
         user_id = configMaps.getUser_id();
 
@@ -54,6 +52,7 @@ public class CLI_Interface {
     public void initSession() {
         setConfigs();
         while ((client_id == null || client_id.isEmpty()) || (client_secret == null || client_secret.isEmpty())) {
+            changesSaved = false;
             System.out.println("Spotify Web API needed details to setup Session: ");
             if (client_id == null || client_id.isEmpty()) {
                 System.out.println("Question 1/2: Enter Spotify client_id");
@@ -81,7 +80,7 @@ public class CLI_Interface {
             System.out.println("3. Set Http Debug Output" + (httpConnection.getDebugOutput() ? " - Debug Output Enabled" : ""));
             System.out.println("4. Set Auto Mode" + (auto_mode ? " - Auto Mode Enabled, Program won't launch to CLI on next run" : ""));
             System.out.println("5. Save Config");
-            System.out.println("0. Exit the program");
+            System.out.println("0. Exit the program" + (changesSaved ? "" : " - Changes not saved"));
             switch (scanner.nextLine()) {
                 case "1":
                     Basic_auth_Functions();
@@ -119,7 +118,6 @@ public class CLI_Interface {
                     break;
                 case "0":
                     System.out.println("Exiting the program...");
-                    saveConfig();
                     return;
                 default:
                     System.out.println("Invalid input. Please try again.");
@@ -132,6 +130,7 @@ public class CLI_Interface {
         while (((refresh_token == null || refresh_token.isEmpty()) || (redirect_uri == null || redirect_uri.isEmpty()))
                 || ((client_id == null || client_id.isEmpty()) ||
                 (client_secret == null || client_secret.isEmpty())) || (playlist_id == null || playlist_id.isEmpty()) || (user_id == null || user_id.isEmpty())) {
+            changesSaved = false;
             if (user_id == null || user_id.isEmpty()) {
                 System.out.println("Enter User ID:");
                 user_id = scanner.nextLine().trim();
@@ -175,6 +174,7 @@ public class CLI_Interface {
         fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
                 redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
                 Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()),"user_id",user_id);
+        changesSaved = true;
     }
 
     private void Basic_auth_Functions() {
@@ -217,6 +217,7 @@ public class CLI_Interface {
             case "1":
                 code= null;
                 while ((code == null || code.isEmpty()) || (redirect_uri == null || redirect_uri.isEmpty())) {
+                    changesSaved = false;
                     if (code == null || code.isEmpty()) {
                         System.out.println("Enter Spotify code:");
                         code = scanner.nextLine().trim();
@@ -239,6 +240,7 @@ public class CLI_Interface {
                 break;
             case "2":
                 while ((refresh_token == null || refresh_token.isEmpty()) || (redirect_uri == null || redirect_uri.isEmpty())) {
+                    changesSaved = false;
                     if ((refresh_token == null || refresh_token.isEmpty())) {
                         System.out.println("Enter Refresh Token:");
                         refresh_token = scanner.nextLine().trim();
@@ -262,17 +264,20 @@ public class CLI_Interface {
             case "5":
                 System.out.println("Add to new playlist? (y/n)");
                 String chosenPlaylist = null;
+                int position;
                 if (scanner.nextLine().equals("y")) {
                     while (chosenPlaylist == null || chosenPlaylist.isEmpty()) {
                         System.out.println("Enter Playlist ID:");
                         chosenPlaylist = scanner.nextLine().trim();
                     }
                     System.out.println("Adding to playlist: " + chosenPlaylist);
-                    userRequest.addPlaylistItems(chosenPlaylist,0,addTrackUri(), false);
+                    position = setPosition();
+                    userRequest.addPlaylistItems(chosenPlaylist,position,addTrackUri(), false);
                     break;
                 }
                 System.out.println("Adding to playlist: " + playlist_id);
-                userRequest.addPlaylistItems(playlist_id,0,addTrackUri(), false);
+                position = setPosition();
+                userRequest.addPlaylistItems(playlist_id,position,addTrackUri(), false);
                 break;
             case "6":
                 createPlaylistDetails(userRequest);
@@ -283,6 +288,13 @@ public class CLI_Interface {
                 System.out.println("Invalid input. Please try again.");
                 break;
         }
+    }
+
+    private int setPosition() {
+        int position = 0;
+            System.out.println("Enter Position to insert the track:");
+            position = scanner.nextInt();
+        return position;
     }
 
     private String addTrackUri() {
@@ -304,6 +316,7 @@ public class CLI_Interface {
                 System.out.println("Enter User ID:");
                 user_id = scanner.nextLine().trim();
                 spotify_session.setUser_id(user_id);
+                changesSaved = false;
                 continue;
             }
             if (createName == null || createName.isEmpty()) {
@@ -323,6 +336,7 @@ public class CLI_Interface {
         while (playlist_id == null || playlist_id.isEmpty()) {
             System.out.println("Enter Playlist ID:");
             playlist_id = scanner.nextLine().trim();
+            changesSaved = false;
         }
         String newName = null;
         String newDescription = null;
