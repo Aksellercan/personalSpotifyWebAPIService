@@ -11,9 +11,14 @@ public class ConfigMaps {
     private String playlist_id;
     private boolean output_debug;
     private boolean auto_mode;
+    private String user_id;
 
     public ConfigMaps(HashMap<String,String> configMap) {
         this.configMap = configMap;
+    }
+
+    public String getUser_id() {
+        return user_id;
     }
 
     public String getClient_id() {
@@ -40,13 +45,16 @@ public class ConfigMaps {
 
     public void setCredentials(String... credentials) {
         if (credentials.length == 0) {
-            Logger.INFO.Log("No credentials provided");
+            Logger.INFO.LogSilently("No credentials provided");
             return;
         }
         for (String credential : credentials) {
             if (configMap.containsKey(credential)) {
                 String value = configMap.get(credential);
                 switch (credential) {
+                    case "user_id":
+                        this.user_id = value;
+                        break;
                     case "client_id":
                         this.client_id = value;
                         break;

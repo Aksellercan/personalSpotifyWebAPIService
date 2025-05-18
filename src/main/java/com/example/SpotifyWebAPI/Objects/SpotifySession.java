@@ -1,6 +1,7 @@
 package com.example.SpotifyWebAPI.Objects;
 
 public class SpotifySession {
+    private String user_id;
     private String client_id;
     private String client_secret;
     private String redirect_uri;
@@ -15,6 +16,9 @@ public class SpotifySession {
     }
 
     //getters
+    public String getUser_id() {
+        return user_id;
+    }
     public String getClient_id() {
         return client_id;
     }
@@ -38,6 +42,9 @@ public class SpotifySession {
     }
 
     //setters
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
     public void setClient_id(String client_id) {
         this.client_id = client_id;
     }

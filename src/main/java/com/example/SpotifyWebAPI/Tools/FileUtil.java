@@ -40,6 +40,9 @@ public class FileUtil {
             String line;
             String[] splitLine;
             while ((line = reader.readLine()) != null) {
+                if (line.startsWith("#") || line.startsWith("//") || line.isEmpty()) {
+                    continue;
+                }
                 splitLine = line.split("=");
                 if (splitLine.length == 2) {
                     String key = splitLine[0].trim();
@@ -63,7 +66,7 @@ public class FileUtil {
             try (FileWriter writer = new FileWriter(configFile, false)) {
                 for (int i = 0; i < option.length; i += 2) {
                     if (option[i + 1] == null || option[i + 1].isEmpty()) {
-                        Logger.ERROR.Log("Invalid value for key: " + option[i]);
+                        Logger.ERROR.LogSilently("Invalid value for key: " + option[i]);
                     } else {
                         String key = option[i].trim();
                         String value = option[i + 1].trim();

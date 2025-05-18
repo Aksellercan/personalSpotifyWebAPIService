@@ -13,9 +13,18 @@ public enum Logger {
     DEBUG(" [ DEBUG ] "),
     ;
     private final String severity;
+    private boolean debugOutput = false;
 
     Logger(String severity) {
         this.severity = severity;
+    }
+
+    public void setDebugOutput(boolean debugOutput) {
+        this.debugOutput = debugOutput;
+    }
+
+    public boolean getDebugOutput() {
+        return debugOutput;
     }
 
     private String logFormat(String message) {
@@ -33,12 +42,21 @@ public enum Logger {
         if (writetoFile) {
             writeLog(fullMessage);
         }
+        if (!debugOutput && this == DEBUG) {
+            debugLogs(message);
+            return;
+        }
         System.out.println(fullMessage);
     }
 
     public void LogSilently(String message) {
         String fullMessage = logFormat(message);
         writeLog(fullMessage);
+    }
+
+    private void debugLogs(String message) {
+        String fullMessage = logFormat(message);
+        System.out.println(fullMessage);
     }
 
     private void writeLog(String fullMessage) {

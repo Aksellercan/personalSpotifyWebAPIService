@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 public class CLI_Interface {
     private SpotifySession spotify_session;
+    private String user_id;
     private String client_id;
     private String client_secret;
     private String redirect_uri;
@@ -61,6 +62,7 @@ public class CLI_Interface {
         output_debug = configMaps.isOutputDebug();
         httpConnection.setDebugOutput(output_debug);
         auto_mode = configMaps.isAutoMode();
+        user_id = configMaps.getUser_id();
     }
 
     private void setProperties() {
@@ -73,6 +75,11 @@ public class CLI_Interface {
             Logger.INFO.LogSilently("refresh_token is null or empty");
         } else {
             spotify_session.setRefresh_token(refresh_token);
+        }
+        if (user_id == null || user_id.isEmpty()) {
+            Logger.INFO.LogSilently("user_id is null or empty");
+        } else {
+            spotify_session.setUser_id(user_id);
         }
     }
 
@@ -89,8 +96,11 @@ public class CLI_Interface {
                 System.out.println("Question 2/2: Enter Spotify client_secret");
                 client_secret = scanner.nextLine().trim();
             }
+            if (client_id != null && !client_id.isEmpty() && client_secret != null && !client_secret.isEmpty()) {
+                System.out.println("Done");
+                break;
+            }
         }
-        System.out.println("Done");
         spotify_session = new SpotifySession(client_id, client_secret);
         setProperties();
         userInterface();
@@ -153,7 +163,12 @@ public class CLI_Interface {
     private void setupAutoMode() {
         while (((refresh_token == null || refresh_token.isEmpty()) || (redirect_uri == null || redirect_uri.isEmpty()))
                 || ((client_id == null || client_id.isEmpty()) ||
-                (client_secret == null || client_secret.isEmpty())) || (playlist_id == null || playlist_id.isEmpty())) {
+                (client_secret == null || client_secret.isEmpty())) || (playlist_id == null || playlist_id.isEmpty()) || (user_id == null || user_id.isEmpty())) {
+            if (user_id == null || user_id.isEmpty()) {
+                System.out.println("Enter User ID:");
+                user_id = scanner.nextLine().trim();
+                continue;
+            }
             if (client_id == null || client_id.isEmpty()) {
                 System.out.println("Enter Spotify client_id:");
                 client_id = scanner.nextLine().trim();
@@ -176,10 +191,10 @@ public class CLI_Interface {
             }
             if (playlist_id == null || playlist_id.isEmpty()) {
                 System.out.println("Enter Playlist ID:");
-                playlist_id = scanner.nextLine().trim();
-                continue;
+                playlist_id = scanner.nextLine().trim();;
             }
         }
+        spotify_session.setUser_id(user_id);
         spotify_session.setRefresh_token(refresh_token);
         spotify_session.setRedirect_uri(redirect_uri);
         spotify_session.setClient_id(client_id);
@@ -191,7 +206,7 @@ public class CLI_Interface {
     private void saveConfig() {
         fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
                 redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
-                Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()));
+                Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()),"user_id",user_id);
         Logger.INFO.Log("Saved Config successfully!");
     }
 
@@ -224,8 +239,12 @@ public class CLI_Interface {
         System.out.println("1. Get Refresh Token to access User Requests");
         System.out.println("2. Refresh access token using refresh token");
         System.out.println("3. Edit Details of a Playlist");
+        System.out.println("4. Get Playlist items");
+        System.out.println("5. add songs to Playlist");
+        System.out.println("6. Create Playlist");
         System.out.println("0. Go Back");
         User_Access_Token userAccessToken = new User_Access_Token(httpConnection, spotify_session);
+        User_Request userRequest = new User_Request(httpConnection, spotify_session);
         if (httpConnection.getDebugOutput()) userAccessToken.printData();
         switch (scanner.nextLine()) {
             case "1":
@@ -243,6 +262,15 @@ public class CLI_Interface {
                     }
                 }
                 userAccessToken.get_Refresh_Token();
+                System.out.println("Save the refresh token to config?");
+                if (scanner.nextLine().equals("y")) {
+                    refresh_token = spotify_session.getRefresh_token();
+//                    fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
+//                            redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
+//                            Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()),user_id);
+                    saveConfig();
+                    Logger.INFO.Log("Saved Config successfully!");
+                }
                 break;
             case "2":
                 while ((refresh_token == null || refresh_token.isEmpty()) || (redirect_uri == null || redirect_uri.isEmpty())) {
@@ -261,8 +289,20 @@ public class CLI_Interface {
                 userAccessToken.refresh_token_with_User_Token();
                 break;
             case "3":
-                setPlaylistDetails();
+                setPlaylistDetails(userRequest);
                 break;
+            case "4":
+                //load hashmap
+                userRequest.getPlaylistItems(playlist_id,0,10);
+                //add them then
+                String testid = "testid";
+                userRequest.addPlaylistItems(testid,0);
+                break;
+            case "5":
+                System.out.println("WIP");
+                break;
+            case "6":
+                createPlaylistDetails(userRequest);
             case "0":
                 return;
             default:
@@ -271,17 +311,63 @@ public class CLI_Interface {
         }
     }
 
-    private void setPlaylistDetails() {
-        User_Request userRequest = new User_Request(httpConnection, spotify_session);
+    private void createPlaylistDetails(User_Request userRequest) {
+        String createName = null;
+        String createDescription = null;
+        while ((user_id == null || user_id.isEmpty()) || (createName == null || createName.isEmpty()) ||
+                (createDescription == null || createDescription.isEmpty())) {
+            if (user_id == null || user_id.isEmpty()) {
+                System.out.println("Enter User ID:");
+                user_id = scanner.nextLine().trim();
+                spotify_session.setUser_id(user_id);
+                continue;
+            }
+            if (createName == null || createName.isEmpty()) {
+                System.out.println("Enter Playlist Name:");
+                createName = scanner.nextLine().trim();
+                continue;
+            }
+            if (createDescription == null || createDescription.isEmpty()) {
+                System.out.println("Enter Playlist Description:");
+                createDescription = scanner.nextLine().trim();;
+            }
+        }
+        userRequest.createPlaylist(user_id,createName,createDescription);
+    }
+
+    private void setPlaylistDetails(User_Request userRequest) {
         while (playlist_id == null || playlist_id.isEmpty()) {
             System.out.println("Enter Playlist ID:");
             playlist_id = scanner.nextLine().trim();
         }
-        System.out.println("Edit details of a Playlist");
-        System.out.println("Enter new Description:");
-        String newDescription = scanner.nextLine();
+        String newName = null;
+        String newDescription = null;
+        boolean isPublic = false;
+        boolean isCollaborative = false;
+        while ((newName == null || newName.isEmpty()) || (newDescription == null || newDescription.isEmpty())) {
+            if ((newName == null || newName.isEmpty())) {
+                System.out.println("Enter new Name:");
+                newName = scanner.nextLine();
+                continue;
+            }
+            if ((newDescription == null || newDescription.isEmpty())) {
+                System.out.println("Enter new Description:");
+                newDescription = scanner.nextLine();
+            }
+        }
+        System.out.println("Is the playlist public? (y/n)");
+        if (scanner.nextLine().equals("y")) {
+            isPublic = true;
+        }
+        System.out.println("Is the playlist collaborative? (y/n)");
+        if (scanner.nextLine().equals("y")) {
+            isCollaborative = true;
+        }
+        System.out.println("New Name: " + newName);
         System.out.println("New Description: " + newDescription);
-        userRequest.setPlaylistDescription(playlist_id, newDescription);
+        System.out.println("Is the playlist public? " + isPublic);
+        System.out.println("Is the playlist collaborative? " + isCollaborative);
+        userRequest.setPlaylistDetails(playlist_id, newName, newDescription, isPublic, isCollaborative);
     }
 
     private void clearScreen() {
@@ -294,7 +380,7 @@ public class CLI_Interface {
                 System.out.flush();
             }
         } catch (Exception e) {
-            Logger.ERROR.Log("Error clearing screen, Operating System: " + getOS + ", " + e.getMessage());
+            Logger.ERROR.LogSilently("Error clearing screen, Operating System: " + getOS + ", " + e.getMessage());
         }
     }
 }

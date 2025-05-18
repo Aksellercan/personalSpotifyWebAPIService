@@ -10,6 +10,7 @@ import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 
 public class AutoMode {
+    private String user_id;
     private String client_id;
     private String client_secret;
     private String redirect_uri;
@@ -28,6 +29,7 @@ public class AutoMode {
     private void setConfigs() {
         client_id = configMaps.getClient_id();
         client_secret = configMaps.getClient_secret();
+        user_id = configMaps.getUser_id();
         redirect_uri = configMaps.getRedirect_uri();
         refresh_token = configMaps.getRefresh_token();
         playlist_id = configMaps.getPlaylist_id();
@@ -48,6 +50,7 @@ public class AutoMode {
             User_Access_Token userAccessToken = new User_Access_Token(httpConnection, spotify_session);
             userAccessToken.refresh_token_with_User_Token();
             Logger.INFO.Log("Received the access token");
+            User_Request userRequest = new User_Request(httpConnection, spotify_session);
             //Get the size of the playlist
             Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request(httpConnection, spotify_session);
             clientCredentialsRequest.getPlaylist(playlist_id);
@@ -58,6 +61,9 @@ public class AutoMode {
                 Logger.INFO.Log("Completed the automated run, no changes made");
                 return;
             } else if (playlistSize == 120) {
+                String prevPlaylistName = clientCredentialsRequest.getplaylistName();
+                int nextNumber = 0;
+                userRequest.createPlaylist(user_id, "Favorites " + nextNumber, "0/120");
                 Logger.INFO.Log("Maximum playlist size reached");
                 auto_mode = false;
                 fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
@@ -68,12 +74,20 @@ public class AutoMode {
             String playlistSizeString = String.valueOf(playlistSize);
             Logger.INFO.Log("Playlist size: " + playlistSizeString);
             // Set the playlist description
-            User_Request userRequest = new User_Request(httpConnection, spotify_session);
-            userRequest.setPlaylistDescription(playlist_id, playlistSizeString + "/120");
+            userRequest.setPlaylistDetails(playlist_id, clientCredentialsRequest.getplaylistName(),playlistSizeString + "/120",true,false);
             Logger.INFO.Log("Completed the automated run");
         } catch (Exception e) {
             Logger.ERROR.Log("Auto Mode Error: " + e.getMessage());
         }
+    }
+
+    private void splitter(String str) {
+        String[] splitLine;
+        String line = str.trim();
+        if (line.isEmpty()) {
+            return;
+        }
+        splitLine = line.split("=");
     }
 
     private String readString(String str) {

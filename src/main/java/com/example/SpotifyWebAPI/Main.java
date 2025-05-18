@@ -10,7 +10,7 @@ public class Main {
         FileUtil fileUtil = new FileUtil();
         fileUtil.readConfig();
         ConfigMaps configMaps = new ConfigMaps(fileUtil.getConfigMap());
-        configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode");
+        configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode","user_id");
         if (configMaps.isAutoMode()) {
             AutoMode autoMode = new AutoMode(fileUtil, configMaps);
             autoMode.runFunctions();
