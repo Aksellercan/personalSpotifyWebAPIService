@@ -89,7 +89,15 @@ public class User_Request {
         }
     }
 
-    public void addPlaylistItems(String playlist_id, int position) {
+    private ArrayNode addFromPreviousPlaylist(ObjectMapper mapper) {
+        ArrayNode arrayNode = mapper.createArrayNode();
+        for(String value : songs.values()) {
+            arrayNode.add(value);
+        }
+        return arrayNode;
+    }
+
+    public void addPlaylistItems(String playlist_id, int position, String track_uri, boolean addFromPreviousPlaylist) {
         try {
             String fullURL = "https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks";
             String Bearer = "Bearer " + spotifySession.getAccess_token();
@@ -97,22 +105,18 @@ public class User_Request {
             http.setDoOutput(true);
 
             ObjectMapper mapper = new ObjectMapper();
-            ArrayNode arrayNode = mapper.createArrayNode();
-            for(String value : songs.values()) {
-                arrayNode.add(value);
-            }
             ObjectNode rootNode = mapper.createObjectNode();
-            rootNode.set("uris", arrayNode);
+            if (addFromPreviousPlaylist) {
+                rootNode.set("uris", addFromPreviousPlaylist(mapper));
+            } else {
+                ArrayNode arrayNode = mapper.createArrayNode();
+                arrayNode.add(track_uri);
+                rootNode.set("uris", arrayNode);
+            }
             rootNode.put("position", position);
             String postBody = mapper.writeValueAsString(rootNode);
             httpConnection.postBody(http, postBody);
-
-            //read error stream
-            if (http.getResponseCode() >= 400) {
-                InputStream error = http.getErrorStream();
-                String errorBody = new BufferedReader(new InputStreamReader(error)).lines().collect(Collectors.joining("\n"));
-                throw new Exception("POST error response: " + errorBody);
-            }
+            httpConnection.readErrorStream(http,400, true);
         } catch (Exception e) {
             Logger.ERROR.Log(e.getMessage());
         }

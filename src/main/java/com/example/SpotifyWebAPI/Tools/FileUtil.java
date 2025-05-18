@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FileUtil {
     private final File configPath = new File("Config");
     private final File configFile = new File(configPath + File.separator + "config.txt");;
     private final HashMap<String, String> configMap = new HashMap<>();
+    private final ArrayList<String> comments = new ArrayList<>();
 
     private void checkExist() {
         try {
@@ -41,6 +43,7 @@ public class FileUtil {
             String[] splitLine;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("#") || line.startsWith("//") || line.isEmpty()) {
+                    comments.add(line);
                     continue;
                 }
                 splitLine = line.split("=");
@@ -53,7 +56,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.Log("readConfig() Error: " + e.getMessage(), true);
+            Logger.ERROR.LogSilently("readConfig() Error: " + e.getMessage());
         }
     }
 
@@ -64,6 +67,9 @@ public class FileUtil {
         try {
             checkExist();
             try (FileWriter writer = new FileWriter(configFile, false)) {
+                for (String comment : comments) {
+                    writer.write(comment + "\n");
+                }
                 for (int i = 0; i < option.length; i += 2) {
                     if (option[i + 1] == null || option[i + 1].isEmpty()) {
                         Logger.ERROR.LogSilently("Invalid value for key: " + option[i]);

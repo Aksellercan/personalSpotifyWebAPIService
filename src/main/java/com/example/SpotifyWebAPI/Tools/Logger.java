@@ -42,7 +42,7 @@ public enum Logger {
         if (writetoFile) {
             writeLog(fullMessage);
         }
-        if (!debugOutput && this == DEBUG) {
+        if (debugOutput && this == DEBUG) {
             debugLogs(message);
             return;
         }

@@ -16,11 +16,6 @@ public class Main {
             autoMode.runFunctions();
         } else {
             CLI_Interface cli = new CLI_Interface(fileUtil, configMaps);
-//            cli.setClient_id("client_id");
-//            cli.setClient_secret("client_secret");
-//            cli.setPlaylist_id("playlist_id");
-//            cli.setredirect_uri("redirect_uri");
-//            cli.setRefresh_token("refresh_token");
             cli.initSession();
         }
     }
