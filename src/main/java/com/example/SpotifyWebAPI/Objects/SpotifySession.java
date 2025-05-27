@@ -10,10 +10,11 @@ public class SpotifySession {
     private String refresh_token;
     private String code;
 
-    public SpotifySession(String client_id, String client_secret) {
-        this.client_id = client_id;
-        this.client_secret = client_secret;
-    }
+//    public SpotifySession(String client_id, String client_secret) {
+//        this.client_id = client_id;
+//        this.client_secret = client_secret;
+//    }
+    public SpotifySession() {}
 
     //getters
     public String getUser_id() {

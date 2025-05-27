@@ -12,6 +12,7 @@ public class ConfigMaps {
     private boolean output_debug;
     private boolean auto_mode;
     private String user_id;
+    private boolean testMode;
 
     public ConfigMaps(HashMap<String,String> configMap) {
         this.configMap = configMap;
@@ -41,6 +42,9 @@ public class ConfigMaps {
     }
     public boolean isAutoMode() {
         return auto_mode;
+    }
+    public boolean isTestMode() {
+        return testMode;
     }
 
     public void setCredentials(String... credentials) {
@@ -75,6 +79,10 @@ public class ConfigMaps {
                         break;
                     case "auto_mode":
                         this.auto_mode = Boolean.parseBoolean(value);
+                        break;
+                    case "test_mode":
+                        this.testMode = Boolean.parseBoolean(value);
+                        Logger.DEBUG.LogSilently("Test mode set to " + testMode);
                         break;
                 }
             } else {

@@ -2,7 +2,6 @@ package com.example.SpotifyWebAPI.Run_Modes;
 
 import com.example.SpotifyWebAPI.Connection.HTTPConnection;
 import com.example.SpotifyWebAPI.Connection.User_Access_Token;
-import com.example.SpotifyWebAPI.Objects.Playlist;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
@@ -42,7 +41,9 @@ public class AutoMode {
         // Initialize Spotify session
         Logger.INFO.Log("Starting AutoMode.runFunctions()");
         setConfigs();
-        SpotifySession spotify_session = new SpotifySession(client_id, client_secret);
+        SpotifySession spotify_session = new SpotifySession();
+        spotify_session.setClient_id(client_id);
+        spotify_session.setClient_secret(client_secret);
         spotify_session.setRedirect_uri(redirect_uri);
         spotify_session.setRefresh_token(refresh_token);
 
@@ -84,7 +85,6 @@ public class AutoMode {
     }
 
     private int nextNumber(String str) {
-        String name;
         int number = 0;
         String[] splitLine;
         if (str.isEmpty()) {
@@ -92,7 +92,6 @@ public class AutoMode {
         }
         splitLine = str.split(" ");
         if (splitLine.length == 2) {
-            name = splitLine[0];
             number = Integer.parseInt(splitLine[1]);
         }
         number++;

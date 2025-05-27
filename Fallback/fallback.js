@@ -8,27 +8,31 @@ addList()
 document.getElementById('redirectForm').addEventListener('submit',function(event) {
     event.preventDefault();
     var client_id = document.getElementById('setClient_id').value;
-    var scopeFull = '';
+    var scope = '';
+    var state = generateRandomString(16);
+    console.log(`State: ${state}`);
     if (scopesArray.length === 0) {
         alert("No Scopes added");
         return;
     }    
     for (let i = 0; i < scopesArray.length; i++) {
         if (i === 0) {
-        scopeFull += scopesArray[i];    
+        scope += scopesArray[i];    
         continue;
         }
-        scopeFull += " " +scopesArray[i];
+        scope += " " +scopesArray[i];
     }
-    console.log(`DEBUG ${scopesArray.length} ` + (scopesArray.length === 1 ? `Scope: ${scopeFull}` :`Scopes: ${scopeFull}`));
+    console.log(`DEBUG ${scopesArray.length} ` + (scopesArray.length === 1 ? `Scope: ${scope}` :`Scopes: ${scope}`));
     var url = 'https://accounts.spotify.com/authorize?' +
         new URLSearchParams({
             response_type: 'code',
             client_id: client_id,
-            scope: scopeFull,
-            redirect_uri: redirect_uri
+            scope: scope,
+            redirect_uri: redirect_uri,
+            state:state
         })
-    window.location.href = url;
+    // window.location.href = url;
+    window.open(url, '_blank').focus();
 });
 
 function addList(){
@@ -58,4 +62,14 @@ function loop(){
         listView.textContent = " " + scopesArray[i];
         listContent.appendChild(listView);
     }
+}
+
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+    return result;
 }

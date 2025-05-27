@@ -33,11 +33,9 @@ public class CLI_Interface {
     }
 
     private void setConfigs() {
+        spotify_session = new SpotifySession();
         client_id = configMaps.getClient_id();
         client_secret = configMaps.getClient_secret();
-
-        spotify_session = new SpotifySession(client_id, client_secret);
-
         redirect_uri = configMaps.getRedirect_uri();
         refresh_token = configMaps.getRefresh_token();
         playlist_id = configMaps.getPlaylist_id();
@@ -45,6 +43,8 @@ public class CLI_Interface {
         user_id = configMaps.getUser_id();
         httpConnection.setDebugOutput(configMaps.isOutputDebug());
 
+        spotify_session.setClient_id(client_id);
+        spotify_session.setClient_secret(client_secret);
         spotify_session.setUser_id(user_id);
         spotify_session.setRedirect_uri(redirect_uri);
         spotify_session.setRefresh_token(refresh_token);
@@ -58,11 +58,13 @@ public class CLI_Interface {
             if (client_id == null || client_id.isEmpty()) {
                 System.out.println("Question 1/2: Enter Spotify client_id");
                 client_id = scanner.nextLine().trim();
+                spotify_session.setClient_id(client_id);
                 continue;
             }
             if (client_secret == null || client_secret.isEmpty()) {
                 System.out.println("Question 2/2: Enter Spotify client_secret");
                 client_secret = scanner.nextLine().trim();
+                spotify_session.setClient_secret(client_secret);
             }
             if ((client_id != null && !client_id.isEmpty()) && (client_secret != null && !client_secret.isEmpty())) {
                 System.out.println("Done");
@@ -162,7 +164,7 @@ public class CLI_Interface {
             }
             if (playlist_id == null || playlist_id.isEmpty()) {
                 System.out.println("Enter Playlist ID:");
-                playlist_id = scanner.nextLine().trim();;
+                playlist_id = scanner.nextLine().trim();
             }
         }
         spotify_session.setUser_id(user_id);
@@ -263,7 +265,7 @@ public class CLI_Interface {
                 setPlaylistDetails(userRequest);
                 break;
             case "4":
-                userRequest.getPlaylistItems(playlist_id,0,10);
+                getPlaylistItems(userRequest);
                 break;
             case "5":
                 System.out.println("Add to new playlist? (y/n)");
@@ -294,10 +296,37 @@ public class CLI_Interface {
         }
     }
 
+    private void getPlaylistItems(User_Request userRequest) {
+        int offset = 0;
+        int limit = 10;
+        while (playlist_id == null || playlist_id.isEmpty()) {
+            System.out.println("Enter Playlist ID:");
+            playlist_id = scanner.nextLine().trim();
+            changesSaved = false;
+        }
+        System.out.println("Change playlist ID? (y/n)");
+        if (scanner.nextLine().equals("y")) {
+            System.out.println("Enter new Playlist ID:");
+            playlist_id = scanner.nextLine();
+            changesSaved = false;
+        }
+        System.out.println("Enter offset (default 0):");
+        String offsetInput = scanner.nextLine().trim();
+        if (!offsetInput.isEmpty()) {
+            offset = Integer.parseInt(offsetInput);
+        }
+        System.out.println("Enter limit (default 10):");
+        String limitInput = scanner.nextLine().trim();
+        if (!limitInput.isEmpty()) {
+            limit = Integer.parseInt(limitInput);
+        }
+        userRequest.getPlaylistItems(playlist_id,offset, limit);
+    }
+
     private int setPosition() {
-        int position = 0;
-            System.out.println("Enter Position to insert the track:");
-            position = scanner.nextInt();
+        int position;
+        System.out.println("Enter Position to insert the track:");
+        position = scanner.nextInt();
         return position;
     }
 
@@ -330,7 +359,7 @@ public class CLI_Interface {
             }
             if (createDescription == null || createDescription.isEmpty()) {
                 System.out.println("Enter Playlist Description:");
-                createDescription = scanner.nextLine().trim();;
+                createDescription = scanner.nextLine().trim();
             }
         }
         userRequest.createPlaylist(user_id,createName,createDescription);

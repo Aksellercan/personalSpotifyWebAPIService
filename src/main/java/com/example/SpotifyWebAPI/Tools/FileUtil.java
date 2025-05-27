@@ -67,8 +67,10 @@ public class FileUtil {
         try {
             checkExist();
             try (FileWriter writer = new FileWriter(configFile, false)) {
-                for (String comment : comments) {
-                    writer.write(comment + "\n");
+                if (!comments.isEmpty()) {
+                    for (String comment : comments) {
+                        writer.write(comment + "\n");
+                    }
                 }
                 for (int i = 0; i < option.length; i += 2) {
                     if (option[i + 1] == null || option[i + 1].isEmpty()) {
