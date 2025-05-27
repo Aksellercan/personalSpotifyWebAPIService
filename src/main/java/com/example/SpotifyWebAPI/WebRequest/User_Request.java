@@ -8,22 +8,27 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class User_Request {
     private final HTTPConnection httpConnection;
     private final SpotifySession spotifySession;
+    private Playlist playlist;
     private final HashMap<String, String> songs = new HashMap<>();
 
 
     public User_Request(HTTPConnection httpConnection, SpotifySession spotifySession) {
         this.httpConnection = httpConnection;
         this.spotifySession = spotifySession;
+    }
+
+    public Playlist getPlaylist() {
+        if (playlist == null) {
+            Logger.WARN.LogSilently("Playlist is null");
+            return null;
+        }
+        return playlist;
     }
 
     //Needs playlist-modify-public Scope
@@ -129,7 +134,8 @@ public class User_Request {
             HttpURLConnection http = httpConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
             http.setDoOutput(true);
             ObjectMapper mapper = new ObjectMapper();
-            Playlist playlist = new Playlist(playlistName, playlistDescription);
+
+            playlist = new Playlist(playlistName, playlistDescription);
             playlist.setPublicPlaylist(true);
             playlist.setCollaborative(false);
             String postBody = mapper.writeValueAsString(playlist);

@@ -2,6 +2,7 @@ package com.example.SpotifyWebAPI.Run_Modes;
 
 import com.example.SpotifyWebAPI.Connection.HTTPConnection;
 import com.example.SpotifyWebAPI.Connection.User_Access_Token;
+import com.example.SpotifyWebAPI.Objects.Playlist;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
@@ -56,19 +57,20 @@ public class AutoMode {
             clientCredentialsRequest.getPlaylist(playlist_id);
             int playlistSize = clientCredentialsRequest.getplaylistSize();
             int readDescCount = Integer.parseInt(readString(clientCredentialsRequest.getplaylistDescription()));
-            if (playlistSize == readDescCount) {
-                Logger.INFO.Log("Playlist size is already set to " + playlistSize);
-                Logger.INFO.Log("Completed the automated run, no changes made");
-                return;
-            } else if (playlistSize == 120) {
+
+            if (playlistSize == 120) {
                 String prevPlaylistName = clientCredentialsRequest.getplaylistName();
-                int nextNumber = 0;
+                int nextNumber = nextNumber(prevPlaylistName);
                 userRequest.createPlaylist(user_id, "Favorites " + nextNumber, "0/120");
-                Logger.INFO.Log("Maximum playlist size reached");
+                Logger.INFO.Log("New playlist created with playlist_id: " + playlist_id + " and Name: " + "Favorites " + nextNumber);
                 auto_mode = false;
                 fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
-                        redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
-                        Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()));
+                        redirect_uri, "refresh_token", refresh_token, "playlist_id", userRequest.getPlaylist().getPlaylist_id(), "auto_mode",
+                        Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()), "user_id",user_id);
+                return;
+            } else if (playlistSize == readDescCount) {
+                Logger.INFO.Log("Playlist size is already set to " + playlistSize);
+                Logger.INFO.Log("Completed the automated run, no changes made");
                 return;
             }
             String playlistSizeString = String.valueOf(playlistSize);
@@ -81,17 +83,24 @@ public class AutoMode {
         }
     }
 
-    private void splitter(String str) {
+    private int nextNumber(String str) {
+        String name;
+        int number = 0;
         String[] splitLine;
-        String line = str.trim();
-        if (line.isEmpty()) {
-            return;
+        if (str.isEmpty()) {
+            return 0;
         }
-        splitLine = line.split("=");
+        splitLine = str.split(" ");
+        if (splitLine.length == 2) {
+            name = splitLine[0];
+            number = Integer.parseInt(splitLine[1]);
+        }
+        number++;
+        Logger.DEBUG.Log("Next number: " + number);
+        return number;
     }
 
     private String readString(String str) {
-
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);

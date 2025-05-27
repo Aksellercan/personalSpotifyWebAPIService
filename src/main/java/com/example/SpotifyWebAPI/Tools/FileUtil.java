@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 public class FileUtil {
     private final File configPath = new File("Config");
-    private final File configFile = new File(configPath + File.separator + "config.txt");;
+    private final File configFile = new File(configPath + File.separator + "config.txt");
     private final HashMap<String, String> configMap = new HashMap<>();
     private final ArrayList<String> comments = new ArrayList<>();
 

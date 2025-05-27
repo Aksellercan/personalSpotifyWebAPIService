@@ -18,9 +18,13 @@ public class User_Access_Token {
         this.spotifySession = spotifySession;
     }
 
+    private String getEncodedString() {
+        return Base64.getEncoder().encodeToString((spotifySession.getClient_id() + ":" + spotifySession.getClient_secret()).getBytes());
+    }
+
     public void get_Refresh_Token() {
         try {
-            String encodeString = Base64.getEncoder().encodeToString((spotifySession.getClient_id() + ":" + spotifySession.getClient_secret()).getBytes()); //Base64 encoding as required by Spotify
+            String encodeString = getEncodedString(); //Base64 encoding as required by Spotify
             String Basic = "Basic " + encodeString;
             HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
             http.setDoOutput(true);
@@ -55,7 +59,7 @@ public class User_Access_Token {
 
     public void refresh_token_with_User_Token() {
         try {
-            String encodeString = Base64.getEncoder().encodeToString((spotifySession.getClient_id() + ":" + spotifySession.getClient_secret()).getBytes()); //Base64 encoding as required by Spotify
+            String encodeString = getEncodedString(); //Base64 encoding as required by Spotify
             String Basic = "Basic " + encodeString;
             HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
             http.setDoOutput(true);

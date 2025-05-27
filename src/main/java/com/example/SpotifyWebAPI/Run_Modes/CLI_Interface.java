@@ -43,6 +43,7 @@ public class CLI_Interface {
         playlist_id = configMaps.getPlaylist_id();
         auto_mode = configMaps.isAutoMode();
         user_id = configMaps.getUser_id();
+        httpConnection.setDebugOutput(configMaps.isOutputDebug());
 
         spotify_session.setUser_id(user_id);
         spotify_session.setRedirect_uri(redirect_uri);
@@ -63,7 +64,7 @@ public class CLI_Interface {
                 System.out.println("Question 2/2: Enter Spotify client_secret");
                 client_secret = scanner.nextLine().trim();
             }
-            if (client_id != null && !client_id.isEmpty() && client_secret != null && !client_secret.isEmpty()) {
+            if ((client_id != null && !client_id.isEmpty()) && (client_secret != null && !client_secret.isEmpty())) {
                 System.out.println("Done");
                 break;
             }
@@ -92,12 +93,15 @@ public class CLI_Interface {
                     System.out.println("Set Http Debug Output:\nCurrent State is " + httpConnection.getDebugOutput() +
                             "\nPress y to enable debug output\nPress n to disable debug output");
                     if (scanner.nextLine().equals("y")) {
+                        if (!httpConnection.getDebugOutput()) {
+                            changesSaved = false;
+                        }
                         httpConnection.setDebugOutput(true);
                         System.out.println("Http Debug Output set to true");
-                        saveConfig();
                     } else {
                         httpConnection.setDebugOutput(false);
                         System.out.println("Http Debug Output set to false");
+                        changesSaved = false;
                     }
                     break;
                 case "4":
