@@ -77,7 +77,7 @@ public class CLI_Interface {
     private void userInterface() {
         while (true) {
             clearScreen();
-            System.out.println("Spotify Web API CLI Interface");
+            System.out.println("Spotify Web API CLI Interface [ OLD ]");
             System.out.println("1. Basic auth Functions");
             System.out.println("2. Oauth2 Functions");
             System.out.println("3. Set Http Debug Output" + (httpConnection.getDebugOutput() ? " - Debug Output Enabled" : ""));

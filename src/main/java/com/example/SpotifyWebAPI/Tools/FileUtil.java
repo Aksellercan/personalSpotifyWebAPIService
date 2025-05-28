@@ -52,7 +52,8 @@ public class FileUtil {
                     String value = splitLine[1].trim();
                     configMap.put(key, value);
                 } else {
-                    throw new IOException("Invalid config line: " + line);
+                    //throw new IOException("Invalid config line: " + line);
+                    Logger.ERROR.LogSilently("Invalid config line: " + line + ", expected format: key=value. Continue reading the file.");
                 }
             }
         } catch (IOException e) {

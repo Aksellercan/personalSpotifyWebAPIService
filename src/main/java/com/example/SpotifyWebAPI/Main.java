@@ -16,6 +16,7 @@ public class Main {
         programOptions.setAutoMode(configMaps.isAutoMode());
         programOptions.setDebugMode(configMaps.isOutputDebug());
         programOptions.setTestMode(configMaps.isTestMode());
+        programOptions.setPlaylist_id(configMaps.getPlaylist_id());
         spotifySession.setClient_id(configMaps.getClient_id());
         spotifySession.setClient_secret(configMaps.getClient_secret());
         spotifySession.setRedirect_uri(configMaps.getRedirect_uri());
@@ -31,14 +32,14 @@ public class Main {
         Initialize(fileUtil, configMaps, programOptions, spotifySession);
 
         if (programOptions.isTestMode()){
-            MainMenu mainMenu = new MainMenu(programOptions,spotifySession);
-            mainMenu.userInterface();
+            CLI_Interface cli = new CLI_Interface(fileUtil, configMaps);
+            cli.initSession();
         } else if (configMaps.isAutoMode()) {
             AutoMode autoMode = new AutoMode(fileUtil, configMaps);
             autoMode.runFunctions();
         } else {
-            CLI_Interface cli = new CLI_Interface(fileUtil, configMaps);
-            cli.initSession();
+            MainMenu mainMenu = new MainMenu(programOptions,spotifySession);
+            mainMenu.userInterface();
         }
     }
 }

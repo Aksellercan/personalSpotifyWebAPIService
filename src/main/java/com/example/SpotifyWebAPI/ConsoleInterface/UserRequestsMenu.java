@@ -89,7 +89,7 @@ public class UserRequestsMenu {
                     String chosenPlaylist = null;
                     int position;
                     if (scanner.nextLine().equals("y")) {
-                        while (chosenPlaylist == null || chosenPlaylist.isEmpty()) {
+                        while (helperFunctions.checkIfNullOrEmpty(chosenPlaylist)) {
                             System.out.println("Enter Playlist ID:");
                             chosenPlaylist = scanner.nextLine().trim();
                         }
@@ -98,9 +98,9 @@ public class UserRequestsMenu {
                         userRequest.addPlaylistItems(chosenPlaylist, position, helperFunctions.addTrackUri(), false);
                         break;
                     }
-                    System.out.println("Adding to playlist: " + playlist_id);
+                    System.out.println("Adding to playlist: " + programOptions.getPlaylist_id());
                     position = helperFunctions.setPosition();
-                    userRequest.addPlaylistItems(playlist_id, position, helperFunctions.addTrackUri(), false);
+                    userRequest.addPlaylistItems(programOptions.getPlaylist_id(), position, helperFunctions.addTrackUri(), false);
                     break;
                 case "6":
                     helperFunctions.createPlaylistDetails(userRequest);
