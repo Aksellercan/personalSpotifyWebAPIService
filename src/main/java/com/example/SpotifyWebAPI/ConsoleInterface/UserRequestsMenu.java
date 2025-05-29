@@ -27,6 +27,7 @@ public class UserRequestsMenu {
     public void Oauth2_Functions() {
         while (true) {
             helperFunctions.clearScreen();
+            System.out.println("User Requests Menu" + (helperFunctions.checkIfNullOrEmpty(spotify_session.getRefresh_token()) ? " - No Refresh Token. Get Token First" : ""));
             System.out.println("1. Get Refresh Token to access User Requests");
             System.out.println("2. Refresh access token using refresh token");
             System.out.println("3. Edit Details of a Playlist");

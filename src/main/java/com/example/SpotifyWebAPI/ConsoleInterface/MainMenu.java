@@ -19,6 +19,7 @@ public class MainMenu {
     public void userInterface() {
         Scanner scanner = new Scanner(System.in);
         helperFunctions = new HelperFunctions(programOptions, spotifySession, scanner);
+        helperFunctions.checkClientCredentials();
         while (true) {
             helperFunctions.clearScreen();
             System.out.println("Spotify Web API CLI Interface");

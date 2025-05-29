@@ -21,6 +21,24 @@ public class HelperFunctions {
         this.scanner = scanner;
     }
 
+    public void checkClientCredentials() {
+        while (checkIfNullOrEmpty(spotifySession.getClient_id()) || checkIfNullOrEmpty(spotifySession.getClient_secret())) {
+            if (checkIfNullOrEmpty(spotifySession.getClient_id())) {
+                System.out.println("Enter Spotify client_id:");
+                String client_id = scanner.nextLine().trim();
+                spotifySession.setClient_id(client_id);
+                programOptions.setChangesSaved(false);
+            }
+            if (checkIfNullOrEmpty(spotifySession.getClient_secret())) {
+                System.out.println("Enter Spotify client_secret:");
+                String client_secret = scanner.nextLine().trim();
+                spotifySession.setClient_secret(client_secret);
+                programOptions.setChangesSaved(false);
+            }
+        }
+        Logger.INFO.LogSilently("Everything is set up correctly, client_id and client_secret are not null or empty.");
+    }
+
     public boolean checkIfNullOrEmpty(String str) {
         return str == null || str.isEmpty();
     }
