@@ -5,7 +5,6 @@ import com.example.SpotifyWebAPI.Connection.HTTPConnection;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
-
 import java.util.Scanner;
 
 public class BasicAuthMenu {

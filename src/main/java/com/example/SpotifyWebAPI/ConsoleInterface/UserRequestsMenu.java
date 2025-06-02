@@ -4,27 +4,30 @@ import com.example.SpotifyWebAPI.Connection.HTTPConnection;
 import com.example.SpotifyWebAPI.Connection.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.Scanner;
 
 
 public class UserRequestsMenu {
-    private String playlist_id;
-    private SpotifySession spotify_session;
-    private HTTPConnection httpConnection = new HTTPConnection();
-    private Scanner scanner;
-    private ProgramOptions programOptions;
-    private HelperFunctions helperFunctions;
+    private final SpotifySession spotify_session;
+    private final HTTPConnection httpConnection = new HTTPConnection();
+    private final Scanner scanner;
+    private final ProgramOptions programOptions;
+    private final HelperFunctions helperFunctions;
+    private final FileUtil fileUtil;
 
-    public UserRequestsMenu(SpotifySession spotify_session, ProgramOptions programOptions, Scanner scanner) {
+    public UserRequestsMenu(SpotifySession spotify_session, ProgramOptions programOptions, Scanner scanner, FileUtil fileUtil) {
         this.spotify_session = spotify_session;
         this.programOptions = programOptions;
         this.scanner = scanner;
+        this.fileUtil = fileUtil;
         this.helperFunctions = new HelperFunctions(programOptions,spotify_session, scanner);
     }
 
     public void Oauth2_Functions() {
+        helperFunctions.setFileUtil(fileUtil);
         while (true) {
             helperFunctions.clearScreen();
             System.out.println("User Requests Menu" + (helperFunctions.checkIfNullOrEmpty(spotify_session.getRefresh_token()) ? " - No Refresh Token. Get Token First" : ""));

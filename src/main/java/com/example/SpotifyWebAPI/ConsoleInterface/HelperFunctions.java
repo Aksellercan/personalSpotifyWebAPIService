@@ -5,12 +5,11 @@ import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
-
 import java.util.Scanner;
 
 public class HelperFunctions {
 
-    private final FileUtil fileUtil = new FileUtil();
+    private FileUtil fileUtil;
     private final ProgramOptions programOptions;
     private final SpotifySession spotifySession;
     private final Scanner scanner;
@@ -19,6 +18,10 @@ public class HelperFunctions {
         this.programOptions = programOptions;
         this.spotifySession = spotifySession;
         this.scanner = scanner;
+    }
+
+    public void setFileUtil(FileUtil fileUtil) {
+        this.fileUtil = fileUtil;
     }
 
     public void checkClientCredentials() {
@@ -221,5 +224,3 @@ public class HelperFunctions {
         System.out.println("Done");
     }
 }
-
-

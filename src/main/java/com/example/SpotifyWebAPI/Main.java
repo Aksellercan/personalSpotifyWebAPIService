@@ -38,7 +38,7 @@ public class Main {
             AutoMode autoMode = new AutoMode(fileUtil, configMaps);
             autoMode.runFunctions();
         } else {
-            MainMenu mainMenu = new MainMenu(programOptions,spotifySession);
+            MainMenu mainMenu = new MainMenu(programOptions,spotifySession, fileUtil);
             mainMenu.userInterface();
         }
     }

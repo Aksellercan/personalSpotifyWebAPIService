@@ -2,24 +2,27 @@ package com.example.SpotifyWebAPI.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
-
 import java.util.Scanner;
 
 public class MainMenu {
     private final ProgramOptions programOptions;
     private final SpotifySession spotifySession;
     private HelperFunctions helperFunctions;
+    private final FileUtil fileUtil;
 
-    public MainMenu (ProgramOptions programOptions, SpotifySession spotifySession) {
+    public MainMenu (ProgramOptions programOptions, SpotifySession spotifySession, FileUtil fileUtil) {
         this.programOptions = programOptions;
         this.spotifySession = spotifySession;
+        this.fileUtil = fileUtil;
     }
 
     public void userInterface() {
         Scanner scanner = new Scanner(System.in);
         helperFunctions = new HelperFunctions(programOptions, spotifySession, scanner);
         helperFunctions.checkClientCredentials();
+        helperFunctions.setFileUtil(fileUtil);
         while (true) {
             helperFunctions.clearScreen();
             System.out.println("Spotify Web API CLI Interface");
@@ -35,7 +38,7 @@ public class MainMenu {
                     basicAuthMenu.Basic_auth_Functions();
                     break;
                 case "2":
-                    UserRequestsMenu userRequestsMenu = new UserRequestsMenu(spotifySession, programOptions, scanner);
+                    UserRequestsMenu userRequestsMenu = new UserRequestsMenu(spotifySession, programOptions, scanner, fileUtil);
                     userRequestsMenu.Oauth2_Functions();
                     break;
                 case "3":
