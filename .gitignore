@@ -36,3 +36,11 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Mine ###
+.idea/
+.idea/*
+Config/
+Config/*
+Logs/
+Logs/*

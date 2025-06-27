@@ -37,7 +37,7 @@ public class HTTPConnection {
             }
             return http;
         } catch (IOException e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e, "HTTP Connection Error", true);
             throw new RuntimeException("Connection failed: " + e.getMessage());
         }
     }

@@ -34,6 +34,10 @@ public enum Logger {
     }
 
     public void Log(String message) {
+        if (!debugOutput && this == DEBUG) {
+            debugLogs(message);
+            return;
+        }
         Log(message, true);
     }
 
@@ -42,15 +46,52 @@ public enum Logger {
         if (writetoFile) {
             writeLog(fullMessage);
         }
-        if (debugOutput && this == DEBUG) {
-            debugLogs(message);
-            return;
-        }
         System.out.println(fullMessage);
+    }
+
+    public void Log(Exception e, String message) {
+        System.out.println(WriteExceptionMessageLogs(e, message));
+    }
+
+    public void Log(Exception e, boolean writetoFile) {
+        String exceptionLog = WriteExceptions(e);
+        System.out.println(exceptionLog);
+        if (writetoFile) {
+            writeLog(exceptionLog);
+        }
+    }
+
+    public void Log(Exception e) {
+        System.out.println(WriteExceptions(e));
+    }
+
+    public void Log(Exception e, String message, boolean writetoFile) {
+        String exceptionLog = WriteExceptionMessageLogs(e, message);
+        System.out.println(exceptionLog);
+        if (writetoFile) {
+            writeLog(exceptionLog);
+        }
+    }
+
+    private String WriteExceptions(Exception e) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return now.format(formatter) + severity + e.getMessage();
+    }
+
+    private String WriteExceptionMessageLogs(Exception e, String message) {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return now.format(formatter) + severity + message + ". Error: " + e.getMessage();
     }
 
     public void LogSilently(String message) {
         String fullMessage = logFormat(message);
+        writeLog(fullMessage);
+    }
+
+    public void LogSilently(Exception e, String message) {
+        String fullMessage = WriteExceptionMessageLogs(e, message);
         writeLog(fullMessage);
     }
 
@@ -82,7 +123,7 @@ public enum Logger {
                 writer.write(fullMessage + "\n");
             }
         } catch (IOException e) {
-            ERROR.Log("writeLog(String fullMessage) Error: " + e.getMessage(), false);
+            Log(e, "writeLog(String fullMessage)");
         }
     }
 }

@@ -28,7 +28,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.Log(e.getMessage(), false);
+            Logger.ERROR.Log(e, false);
         }
     }
 
@@ -52,12 +52,11 @@ public class FileUtil {
                     String value = splitLine[1].trim();
                     configMap.put(key, value);
                 } else {
-                    //throw new IOException("Invalid config line: " + line);
                     Logger.ERROR.LogSilently("Invalid config line: " + line + ", expected format: key=value. Continue reading the file.");
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.LogSilently("readConfig() Error: " + e.getMessage());
+            Logger.ERROR.LogSilently(e,"readConfig()");
         }
     }
 
@@ -84,7 +83,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.Log("writeConfig(String line) Error: " + e.getMessage(), false);
+            Logger.ERROR.Log(e,"writeConfig(String line)", false);
         }
     }
 }
