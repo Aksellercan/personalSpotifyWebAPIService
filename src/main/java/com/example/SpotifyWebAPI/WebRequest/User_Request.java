@@ -55,7 +55,7 @@ public class User_Request {
                 throw new Exception("Failed to update playlist description to " + description + ". HTTP Response Code " + responseCode + ", " + node.get("message").asText());
             }
         } catch (Exception e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
         }
     }
 
@@ -90,7 +90,7 @@ public class User_Request {
                 Logger.INFO.Log("Song: " + key.get("track").get("name").asText() + " URI: " + key.get("track").get("uri").asText());
             }
         } catch (Exception e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
         }
     }
 
@@ -123,7 +123,7 @@ public class User_Request {
             httpConnection.postBody(http, postBody);
             httpConnection.readErrorStream(http,400, true);
         } catch (Exception e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
         }
     }
 
@@ -156,7 +156,7 @@ public class User_Request {
             Logger.INFO.Log("Playlist collaborative: " + playlist.isCollaborative());
             playlist.setPlaylist_id(playlist_id);
         } catch (Exception e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
         }
     }
 }

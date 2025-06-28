@@ -41,7 +41,7 @@ public class Client_Credentials_Request {
             playlistSize = node.get("tracks").get("total").asInt();
             System.out.println("SpotifyWebAPI Playlist Details\nName: " + playlistName + "\nDescription: " + playlistDescription + "\nSize: " + playlistSize);
         } catch (Exception e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
         }
     }
 }

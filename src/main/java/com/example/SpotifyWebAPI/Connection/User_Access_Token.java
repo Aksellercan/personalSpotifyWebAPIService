@@ -41,7 +41,7 @@ public class User_Access_Token {
             Logger.INFO.Log("Refresh Token to take note: " + spotifySession.getRefresh_token(), false);
             Logger.INFO.Log("Refreshed token: " + spotifySession.getAccess_token(), false);
         } catch (Exception e) {
-            Logger.ERROR.Log("Failed to request refresh token: " + e.getMessage());
+            Logger.ERROR.Log(e,"Failed to request refresh token", true);
             return;
         }
         if (spotifySession.getRefresh_token() == null) {
@@ -78,7 +78,7 @@ public class User_Access_Token {
                 Logger.INFO.Log("Refresh Token to take note: " + spotifySession.getRefresh_token(), false);
             }
         } catch (IOException e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
         }
     }
 }

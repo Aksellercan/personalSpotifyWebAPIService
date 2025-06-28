@@ -27,11 +27,11 @@ public class Client_Credentials_Token {
             spotifySession.setAccess_token(node.get("access_token").asText());
             Logger.INFO.Log("Token: " + spotifySession.getAccess_token(), false);
         } catch (Exception e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
             return;
         }
         if (spotifySession.getAccess_token() == null) {
-            Logger.WARN.Log("Token couldn't be acquired.");
+            Logger.WARN.Log("Access Token couldn't be acquired.");
         }
     }
 }

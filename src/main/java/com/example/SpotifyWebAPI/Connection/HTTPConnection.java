@@ -66,7 +66,7 @@ public class HTTPConnection {
                 throw new Exception("POST error response: " + errorBody);
             }
         } catch (Exception e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.Log(e);
         }
     }
 }
