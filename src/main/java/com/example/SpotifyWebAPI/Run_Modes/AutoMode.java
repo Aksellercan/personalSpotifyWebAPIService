@@ -8,7 +8,6 @@ import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -117,12 +116,10 @@ public class AutoMode {
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             if ((c == '&') && (str.charAt(i+1) == '#')) { // assuming '/' is encoded to '&#x2F;'
-                Logger.DEBUG.Log("Reading a #" + str.charAt(i) + "and later " + str.charAt(i+1));
                 break;
             }
             sb.append(c);
         }
-        Logger.DEBUG.Log("Reading string: " + sb.toString());
         return sb.toString();
     }
 }
