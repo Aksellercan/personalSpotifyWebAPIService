@@ -4,7 +4,6 @@ public class ProgramOptions {
     private boolean AUTO_MODE;
     private boolean DEBUG_MODE;
     private boolean CHANGES_SAVED = true;
-    private boolean TEST_MODE;
     private String playlist_id;//test
 
     public ProgramOptions() {}
@@ -15,9 +14,7 @@ public class ProgramOptions {
     public boolean isDebugMode() {
         return DEBUG_MODE;
     }
-    public boolean isTestMode() {
-        return TEST_MODE;
-    }
+
     public boolean isChangesSaved() {
         return CHANGES_SAVED;
     }
@@ -25,9 +22,6 @@ public class ProgramOptions {
         return playlist_id;
     }
 
-    public void setTestMode(boolean testMode) {
-        this.TEST_MODE = testMode;
-    }
     public void setAutoMode(boolean autoMode) {
         this.AUTO_MODE = autoMode;
     }

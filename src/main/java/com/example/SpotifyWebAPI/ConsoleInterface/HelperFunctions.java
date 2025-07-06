@@ -63,7 +63,7 @@ public class HelperFunctions {
     public void saveConfig() {
         fileUtil.writeConfig("client_id", spotifySession.getClient_id(), "client_secret", spotifySession.getClient_secret(), "redirect_uri",
                 spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id",programOptions.getPlaylist_id(), "auto_mode",
-                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(programOptions.isDebugMode()),"user_id",spotifySession.getUser_id(), "test_mode", Boolean.toString(programOptions.isTestMode()));
+                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(programOptions.isDebugMode()),"user_id",spotifySession.getUser_id());
         programOptions.setChangesSaved(true);
     }
 

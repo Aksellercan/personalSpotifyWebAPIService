@@ -9,6 +9,9 @@ import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class AutoMode {
     private String user_id;
     private String client_id;
@@ -57,8 +60,19 @@ public class AutoMode {
             Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request(httpConnection, spotify_session);
             clientCredentialsRequest.getPlaylist(playlist_id);
             int playlistSize = clientCredentialsRequest.getplaylistSize();
-            int readDescCount = Integer.parseInt(readString(clientCredentialsRequest.getplaylistDescription()));
-
+            String stringDescCount = readString(clientCredentialsRequest.getplaylistDescription());
+            int readDescCount;
+            Pattern pattern= Pattern.compile("[a-zA-Z/]");
+            Matcher matcher = pattern.matcher(stringDescCount);
+            if (matcher.find()) {
+                Logger.INFO.Log("Playlist size: " + playlistSize);
+                // Set the playlist description
+                userRequest.setPlaylistDetails(playlist_id, clientCredentialsRequest.getplaylistName(),playlistSize + "/120",true,false);
+                Logger.INFO.Log("Completed the automated run");
+                return;
+            } else {
+                readDescCount = Integer.parseInt(stringDescCount);
+            }
             if (playlistSize == 120) {
                 String prevPlaylistName = clientCredentialsRequest.getplaylistName();
                 int nextNumber = nextNumber(prevPlaylistName);
@@ -74,13 +88,12 @@ public class AutoMode {
                 Logger.INFO.Log("Completed the automated run, no changes made");
                 return;
             }
-            String playlistSizeString = String.valueOf(playlistSize);
-            Logger.INFO.Log("Playlist size: " + playlistSizeString);
+            Logger.INFO.Log("Playlist size: " + playlistSize);
             // Set the playlist description
-            userRequest.setPlaylistDetails(playlist_id, clientCredentialsRequest.getplaylistName(),playlistSizeString + "/120",true,false);
+            userRequest.setPlaylistDetails(playlist_id, clientCredentialsRequest.getplaylistName(),playlistSize + "/120",true,false);
             Logger.INFO.Log("Completed the automated run");
         } catch (Exception e) {
-            Logger.ERROR.Log("Auto Mode Error: " + e.getMessage());
+            Logger.ERROR.Log(e,"Auto Mode");
         }
     }
 
@@ -103,11 +116,13 @@ public class AutoMode {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (c == '&') { // assuming '/' is encoded to '&#x2F;'
+            if ((c == '&') && (str.charAt(i+1) == '#')) { // assuming '/' is encoded to '&#x2F;'
+                Logger.DEBUG.Log("Reading a #" + str.charAt(i) + "and later " + str.charAt(i+1));
                 break;
             }
             sb.append(c);
         }
+        Logger.DEBUG.Log("Reading string: " + sb.toString());
         return sb.toString();
     }
 }

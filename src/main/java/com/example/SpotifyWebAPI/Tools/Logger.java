@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 public enum Logger {
     INFO(" [ INFO ] "),
@@ -82,7 +83,7 @@ public enum Logger {
     private String WriteExceptionMessageLogs(Exception e, String message) {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return now.format(formatter) + severity + message + ". Error: " + e.getMessage();
+        return now.format(formatter) + severity + message + ". Exception: " + e.getMessage();
     }
 
     public void LogSilently(String message) {
