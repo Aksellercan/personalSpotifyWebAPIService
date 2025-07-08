@@ -74,9 +74,9 @@ public class Main {
                     AutoModeRequirementCheck(programOptions, spotifySession);
                     return;
                 case "--auto-mode":
-                    if (programOptions.getPlaylist_id() == null && spotifySession.getRefresh_token() == null
-                            && spotifySession.getUser_id() == null &&  spotifySession.getClient_id() == null
-                            && spotifySession.getClient_secret() == null && spotifySession.getRedirect_uri() == null) {
+                    if (programOptions.getPlaylist_id() == null || spotifySession.getRefresh_token() == null
+                            || spotifySession.getUser_id() == null ||  spotifySession.getClient_id() == null
+                            || spotifySession.getClient_secret() == null || spotifySession.getRedirect_uri() == null) {
                         System.out.println("Required parameters not set!");
                         return;
                     }
