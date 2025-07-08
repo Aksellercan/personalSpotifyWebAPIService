@@ -9,7 +9,6 @@ import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
-import com.example.SpotifyWebAPI.Tools.Logger;
 
 public class Main {
 
@@ -75,6 +74,12 @@ public class Main {
                     AutoModeRequirementCheck(programOptions, spotifySession);
                     return;
                 case "--auto-mode":
+                    if (programOptions.getPlaylist_id() == null && spotifySession.getRefresh_token() == null
+                            && spotifySession.getUser_id() == null &&  spotifySession.getClient_id() == null
+                            && spotifySession.getClient_secret() == null && spotifySession.getRedirect_uri() == null) {
+                        System.out.println("Required parameters not set!");
+                        return;
+                    }
                     AutoMode autoMode = new AutoMode(fileUtil, configMaps);
                     autoMode.runFunctions();
                     return;
