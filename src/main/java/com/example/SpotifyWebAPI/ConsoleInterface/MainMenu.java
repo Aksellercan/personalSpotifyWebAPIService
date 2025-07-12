@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
+import com.example.SpotifyWebAPI.Connection.HTTPConnection;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
@@ -7,20 +8,18 @@ import com.example.SpotifyWebAPI.Tools.Logger;
 import java.util.Scanner;
 
 public class MainMenu {
-    private final ProgramOptions programOptions;
-    private final SpotifySession spotifySession;
+    private final ProgramOptions programOptions = ProgramOptions.getInstance();
+    private final SpotifySession spotifySession = SpotifySession.getInstance();
     private HelperFunctions helperFunctions;
     private final FileUtil fileUtil;
 
-    public MainMenu (ProgramOptions programOptions, SpotifySession spotifySession, FileUtil fileUtil) {
-        this.programOptions = programOptions;
-        this.spotifySession = spotifySession;
+    public MainMenu (FileUtil fileUtil) {
         this.fileUtil = fileUtil;
     }
 
     public void userInterface() {
         Scanner scanner = new Scanner(System.in);
-        helperFunctions = new HelperFunctions(programOptions, spotifySession, scanner);
+        helperFunctions = new HelperFunctions(scanner);
         helperFunctions.checkClientCredentials();
         helperFunctions.setFileUtil(fileUtil);
         while (true) {
@@ -34,23 +33,28 @@ public class MainMenu {
             System.out.println("0. Exit the program" + (programOptions.isChangesSaved() ? "" : " - Changes not saved"));
             switch (scanner.nextLine()) {
                 case "1":
-                    BasicAuthMenu basicAuthMenu = new BasicAuthMenu(spotifySession, scanner, programOptions);
+                    BasicAuthMenu basicAuthMenu = new BasicAuthMenu(scanner);
                     basicAuthMenu.Basic_auth_Functions();
                     break;
                 case "2":
-                    UserRequestsMenu userRequestsMenu = new UserRequestsMenu(spotifySession, programOptions, scanner, fileUtil);
+                    UserRequestsMenu userRequestsMenu = new UserRequestsMenu(scanner, fileUtil);
                     userRequestsMenu.Oauth2_Functions();
                     break;
                 case "3":
+                    HTTPConnection  httpConnection = HTTPConnection.getInstance();
                     System.out.println("Set Http Debug Output:\nCurrent State is " + programOptions.isDebugMode() +
                             "\nPress y to enable debug output\nPress n to disable debug output");
                     if (scanner.nextLine().equals("y")) {
                         if (!programOptions.isDebugMode()) {
                             programOptions.setChangesSaved(false);
                         }
+                        //temp
+                        httpConnection.setDebugOutput(true);
                         programOptions.setDebugMode(true);
                         System.out.println("Http Debug Output set to true");
                     } else {
+                        //temp
+                        httpConnection.setDebugOutput(false);
                         programOptions.setDebugMode(false);
                         System.out.println("Http Debug Output set to false");
                         programOptions.setChangesSaved(false);

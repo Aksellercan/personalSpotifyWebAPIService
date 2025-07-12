@@ -1,6 +1,7 @@
 package com.example.SpotifyWebAPI.Objects;
 
-public class SpotifySession {
+public final class SpotifySession {
+    private static SpotifySession instance;
     private String user_id;
     private String client_id;
     private String client_secret;
@@ -10,7 +11,15 @@ public class SpotifySession {
     private String refresh_token;
     private String code;
 
-    public SpotifySession() {}
+    private SpotifySession() {}
+
+    //Instance Check
+    public static SpotifySession getInstance() {
+        if (instance == null) {
+            instance = new SpotifySession();
+        }
+        return instance;
+    }
 
     //getters
     public String getUser_id() {

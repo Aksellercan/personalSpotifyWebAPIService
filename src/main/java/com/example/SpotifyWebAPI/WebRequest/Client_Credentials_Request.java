@@ -8,16 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
 
 public class Client_Credentials_Request {
-    private final HTTPConnection httpConnection;
-    private final SpotifySession spotifySession;
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
+    private final SpotifySession spotifySession = SpotifySession.getInstance();
     private String playlistDescription;
     private String playlistName;
     private int playlistSize;
-
-    public Client_Credentials_Request(HTTPConnection httpConnection, SpotifySession spotifySession) {
-        this.httpConnection = httpConnection;
-        this.spotifySession = spotifySession;
-    }
 
     public String getplaylistDescription() {
         return playlistDescription;
@@ -41,7 +36,7 @@ public class Client_Credentials_Request {
             playlistSize = node.get("tracks").get("total").asInt();
             System.out.println("SpotifyWebAPI Playlist Details\nName: " + playlistName + "\nDescription: " + playlistDescription + "\nSize: " + playlistSize);
         } catch (Exception e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
         }
     }
 }

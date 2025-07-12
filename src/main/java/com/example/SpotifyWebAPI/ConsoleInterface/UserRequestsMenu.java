@@ -11,19 +11,17 @@ import java.util.Scanner;
 
 
 public class UserRequestsMenu {
-    private final SpotifySession spotify_session;
-    private final HTTPConnection httpConnection = new HTTPConnection();
+    private final SpotifySession spotify_session = SpotifySession.getInstance();
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final Scanner scanner;
-    private final ProgramOptions programOptions;
+    private final ProgramOptions programOptions = ProgramOptions.getInstance();
     private final HelperFunctions helperFunctions;
     private final FileUtil fileUtil;
 
-    public UserRequestsMenu(SpotifySession spotify_session, ProgramOptions programOptions, Scanner scanner, FileUtil fileUtil) {
-        this.spotify_session = spotify_session;
-        this.programOptions = programOptions;
+    public UserRequestsMenu(Scanner scanner, FileUtil fileUtil) {
         this.scanner = scanner;
         this.fileUtil = fileUtil;
-        this.helperFunctions = new HelperFunctions(programOptions,spotify_session, scanner);
+        this.helperFunctions = new HelperFunctions(scanner);
     }
 
     public void Oauth2_Functions() {
@@ -38,8 +36,8 @@ public class UserRequestsMenu {
             System.out.println("5. add song to Playlist");
             System.out.println("6. Create Playlist");
             System.out.println("0. Go Back");
-            User_Access_Token userAccessToken = new User_Access_Token(httpConnection, spotify_session);
-            User_Request userRequest = new User_Request(httpConnection, spotify_session);
+            User_Access_Token userAccessToken = new User_Access_Token();
+            User_Request userRequest = new User_Request();
             if (httpConnection.getDebugOutput()) userAccessToken.printData();
             switch (scanner.nextLine()) {
                 case "1":

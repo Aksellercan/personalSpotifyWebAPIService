@@ -1,12 +1,20 @@
 package com.example.SpotifyWebAPI.Objects;
 
-public class ProgramOptions {
+public final class ProgramOptions {
+    private static ProgramOptions instance;
     private boolean AUTO_MODE;
     private boolean DEBUG_MODE;
     private boolean CHANGES_SAVED = true;
     private String playlist_id;//test
 
-    public ProgramOptions() {}
+    private ProgramOptions() {}
+
+    public static ProgramOptions getInstance() {
+        if (instance == null) {
+            instance = new ProgramOptions();
+        }
+        return instance;
+    }
 
     public boolean isAutoMode() {
         return AUTO_MODE;

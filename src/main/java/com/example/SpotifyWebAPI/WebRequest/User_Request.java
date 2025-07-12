@@ -12,16 +12,10 @@ import java.net.HttpURLConnection;
 import java.util.HashMap;
 
 public class User_Request {
-    private final HTTPConnection httpConnection;
-    private final SpotifySession spotifySession;
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
+    private final SpotifySession spotifySession = SpotifySession.getInstance();
     private Playlist playlist;
     private final HashMap<String, String> songs = new HashMap<>();
-
-
-    public User_Request(HTTPConnection httpConnection, SpotifySession spotifySession) {
-        this.httpConnection = httpConnection;
-        this.spotifySession = spotifySession;
-    }
 
     public Playlist getPlaylist() {
         if (playlist == null) {
@@ -55,7 +49,7 @@ public class User_Request {
                 throw new Exception("Failed to update playlist description to " + description + ". HTTP Response Code " + responseCode + ", " + node.get("message").asText());
             }
         } catch (Exception e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
         }
     }
 
@@ -90,7 +84,7 @@ public class User_Request {
                 Logger.INFO.Log("Song: " + key.get("track").get("name").asText() + " URI: " + key.get("track").get("uri").asText());
             }
         } catch (Exception e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
         }
     }
 
@@ -123,7 +117,7 @@ public class User_Request {
             httpConnection.postBody(http, postBody);
             httpConnection.readErrorStream(http,400, true);
         } catch (Exception e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
         }
     }
 
@@ -156,7 +150,7 @@ public class User_Request {
             Logger.INFO.Log("Playlist collaborative: " + playlist.isCollaborative());
             playlist.setPlaylist_id(playlist_id);
         } catch (Exception e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.SpotifyWebAPI;
 
 import com.example.SpotifyWebAPI.Connection.HTTPConnection;
 import com.example.SpotifyWebAPI.Connection.User_Access_Token;
+import com.example.SpotifyWebAPI.JavaFXInterface.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
@@ -27,6 +28,7 @@ public class Main {
         System.out.println("\nOptions:");
         System.out.println("  --req                                         Run requirement checks and exit");
         System.out.println("  --auto-mode                                   Run auto mode functions");
+        System.out.println("  --gui                                         Launch GUI interface");
         System.out.println("  --cli                                         Launch CLI interface normal mode");
         System.out.println("  --cli-test                                    Launch CLI interface in test mode");
         System.out.println("\nUsage: program --set [CONFIGURATION] <value>");
@@ -53,6 +55,9 @@ public class Main {
         configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id");
         programOptions.setAutoMode(configMaps.isAutoMode());
         programOptions.setDebugMode(configMaps.isOutputDebug());
+        //Temporary
+        HTTPConnection httpConnection = HTTPConnection.getInstance();
+        httpConnection.setDebugOutput(programOptions.isDebugMode());
         programOptions.setPlaylist_id(configMaps.getPlaylist_id());
         spotifySession.setClient_id(configMaps.getClient_id());
         spotifySession.setClient_secret(configMaps.getClient_secret());
@@ -64,12 +69,15 @@ public class Main {
     public static void main(String[] args) {
         FileUtil fileUtil = new FileUtil();
         ConfigMaps configMaps = new ConfigMaps(fileUtil.getConfigMap());
-        ProgramOptions programOptions = new ProgramOptions();
-        SpotifySession spotifySession = new SpotifySession();
+        ProgramOptions programOptions = ProgramOptions.getInstance();
+        SpotifySession spotifySession = SpotifySession.getInstance();
         Initialize(fileUtil, configMaps, programOptions, spotifySession);
 
         if (args.length == 1) {
             switch (args[0]) {
+                case "--gui":
+                    GUI.launch(GUI.class, args);
+                    return;
                 case "--req":
                     AutoModeRequirementCheck(programOptions, spotifySession);
                     return;
@@ -84,7 +92,7 @@ public class Main {
                     autoMode.runFunctions();
                     return;
                 case "--cli":
-                    MainMenu mainMenu = new MainMenu(programOptions, spotifySession, fileUtil);
+                    MainMenu mainMenu = new MainMenu(fileUtil);
                     mainMenu.userInterface();
                     return;
                 case "--cli-test":
@@ -132,8 +140,7 @@ public class Main {
             }
 
             if (args[0].equals("--get-refresh-token")) {
-                HTTPConnection httpConnection = new HTTPConnection();
-                User_Access_Token userAccessToken = new User_Access_Token(httpConnection, spotifySession);
+                User_Access_Token userAccessToken = new User_Access_Token();
                 while (true) {
                     if (spotifySession.getCode() == null || spotifySession.getCode().isEmpty()) {
                         spotifySession.setCode(args[1].trim());

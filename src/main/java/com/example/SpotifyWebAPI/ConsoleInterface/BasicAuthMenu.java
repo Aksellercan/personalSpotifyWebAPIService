@@ -8,19 +8,17 @@ import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import java.util.Scanner;
 
 public class BasicAuthMenu {
-    private SpotifySession spotifySession;
-    private HTTPConnection httpConnection = new HTTPConnection();
-    private Scanner scanner;
+    private final SpotifySession spotifySession = SpotifySession.getInstance();
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
+    private final Scanner scanner;
     private String playlist_id;
-    private HelperFunctions helperFunctions;
-    private ProgramOptions programOptions;
+    private final HelperFunctions helperFunctions;
+    private final ProgramOptions programOptions = ProgramOptions.getInstance();
 
 
-    public BasicAuthMenu(SpotifySession spotifySession, Scanner scanner, ProgramOptions programOptions) {
-        this.spotifySession = spotifySession;
+    public BasicAuthMenu(Scanner scanner) {
         this.scanner = scanner;
-        this.programOptions = programOptions;
-        this.helperFunctions = new HelperFunctions(programOptions,spotifySession, scanner);
+        this.helperFunctions = new HelperFunctions(scanner);
     }
     public void Basic_auth_Functions() {
         while (true) {
@@ -28,7 +26,7 @@ public class BasicAuthMenu {
             System.out.println("Basic Auth Functions");
             System.out.println("1. Get Playlist by ID");
             System.out.println("0. Go Back");
-            Client_Credentials_Token clientCredentialsToken = new Client_Credentials_Token(httpConnection, spotifySession);
+            Client_Credentials_Token clientCredentialsToken = new Client_Credentials_Token();
             clientCredentialsToken.post_Access_Request();
             switch (scanner.nextLine()) {
                 case "1":
@@ -37,7 +35,7 @@ public class BasicAuthMenu {
                         playlist_id = scanner.nextLine().trim();
                     }
                     System.out.println("API Response: ");
-                    Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request(httpConnection, spotifySession);
+                    Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
                     clientCredentialsRequest.getPlaylist(playlist_id);
                     break;
                 case "0":

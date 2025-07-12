@@ -7,13 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
 
 public class Client_Credentials_Token {
-    private final HTTPConnection httpConnection;
-    private final SpotifySession spotifySession;
-
-    public Client_Credentials_Token(HTTPConnection httpConnection, SpotifySession spotifySession) {
-        this.httpConnection = httpConnection;
-        this.spotifySession = spotifySession;
-    }
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
+    private final SpotifySession spotifySession = SpotifySession.getInstance();
 
     public void post_Access_Request() {
         try {
@@ -27,7 +22,7 @@ public class Client_Credentials_Token {
             spotifySession.setAccess_token(node.get("access_token").asText());
             Logger.INFO.Log("Token: " + spotifySession.getAccess_token(), false);
         } catch (Exception e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
             return;
         }
         if (spotifySession.getAccess_token() == null) {

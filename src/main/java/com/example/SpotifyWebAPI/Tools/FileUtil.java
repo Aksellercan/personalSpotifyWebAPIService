@@ -28,7 +28,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.Log(e, false);
+            Logger.ERROR.LogException(e, false);
         }
     }
 
@@ -56,7 +56,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.LogSilently(e,"readConfig()");
+            Logger.ERROR.LogExceptionSilently(e,"readConfig()");
         }
     }
 
@@ -83,7 +83,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.Log(e,"writeConfig(String line)", false);
+            Logger.ERROR.LogException(e,"writeConfig(String line)", false);
         }
     }
 }

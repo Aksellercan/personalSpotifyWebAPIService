@@ -6,8 +6,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.stream.Collectors;
 
-public class HTTPConnection {
+public final class HTTPConnection {
+    private static HTTPConnection instance;
     private boolean debugOutput;
+
+    private HTTPConnection() {}
+
+    public static HTTPConnection getInstance() {
+        if(instance == null){
+            instance = new HTTPConnection();
+        }
+        return instance;
+    }
 
     public void setDebugOutput(boolean debugOutput) {
         this.debugOutput = debugOutput;
@@ -37,7 +47,7 @@ public class HTTPConnection {
             }
             return http;
         } catch (IOException e) {
-            Logger.ERROR.Log(e, "HTTP Connection Error", true);
+            Logger.ERROR.LogException(e, "HTTP Connection Error", true);
             throw new RuntimeException("Connection failed: " + e.getMessage());
         }
     }
@@ -47,7 +57,7 @@ public class HTTPConnection {
             if (debugOutput) Logger.DEBUG.Log("Full PostBody: " + postBody, false);
             os.write(postBody.getBytes());
         } catch (IOException e) {
-            Logger.ERROR.Log(e.getMessage());
+            Logger.ERROR.LogException(e);
         }
     }
 
@@ -66,7 +76,7 @@ public class HTTPConnection {
                 throw new Exception("POST error response: " + errorBody);
             }
         } catch (Exception e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
         }
     }
 }

@@ -10,13 +10,11 @@ import java.util.Scanner;
 public class HelperFunctions {
 
     private FileUtil fileUtil;
-    private final ProgramOptions programOptions;
-    private final SpotifySession spotifySession;
+    private final ProgramOptions programOptions = ProgramOptions.getInstance();
+    private final SpotifySession spotifySession = SpotifySession.getInstance();
     private final Scanner scanner;
 
-    public HelperFunctions(ProgramOptions programOptions, SpotifySession spotifySession, Scanner scanner) {
-        this.programOptions = programOptions;
-        this.spotifySession = spotifySession;
+    public HelperFunctions(Scanner scanner) {
         this.scanner = scanner;
     }
 

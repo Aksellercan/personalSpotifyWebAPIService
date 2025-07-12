@@ -10,13 +10,8 @@ import java.net.URLEncoder;
 import java.util.Base64;
 
 public class User_Access_Token {
-    private final HTTPConnection httpConnection;
-    private final SpotifySession spotifySession;
-
-    public User_Access_Token(HTTPConnection httpConnection, SpotifySession spotifySession) {
-        this.httpConnection = httpConnection;
-        this.spotifySession = spotifySession;
-    }
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
+    private final SpotifySession spotifySession = SpotifySession.getInstance();
 
     private String getEncodedString() {
         return Base64.getEncoder().encodeToString((spotifySession.getClient_id() + ":" + spotifySession.getClient_secret()).getBytes());
@@ -41,7 +36,7 @@ public class User_Access_Token {
             Logger.INFO.Log("Refresh Token to take note: " + spotifySession.getRefresh_token(), false);
             Logger.INFO.Log("Refreshed token: " + spotifySession.getAccess_token(), false);
         } catch (Exception e) {
-            Logger.ERROR.Log(e,"Failed to request refresh token", true);
+            Logger.ERROR.LogException(e,"Failed to request refresh token", true);
             return;
         }
         if (spotifySession.getRefresh_token() == null) {
@@ -78,7 +73,7 @@ public class User_Access_Token {
                 Logger.INFO.Log("Refresh Token to take note: " + spotifySession.getRefresh_token(), false);
             }
         } catch (IOException e) {
-            Logger.ERROR.Log(e);
+            Logger.ERROR.LogException(e);
         }
     }
 }

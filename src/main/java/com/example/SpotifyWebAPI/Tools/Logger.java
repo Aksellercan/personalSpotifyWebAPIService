@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 
 public enum Logger {
     INFO(" [ INFO ] "),
@@ -28,10 +27,10 @@ public enum Logger {
         return debugOutput;
     }
 
-    private String logFormat(String message) {
+    private String DateSeverityFormat() {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return now.format(formatter) + severity + message;
+        return now.format(formatter) + severity;
     }
 
     public void Log(String message) {
@@ -43,61 +42,59 @@ public enum Logger {
     }
 
     public void Log(String message, boolean writetoFile) {
-        String fullMessage = logFormat(message);
+        String fullMessage = DateSeverityFormat() + message;
         if (writetoFile) {
             writeLog(fullMessage);
         }
         System.out.println(fullMessage);
     }
 
-    public void Log(Exception e, String message) {
-        System.out.println(WriteExceptionMessageLogs(e, message));
+    // Write exception message + your own message together to console and log file by default
+    public void LogException(Exception e, String message) {
+        WriteExceptionMessageLogs(e, message, true);
     }
 
-    public void Log(Exception e, boolean writetoFile) {
-        String exceptionLog = WriteExceptions(e);
-        System.out.println(exceptionLog);
+    public void LogException(Exception e, String message, boolean writetoFile) {
+        WriteExceptionMessageLogs(e, message, writetoFile);
+    }
+
+    // Write just exception message to console and log file by default
+    public void LogException(Exception e) {
+        WriteExceptions(e, true);
+    }
+
+    public void LogException(Exception e, boolean writetoFile) {
+        WriteExceptions(e, writetoFile);
+    }
+
+
+    private void WriteExceptions(Exception e, boolean writetoFile) {
+        String fullMessage = DateSeverityFormat()  + e.getMessage();
         if (writetoFile) {
-            writeLog(exceptionLog);
+            writeLog(fullMessage);
         }
+        System.out.println(fullMessage);
     }
 
-    public void Log(Exception e) {
-        System.out.println(WriteExceptions(e));
-    }
-
-    public void Log(Exception e, String message, boolean writetoFile) {
-        String exceptionLog = WriteExceptionMessageLogs(e, message);
-        System.out.println(exceptionLog);
+    private void WriteExceptionMessageLogs(Exception e, String message, boolean writetoFile) {
+        String fullMessage = DateSeverityFormat()  + message + ". Exception: " + e.getMessage();
         if (writetoFile) {
-            writeLog(exceptionLog);
+            writeLog(fullMessage);
         }
-    }
-
-    private String WriteExceptions(Exception e) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return now.format(formatter) + severity + e.getMessage();
-    }
-
-    private String WriteExceptionMessageLogs(Exception e, String message) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-        return now.format(formatter) + severity + message + ". Exception: " + e.getMessage();
+        System.out.println(fullMessage);
     }
 
     public void LogSilently(String message) {
-        String fullMessage = logFormat(message);
+        String fullMessage = DateSeverityFormat() + message;
         writeLog(fullMessage);
     }
 
-    public void LogSilently(Exception e, String message) {
-        String fullMessage = WriteExceptionMessageLogs(e, message);
-        writeLog(fullMessage);
+    public void LogExceptionSilently(Exception e, String message) {
+        WriteExceptionMessageLogs(e, message, true);
     }
 
     private void debugLogs(String message) {
-        String fullMessage = logFormat(message);
+        String fullMessage = DateSeverityFormat() + message;
         System.out.println(fullMessage);
     }
 
@@ -124,7 +121,7 @@ public enum Logger {
                 writer.write(fullMessage + "\n");
             }
         } catch (IOException e) {
-            Log(e, "writeLog(String fullMessage)");
+            LogException(e, "writeLog(String fullMessage)");
         }
     }
 }

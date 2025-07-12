@@ -19,7 +19,7 @@ public class AutoMode {
     private String refresh_token;
     private String playlist_id;
     private boolean auto_mode;
-    private final HTTPConnection httpConnection = new HTTPConnection();
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final ConfigMaps configMaps;
     private final FileUtil fileUtil;
 
@@ -43,7 +43,7 @@ public class AutoMode {
         // Initialize Spotify session
         Logger.INFO.Log("Starting AutoMode.runFunctions()");
         setConfigs();
-        SpotifySession spotify_session = new SpotifySession();
+        SpotifySession spotify_session = SpotifySession.getInstance();
         spotify_session.setClient_id(client_id);
         spotify_session.setClient_secret(client_secret);
         spotify_session.setRedirect_uri(redirect_uri);
@@ -51,12 +51,12 @@ public class AutoMode {
 
         try {
             // Perform authentication
-            User_Access_Token userAccessToken = new User_Access_Token(httpConnection, spotify_session);
+            User_Access_Token userAccessToken = new User_Access_Token();
             userAccessToken.refresh_token_with_User_Token();
             Logger.INFO.Log("Received the access token");
-            User_Request userRequest = new User_Request(httpConnection, spotify_session);
+            User_Request userRequest = new User_Request();
             //Get the size of the playlist
-            Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request(httpConnection, spotify_session);
+            Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
             clientCredentialsRequest.getPlaylist(playlist_id);
             int playlistSize = clientCredentialsRequest.getplaylistSize();
             String stringDescCount = readString(clientCredentialsRequest.getplaylistDescription());
@@ -92,7 +92,7 @@ public class AutoMode {
             userRequest.setPlaylistDetails(playlist_id, clientCredentialsRequest.getplaylistName(),playlistSize + "/120",true,false);
             Logger.INFO.Log("Completed the automated run");
         } catch (Exception e) {
-            Logger.ERROR.Log(e,"Auto Mode");
+            Logger.ERROR.LogException(e,"Auto Mode");
         }
     }
 

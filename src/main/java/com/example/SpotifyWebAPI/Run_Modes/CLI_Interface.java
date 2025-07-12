@@ -20,7 +20,7 @@ public class CLI_Interface {
     private String refresh_token;
     private String code;
     private String playlist_id;
-    private final HTTPConnection httpConnection = new HTTPConnection();
+    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final Scanner scanner = new Scanner(System.in);
     private final FileUtil fileUtil;
     private final ConfigMaps configMaps;
@@ -33,7 +33,7 @@ public class CLI_Interface {
     }
 
     private void setConfigs() {
-        spotify_session = new SpotifySession();
+        spotify_session = SpotifySession.getInstance();
         client_id = configMaps.getClient_id();
         client_secret = configMaps.getClient_secret();
         redirect_uri = configMaps.getRedirect_uri();
@@ -187,7 +187,7 @@ public class CLI_Interface {
         clearScreen();
         System.out.println("1. Get Playlist by ID");
         System.out.println("0. Go Back");
-        Client_Credentials_Token clientCredentialsToken = new Client_Credentials_Token(httpConnection, spotify_session);
+        Client_Credentials_Token clientCredentialsToken = new Client_Credentials_Token();
         clientCredentialsToken.post_Access_Request();
         switch (scanner.nextLine()) {
             case "1":
@@ -196,7 +196,7 @@ public class CLI_Interface {
                     playlist_id = scanner.nextLine().trim();
                 }
                 System.out.println("API Response: ");
-                Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request(httpConnection, spotify_session);
+                Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
                 clientCredentialsRequest.getPlaylist(playlist_id);
                 return;
             case "0":
@@ -216,8 +216,8 @@ public class CLI_Interface {
         System.out.println("5. add song to Playlist");
         System.out.println("6. Create Playlist");
         System.out.println("0. Go Back");
-        User_Access_Token userAccessToken = new User_Access_Token(httpConnection, spotify_session);
-        User_Request userRequest = new User_Request(httpConnection, spotify_session);
+        User_Access_Token userAccessToken = new User_Access_Token();
+        User_Request userRequest = new User_Request();
         if (httpConnection.getDebugOutput()) userAccessToken.printData();
         switch (scanner.nextLine()) {
             case "1":
