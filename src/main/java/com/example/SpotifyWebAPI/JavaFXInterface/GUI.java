@@ -1,6 +1,5 @@
 package com.example.SpotifyWebAPI.JavaFXInterface;
 
-import com.example.SpotifyWebAPI.Concurrency.ProcessThread;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
@@ -25,7 +24,6 @@ public class GUI extends Application {
     private SavedScene stage = SavedScene.getInstance();
     @FXML
     private TextArea responseTextArea;
-    private final ProcessThread processThread = new ProcessThread();
 
     @Override
     public void start(Stage primaryStage) {

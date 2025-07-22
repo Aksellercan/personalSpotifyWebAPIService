@@ -38,7 +38,7 @@ public class UserRequestsMenu {
             System.out.println("0. Go Back");
             User_Access_Token userAccessToken = new User_Access_Token();
             User_Request userRequest = new User_Request();
-            if (httpConnection.getDebugOutput()) userAccessToken.printData();
+            if (Logger.getDebugOutput()) userAccessToken.printData();
             switch (scanner.nextLine()) {
                 case "1":
                     String code = null;

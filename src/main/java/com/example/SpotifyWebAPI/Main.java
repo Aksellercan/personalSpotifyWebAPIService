@@ -56,10 +56,8 @@ public class Main {
         configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id");
         programOptions.setAutoMode(configMaps.isAutoMode());
         programOptions.setDebugMode(configMaps.isOutputDebug());
-        //Temporary
-        HTTPConnection httpConnection = HTTPConnection.getInstance();
-        httpConnection.setDebugOutput(programOptions.isDebugMode());
         programOptions.setPlaylist_id(configMaps.getPlaylist_id());
+        Logger.setDebugOutput(programOptions.isDebugMode());
         spotifySession.setClient_id(configMaps.getClient_id());
         spotifySession.setClient_secret(configMaps.getClient_secret());
         spotifySession.setRedirect_uri(configMaps.getRedirect_uri());
@@ -73,7 +71,6 @@ public class Main {
         ProgramOptions programOptions = ProgramOptions.getInstance();
         SpotifySession spotifySession = SpotifySession.getInstance();
         Initialize(fileUtil, configMaps, programOptions, spotifySession);
-        Logger.setDebugOutput(programOptions.isDebugMode());
 
         if (args.length == 1) {
             switch (args[0]) {

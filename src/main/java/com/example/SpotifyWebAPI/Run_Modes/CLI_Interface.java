@@ -41,8 +41,7 @@ public class CLI_Interface {
         playlist_id = configMaps.getPlaylist_id();
         auto_mode = configMaps.isAutoMode();
         user_id = configMaps.getUser_id();
-        httpConnection.setDebugOutput(configMaps.isOutputDebug());
-
+        Logger.setDebugOutput(configMaps.isOutputDebug());
         spotify_session.setClient_id(client_id);
         spotify_session.setClient_secret(client_secret);
         spotify_session.setUser_id(user_id);
@@ -80,7 +79,7 @@ public class CLI_Interface {
             System.out.println("Spotify Web API CLI Interface [ OLD ]");
             System.out.println("1. Basic auth Functions");
             System.out.println("2. Oauth2 Functions");
-            System.out.println("3. Set Http Debug Output" + (httpConnection.getDebugOutput() ? " - Debug Output Enabled" : ""));
+            System.out.println("3. Set Http Debug Output" + (Logger.getDebugOutput() ? " - Debug Output Enabled" : ""));
             System.out.println("4. Set Auto Mode" + (auto_mode ? " - Auto Mode Enabled, Program won't launch to CLI on next run" : ""));
             System.out.println("5. Save Config");
             System.out.println("0. Exit the program" + (changesSaved ? "" : " - Changes not saved"));
@@ -92,16 +91,16 @@ public class CLI_Interface {
                     Oauth2_Functions();
                     break;
                 case "3":
-                    System.out.println("Set Http Debug Output:\nCurrent State is " + httpConnection.getDebugOutput() +
+                    System.out.println("Set Http Debug Output:\nCurrent State is " + Logger.getDebugOutput() +
                             "\nPress y to enable debug output\nPress n to disable debug output");
                     if (scanner.nextLine().equals("y")) {
-                        if (!httpConnection.getDebugOutput()) {
+                        if (!Logger.getDebugOutput()) {
                             changesSaved = false;
                         }
-                        httpConnection.setDebugOutput(true);
+                        Logger.setDebugOutput(true);
                         System.out.println("Http Debug Output set to true");
                     } else {
-                        httpConnection.setDebugOutput(false);
+                        Logger.setDebugOutput(false);
                         System.out.println("Http Debug Output set to false");
                         changesSaved = false;
                     }
@@ -179,7 +178,7 @@ public class CLI_Interface {
     private void saveConfig() {
         fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
                 redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
-                Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()),"user_id",user_id);
+                Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()),"user_id",user_id);
         changesSaved = true;
     }
 
@@ -218,7 +217,7 @@ public class CLI_Interface {
         System.out.println("0. Go Back");
         User_Access_Token userAccessToken = new User_Access_Token();
         User_Request userRequest = new User_Request();
-        if (httpConnection.getDebugOutput()) userAccessToken.printData();
+        if (Logger.getDebugOutput()) userAccessToken.printData();
         switch (scanner.nextLine()) {
             case "1":
                 code= null;

@@ -27,7 +27,7 @@ public class User_Access_Token {
             http.connect();
             String postBody = "grant_type=authorization_code" + "&code=" + URLEncoder.encode(spotifySession.getCode(), "UTF-8")
                     + "&redirect_uri=" + URLEncoder.encode(spotifySession.getRedirect_uri(), "UTF-8");
-            if (httpConnection.getDebugOutput()) System.out.println("Full PostBody: " + postBody);
+            if (Logger.getDebugOutput()) System.out.println("Full PostBody: " + postBody);
             httpConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
@@ -46,7 +46,7 @@ public class User_Access_Token {
     }
 
     public void printData() {
-        System.out.println("Debug Output: " + httpConnection.getDebugOutput());
+        System.out.println("Debug Output: " + Logger.getDebugOutput());
         System.out.println("Refresh Token: " + spotifySession.getRefresh_token());
         System.out.println("Client id: " + spotifySession.getClient_id());
         System.out.println("Client secret: " + spotifySession.getClient_secret());

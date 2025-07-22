@@ -39,7 +39,7 @@ public class User_Request {
             playlist.setCollaborative(collaborative);
             playlist.setPlaylist_id(playlist_id);
             String postBody = mapper.writeValueAsString(playlist);
-            if (httpConnection.getDebugOutput()) Logger.DEBUG.Log("postBody: " + postBody);
+            Logger.DEBUG.Log("postBody: " + postBody);
             httpConnection.postBody(http, postBody);
             int responseCode = http.getResponseCode();
             if (responseCode == 200) {

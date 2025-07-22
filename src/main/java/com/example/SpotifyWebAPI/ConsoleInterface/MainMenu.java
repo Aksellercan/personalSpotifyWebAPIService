@@ -48,13 +48,11 @@ public class MainMenu {
                         if (!programOptions.isDebugMode()) {
                             programOptions.setChangesSaved(false);
                         }
-                        //temp
-                        httpConnection.setDebugOutput(true);
+                        Logger.setDebugOutput(true);
                         programOptions.setDebugMode(true);
                         System.out.println("Http Debug Output set to true");
                     } else {
-                        //temp
-                        httpConnection.setDebugOutput(false);
+                        Logger.setDebugOutput(false);
                         programOptions.setDebugMode(false);
                         System.out.println("Http Debug Output set to false");
                         programOptions.setChangesSaved(false);

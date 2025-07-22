@@ -36,7 +36,7 @@ public class AutoMode {
         refresh_token = configMaps.getRefresh_token();
         playlist_id = configMaps.getPlaylist_id();
         auto_mode = configMaps.isAutoMode();
-        httpConnection.setDebugOutput(configMaps.isOutputDebug());
+        Logger.setDebugOutput(configMaps.isOutputDebug());
     }
 
     public void runFunctions() {
@@ -80,7 +80,7 @@ public class AutoMode {
                 auto_mode = false;
                 fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
                         redirect_uri, "refresh_token", refresh_token, "playlist_id", userRequest.getPlaylist().getPlaylist_id(), "auto_mode",
-                        Boolean.toString(auto_mode), "output_debug", Boolean.toString(httpConnection.getDebugOutput()), "user_id",user_id);
+                        Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()), "user_id",user_id);
                 return;
             } else if (playlistSize == readDescCount) {
                 Logger.INFO.Log("Playlist size is already set to " + playlistSize);

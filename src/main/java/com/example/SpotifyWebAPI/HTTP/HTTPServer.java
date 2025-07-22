@@ -91,8 +91,6 @@ public class HTTPServer {
             serverStatus.isRunning = true;
             Logger.INFO.Log("Starting Server on port " + port);
             socket = new ServerSocket(port, backlog);
-            SocketAddress socketAddress = new InetSocketAddress(port);
-//            socket.bind(socketAddress);
             Logger.DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress());
             Logger.DEBUG.Log("Socket local port: " + socket.getLocalPort());
             while (serverStatus.isRunning) {
@@ -214,7 +212,7 @@ public class HTTPServer {
         out.write("HTTP/1.0 200 OK\r\n");
         out.write("Date: " + now + "\r\n");
         out.write("Server: Custom Server\r\n");
-        out.write("Content-Type: image/vnd.microsoft.icon\r\n");
+        out.write("Content-Type: image/x-icon\r\n");
         out.write("Content-Length: " + bodyLength + "\r\n");
         out.write("\r\n");
         out.write(body);
