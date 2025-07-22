@@ -25,7 +25,7 @@
                         <Font size="11.0" />
                      </font>
                   </Button>
-                  <Button layoutX="4.0" layoutY="152.0" mnemonicParsing="false" onAction="#OnChangeWindowButtonClick" prefHeight="24.0" prefWidth="101.0" text="Start Server">
+                  <Button layoutX="4.0" layoutY="152.0" mnemonicParsing="false" onAction="#OnStartServerButtonClick" prefHeight="24.0" prefWidth="101.0" text="Start Server">
                      <font>
                         <Font size="11.0" />
                      </font>

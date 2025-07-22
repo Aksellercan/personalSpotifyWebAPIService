@@ -4,7 +4,7 @@ import com.example.SpotifyWebAPI.HTTP.HTTPServer;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
 import java.net.Socket;
-
+// may be removed later
 public class ProcessThread implements Runnable {
     HTTPServer httpServer = new HTTPServer(8080, 10);
 

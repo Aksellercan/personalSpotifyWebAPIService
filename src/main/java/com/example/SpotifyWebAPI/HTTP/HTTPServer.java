@@ -1,10 +1,11 @@
 package com.example.SpotifyWebAPI.HTTP;
 
 import com.example.SpotifyWebAPI.Tools.Logger;
-
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -12,10 +13,10 @@ import java.time.LocalDateTime;
 
 
 public class HTTPServer {
-    class Control {
-        public volatile boolean Stop = false;
+    protected static class ServerStatus {
+        public volatile boolean isRunning = false;
     }
-    Control control = new Control();
+    ServerStatus serverStatus = new ServerStatus();
     public static Thread thread;
     private final int port;
     private final int backlog;
@@ -29,12 +30,16 @@ public class HTTPServer {
         this.backlog = backlog;
     }
 
+    public boolean getServerStatus() {
+        return serverStatus.isRunning;
+    }
+
     public boolean StopServer() throws InterruptedException {
         try {
             if (thread == null) {
                 throw new NullPointerException("Server is already stopped or not started");
             }
-            control.Stop = true;
+            serverStatus.isRunning = false;
             thread.interrupt();
             if (thread.isInterrupted()) {
                 Logger.INFO.Log("Server Stopped.");
@@ -83,12 +88,16 @@ public class HTTPServer {
 
     private void StartListening() {
         try {
-            control.Stop = false;
+            serverStatus.isRunning = true;
             Logger.INFO.Log("Starting Server on port " + port);
             socket = new ServerSocket(port, backlog);
-            while (!control.Stop) {
+            SocketAddress socketAddress = new InetSocketAddress(port);
+//            socket.bind(socketAddress);
+            Logger.DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress());
+            Logger.DEBUG.Log("Socket local port: " + socket.getLocalPort());
+            while (serverStatus.isRunning) {
                 Socket clientSocket = socket.accept();
-                if (control.Stop) {
+                if (!serverStatus.isRunning) {
                     break;
                 }
                 setSocket(clientSocket);
@@ -149,6 +158,7 @@ public class HTTPServer {
                 }
                 socket.close();
                 System.gc();
+                Logger.INFO.Log("Socket Closed and cleared resources.");
             } catch (Exception ex) {
                 Logger.CRITICAL.LogException(ex, "Cannot close socket");
             }

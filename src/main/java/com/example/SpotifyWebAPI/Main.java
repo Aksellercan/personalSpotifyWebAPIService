@@ -10,6 +10,7 @@ import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
+import com.example.SpotifyWebAPI.Tools.Logger;
 
 public class Main {
 
@@ -72,6 +73,7 @@ public class Main {
         ProgramOptions programOptions = ProgramOptions.getInstance();
         SpotifySession spotifySession = SpotifySession.getInstance();
         Initialize(fileUtil, configMaps, programOptions, spotifySession);
+        Logger.setDebugOutput(programOptions.isDebugMode());
 
         if (args.length == 1) {
             switch (args[0]) {

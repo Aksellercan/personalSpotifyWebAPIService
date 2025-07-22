@@ -68,7 +68,7 @@ public class GUI extends Application {
     }
 
     @FXML
-    protected void OnChangeWindowButtonClick(ActionEvent event) {
+    protected void OnStartServerButtonClick(ActionEvent event) {
 //        stage = SavedScene.getInstance();
 //        if (stage.getScene() == null) { return;}
         Logger.DEBUG.Log("Event: " + event.toString());
@@ -80,7 +80,10 @@ public class GUI extends Application {
             Logger.DEBUG.Log("httpServer is null");
             httpServer = new HTTPServer(8080, 10);
         }
-        httpServer.StartServer();
+        if (!httpServer.getServerStatus()) {
+            httpServer.StartServer();
+        }
+        responseTextArea.setText("Server Status: Running");
 
         new Thread(() -> {
             try {
@@ -92,10 +95,10 @@ public class GUI extends Application {
                     Logger.DEBUG.Log("Refreshed " + (i+1) + (i+1 > 1 ? " times" : " time") + "...");
                     Thread.sleep(2500);
                 }
+                Logger.DEBUG.Log("Server Status: " + (httpServer.getServerStatus() ? "Running" : "Stopped"));
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            Logger.DEBUG.Log("Test: " + httpServer.isServerRunning());
         }).start();
     }
 
