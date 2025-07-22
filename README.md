@@ -12,6 +12,12 @@ Designed for both automated background execution and interactive command-line us
 
 ----------
 
+## Note
+
+Running JavaFX GUI requires JDK 24! Fortunately rest of the program can run using JDK 21.
+
+----------
+
 ## Features
 
 -   **OAuth2 Client Credentials and Refresh Token flow** for secure Spotify API access.
@@ -65,6 +71,33 @@ Designed for both automated background execution and interactive command-line us
 -   Automate playlist updates and syncing with the AutoMode.
     
 -   Customize logging output and debugging via config.
+
+-   All Commands and their use
+```bash
+Usage: program [OPTION]
+
+Options:
+  --req                                         Run requirement checks and exit
+  --auto-mode                                   Run auto mode functions
+  --gui                                         Launch GUI interface
+  --cli                                         Launch CLI interface normal mode
+  --cli-test                                    Launch CLI interface in test mode
+
+Usage: program --set [CONFIGURATION] <value>
+
+Configuration Options:
+  --playlist-id <id>                            Set default playlist ID
+  --userid <id>                                 Set Spotify user ID
+  --client-id <id>                              Set Spotify client ID
+  --client-secret <secret>                      Set Spotify client secret
+  --redirect-uri <uri>                          Set Spotify redirect URI
+  --refresh-token <token>                       Set refresh token for session
+
+Other:
+  --help                                        Display this help menu
+  --get-refresh-token <code> <redirect uri>     get refresh token
+```
+
     
 
 ## How to Automate
