@@ -1,7 +1,7 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
-import com.example.SpotifyWebAPI.Connection.Client_Credentials_Token;
-import com.example.SpotifyWebAPI.Connection.HTTPConnection;
+import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
+import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;

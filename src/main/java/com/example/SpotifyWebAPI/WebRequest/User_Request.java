@@ -1,6 +1,6 @@
 package com.example.SpotifyWebAPI.WebRequest;
 
-import com.example.SpotifyWebAPI.Connection.HTTPConnection;
+import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.Objects.Playlist;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;

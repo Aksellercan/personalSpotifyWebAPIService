@@ -1,8 +1,8 @@
 package com.example.SpotifyWebAPI.Run_Modes;
 
-import com.example.SpotifyWebAPI.Connection.Client_Credentials_Token;
-import com.example.SpotifyWebAPI.Connection.HTTPConnection;
-import com.example.SpotifyWebAPI.Connection.User_Access_Token;
+import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
+import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
+import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
 import com.example.SpotifyWebAPI.Tools.FileUtil;

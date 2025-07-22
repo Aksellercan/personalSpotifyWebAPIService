@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Connection;
+package com.example.SpotifyWebAPI.HTTP;
 
 import com.example.SpotifyWebAPI.Tools.Logger;
 import java.io.*;
@@ -26,30 +26,25 @@ public final class HTTPConnection {
         return debugOutput;
     }
 
-    public HttpURLConnection connectHTTP(String requestURL, String postType, String... Headers) {
-        try {
-            if (debugOutput) {
-                Logger.DEBUG.Log("requestURL: " + requestURL + "\n" + "postType: " + postType, false);
-                Logger.DEBUG.Log("Headers: ", false);
-            }
-            URL url = new URL(requestURL);
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            http.setRequestMethod(postType);
-            if (Headers.length % 2 != 0) {
-                throw new IllegalArgumentException("Invalid Headers");
-            } else {
-                for (int i = 0; i < Headers.length; i += 2) {
-                    if (debugOutput) {
-                        Logger.DEBUG.Log(Headers[i] + "\n" + Headers[i+1], false);
-                    }
-                    http.setRequestProperty(Headers[i], Headers[i + 1]);
-                }
-            }
-            return http;
-        } catch (IOException e) {
-            Logger.ERROR.LogException(e, "HTTP Connection Error", true);
-            throw new RuntimeException("Connection failed: " + e.getMessage());
+    public HttpURLConnection connectHTTP(String requestURL, String postType, String... Headers) throws IOException{
+        if (debugOutput) {
+            Logger.DEBUG.Log("requestURL: " + requestURL + "\n" + "postType: " + postType, false);
+            Logger.DEBUG.Log("Headers: ", false);
         }
+        URL url = new URL(requestURL);
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+        http.setRequestMethod(postType);
+        if (Headers.length % 2 != 0) {
+            throw new IllegalArgumentException("Invalid Headers");
+        } else {
+            for (int i = 0; i < Headers.length; i += 2) {
+                if (debugOutput) {
+                    Logger.DEBUG.Log(Headers[i] + "\n" + Headers[i+1], false);
+                }
+                http.setRequestProperty(Headers[i], Headers[i + 1]);
+            }
+        }
+        return http;
     }
 
     public void postBody(HttpURLConnection http, String postBody) {

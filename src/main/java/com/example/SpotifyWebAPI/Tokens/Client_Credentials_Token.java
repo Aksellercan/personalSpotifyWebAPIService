@@ -1,5 +1,6 @@
-package com.example.SpotifyWebAPI.Connection;
+package com.example.SpotifyWebAPI.Tokens;
 
+import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.fasterxml.jackson.databind.JsonNode;
