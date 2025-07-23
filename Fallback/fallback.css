@@ -43,6 +43,7 @@ main{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
     font-size:larger;
+    padding-bottom: 20px;
 }
 
 #labelBtn {
@@ -50,8 +51,6 @@ main{
     color: white;
     font-size:large;
 }
-
-
 
 .buttonClass {
     font-size:15px;

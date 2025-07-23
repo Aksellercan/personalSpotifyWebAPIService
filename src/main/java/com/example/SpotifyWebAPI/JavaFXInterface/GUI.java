@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
@@ -36,6 +37,8 @@ public class GUI extends Application {
         primaryStage.setOnCloseRequest(event -> {
             System.exit(0);
         });
+        primaryStage.getIcons().add(new Image("/Icons/appicon.png"));
+
 
         Logger.DEBUG.Log("Is Stage NULL? " + ((stage == null) ? "Yes" : "No") + ".");
 

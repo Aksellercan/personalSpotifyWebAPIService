@@ -1,29 +1,30 @@
 package com.example.SpotifyWebAPI.HTTP;
 
+import com.example.SpotifyWebAPI.HTTP.Enumerators.ContentType;
+import com.example.SpotifyWebAPI.HTTP.Enumerators.StatusCode;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import java.io.*;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 
-
 public class HTTPServer {
     protected static class ServerStatus {
         public volatile boolean isRunning = false;
     }
+
     ServerStatus serverStatus = new ServerStatus();
     public static Thread thread;
     private final int port;
     private final int backlog;
     private static Socket currentSocket;
-    private final File bodyPath = new File("Fallback");
-    private final File bodyFile = new File(bodyPath + File.separator + "fallback.html");
+    private final File sourceFolder = new File("Fallback");
+    private final File indexFile = new File(sourceFolder + File.separator + "index.html");
     private ServerSocket socket = null;
+    private final String serverName = "Spotify Web API HTTP Server";
 
     public HTTPServer(int port, int backlog) {
         this.port = port;
@@ -44,7 +45,7 @@ public class HTTPServer {
             if (thread.isInterrupted()) {
                 Logger.INFO.Log("Server Stopped.");
             } else {
-                throw new Exception("Failed to interrupt the thread.");
+                throw new InterruptedException("Failed to interrupt the thread.");
             }
             Logger.INFO.Log("Thread Info: " + thread.getName() + " | " + thread.getState() + " | " + thread.isAlive());
             return true;
@@ -77,7 +78,7 @@ public class HTTPServer {
     }
 
     private File GetRequestedFile(String fileNameWithExtension) {
-        File requestedFilePath = new File(bodyPath + File.separator + fileNameWithExtension);
+        File requestedFilePath = new File(sourceFolder + File.separator + fileNameWithExtension);
         if (!requestedFilePath.exists()) {
             Logger.WARN.Log("File " + fileNameWithExtension + " not found!");
             return null;
@@ -86,12 +87,20 @@ public class HTTPServer {
         return requestedFilePath;
     }
 
+    private File GetIndexPage() {
+        if (!indexFile.exists()) {
+            Logger.WARN.Log("File " + indexFile.getName() + " not found!");
+            return null;
+        }
+        return indexFile;
+    }
+
     private void StartListening() {
         try {
             serverStatus.isRunning = true;
             Logger.INFO.Log("Starting Server on port " + port);
             socket = new ServerSocket(port, backlog);
-            Logger.DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress());
+            Logger.DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress() + " InetAddress: " + socket.getInetAddress());
             Logger.DEBUG.Log("Socket local port: " + socket.getLocalPort());
             while (serverStatus.isRunning) {
                 Socket clientSocket = socket.accept();
@@ -139,16 +148,33 @@ public class HTTPServer {
                     Logger.INFO.Log("Request Headers: " + clientInputLine);
                 }
 
-                if (requestedFile.toString().contains("css")) SendStylesheet(out, body);
+                if (requestedFile.toString().contains("css"))
+                    PostResponse(out, body, ContentType.StyleSheet.getContentType(), StatusCode.Accepted.getStatusCode());
                 if (requestedFile.toString().trim().isEmpty()) {
-                    String htmlBody = ResponseBody(bodyFile, StandardCharsets.UTF_8);
-                    SendHTML(out, htmlBody);
+                    File htmlFile = GetIndexPage();
+                    String htmlBody;
+                    String statusCode;
+                    String contentType;
+                    if (htmlFile != null) {
+                        contentType = ContentType.HTML.getContentType();
+                        statusCode = StatusCode.OK.getStatusCode();
+                        htmlBody = ResponseBody(htmlFile, StandardCharsets.UTF_8);
+                    } else {
+                        contentType = ContentType.TextPlain.getContentType();
+                        statusCode = StatusCode.NotFound.getStatusCode();
+                        htmlBody = "404 Not Found";
+                    }
+                    PostResponse(out, htmlBody, contentType, statusCode);
                 }
-                if (requestedFile.toString().contains("js")) SendScript(out, body);
-                if (requestedFile.toString().contains("ico")) SendImage(out, body);
+                if (requestedFile.toString().contains("html"))
+                    PostResponse(out, body, ContentType.HTML.getContentType(), StatusCode.Accepted.getStatusCode());
+                if (requestedFile.toString().contains("js"))
+                    PostResponse(out, body, ContentType.JavaScript.getContentType(), StatusCode.Accepted.getStatusCode());
+                if (requestedFile.toString().contains("ico"))
+                    PostResponse(out, body, ContentType.ImageXIcon.getContentType(), StatusCode.Accepted.getStatusCode());
             }
         } catch (Exception ex) {
-            Logger.ERROR.LogException(ex, "Port " + port + " backlog limit: " + 10);
+            Logger.CRITICAL.LogException(ex, "Port " + port + " backlog limit: " + 10);
         } finally {
             try {
                 if (socket == null) {
@@ -163,56 +189,14 @@ public class HTTPServer {
         }
     }
 
-    private void SendScript(BufferedWriter out, String body) throws IOException {
+    private void PostResponse(BufferedWriter out, String body, String contentType, String statusCode) throws IOException {
         int bodyLength = body.length();
         Logger.DEBUG.Log("Body Length: " + bodyLength);
         LocalDateTime now = LocalDateTime.now();
-        out.write("HTTP/1.0 200 OK\r\n");
+        out.write("HTTP/1.0 "+ statusCode +"\r\n");
         out.write("Date: " + now + "\r\n");
-        out.write("Server: Custom Server\r\n");
-        out.write("Content-Type: text/javascript\r\n");
-        out.write("Content-Length: " + bodyLength + "\r\n");
-        out.write("\r\n");
-        out.write(body);
-        out.close();
-    }
-
-    private void SendStylesheet(BufferedWriter out, String body) throws IOException {
-        int bodyLength = body.length();
-        Logger.DEBUG.Log("Body Length: " + bodyLength);
-        LocalDateTime now = LocalDateTime.now();
-        out.write("HTTP/1.0 200 OK\r\n");
-        out.write("Date: " + now + "\r\n");
-        out.write("Server: Custom Server\r\n");
-        out.write("Content-Type: text/css\r\n");
-        out.write("Content-Length: " + bodyLength + "\r\n");
-        out.write("\r\n");
-        out.write(body);
-        out.close();
-    }
-
-    private void SendHTML(BufferedWriter out, String body) throws IOException {
-        int bodyLength = body.length();
-        Logger.DEBUG.Log("Body Length: " + bodyLength);
-        LocalDateTime now = LocalDateTime.now();
-        out.write("HTTP/1.0 200 OK\r\n");
-        out.write("Date: " + now + "\r\n");
-        out.write("Server: Custom Server\r\n");
-        out.write("Content-Type: text/html\r\n");
-        out.write("Content-Length: " + bodyLength + "\r\n");
-        out.write("\r\n");
-        out.write(body);
-        out.close();
-    }
-
-    private void SendImage(BufferedWriter out, String body) throws IOException {
-        int bodyLength = body.length();
-        Logger.DEBUG.Log("Body Length: " + bodyLength);
-        LocalDateTime now = LocalDateTime.now();
-        out.write("HTTP/1.0 200 OK\r\n");
-        out.write("Date: " + now + "\r\n");
-        out.write("Server: Custom Server\r\n");
-        out.write("Content-Type: image/x-icon\r\n");
+        out.write("Server: " + serverName + "\r\n");
+        out.write("Content-Type: " + contentType + "\r\n");
         out.write("Content-Length: " + bodyLength + "\r\n");
         out.write("\r\n");
         out.write(body);
