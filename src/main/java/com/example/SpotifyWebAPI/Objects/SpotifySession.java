@@ -10,6 +10,7 @@ public final class SpotifySession {
     private String token_type;
     private String refresh_token;
     private String code;
+    private String playlist_id;//test
 
     private SpotifySession() {}
 
@@ -46,8 +47,14 @@ public final class SpotifySession {
     public String getCode() {
         return code;
     }
+    public String getPlaylist_id() {
+        return playlist_id;
+    }
 
     //setters
+    public void setPlaylist_id(String playlist_id) {
+        this.playlist_id = playlist_id;
+    }
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }

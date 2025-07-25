@@ -44,3 +44,6 @@ Config/
 Config/*
 Logs/
 Logs/*
+#temporary
+src/main/resources/Icons/
+src/main/resources/Icons/*

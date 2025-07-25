@@ -16,11 +16,11 @@ public class HTTPServer {
         public volatile boolean isRunning = false;
     }
 
-    ServerStatus serverStatus = new ServerStatus();
+    static ServerStatus serverStatus = new ServerStatus();
     public static Thread thread;
     private final int port;
     private final int backlog;
-    private static Socket currentSocket;
+    private Socket currentSocket;
     private final File sourceFolder = new File("Fallback");
     private final File indexFile = new File(sourceFolder + File.separator + "index.html");
     private ServerSocket socket = null;
@@ -56,11 +56,11 @@ public class HTTPServer {
     }
 
     public Socket getSocket() {
-        return currentSocket;
+        return this.currentSocket;
     }
 
     private void setSocket(Socket socket) {
-        currentSocket = socket;
+        this.currentSocket = socket;
     }
 
     public void StartServer() {

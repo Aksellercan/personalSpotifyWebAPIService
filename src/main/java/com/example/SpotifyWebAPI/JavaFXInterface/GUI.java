@@ -1,5 +1,7 @@
 package com.example.SpotifyWebAPI.JavaFXInterface;
 
+import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
+import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
@@ -9,7 +11,6 @@ import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
@@ -37,55 +38,52 @@ public class GUI extends Application {
         primaryStage.setOnCloseRequest(event -> {
             System.exit(0);
         });
-        primaryStage.getIcons().add(new Image("/Icons/appicon.png"));
+//        primaryStage.getIcons().add(new Image("/Icons/appicon.png"));
 
 
         Logger.DEBUG.Log("Is Stage NULL? " + ((stage == null) ? "Yes" : "No") + ".");
 
-        Parent root = setFXMLFile("PrimaryPage");
+        Parent root = SceneActions.setFXMLFile("PrimaryPage");
 
         Scene window = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
-        setStyleSheet(window, "PrimaryPage");
+        SceneActions.setStyleSheet(window, "PrimaryPage");
         primaryStage.setScene(window);
         primaryStage.show();
         stage.setScene(primaryStage);
     }
 
-    private void setStyleSheet(Scene scene, String styleSheetName) {
-        try {
-            scene.getStylesheets().add(getClass().getResource("/Styles/" + styleSheetName + ".css").toExternalForm());
-        } catch (Exception e) {
-            Logger.ERROR.LogException(e, "Cannot load stylesheet");
+    @FXML
+    protected void OnChangeSceneButton(ActionEvent event) {
+        stage = SavedScene.getInstance();
+        if (stage.getScene() == null) {
+            return;
         }
-    }
-
-    private Parent setFXMLFile(String fxmlFilename) {
-        try {
-            return FXMLLoader.load(getClass().getResource("/Layouts/" + fxmlFilename + ".fxml"));
-        } catch (Exception e) {
-            Logger.ERROR.LogException(e, "Cannot load FXML");
-            return null;
+        Parent root = SceneActions.setFXMLFile("SecondPage");
+        if (root == null) {
+            Logger.CRITICAL.Log("FXML root is null");
+            return;
         }
+        Scene window = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+        SceneActions.setStyleSheet(window, "PrimaryPage");
+        stage.getScene().setScene(window);
     }
 
     @FXML
     protected void OnStartServerButtonClick(ActionEvent event) {
-//        stage = SavedScene.getInstance();
-//        if (stage.getScene() == null) { return;}
         Logger.DEBUG.Log("Event: " + event.toString());
-//        Parent root = setFXMLFile("SecondPage");
-//        Scene window = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-//        setStyleSheet(window, "PrimaryPage");
-//        stage.getScene().setScene(window);
+        if (SaveHTTPState.getServer() != null) {
+            Logger.INFO.Log("Server already initialized");
+            httpServer = SaveHTTPState.getServer();
+            return;
+        }
         if (httpServer == null) {
             Logger.DEBUG.Log("httpServer is null");
-            httpServer = new HTTPServer(8080, 10);
+            httpServer = new HTTPServer(0, 10);
         }
         if (!httpServer.getServerStatus()) {
             httpServer.StartServer();
         }
         responseTextArea.setText("Server Status: Running");
-
         new Thread(() -> {
             try {
                 for (int i = 0; i < 10; i++) {
@@ -93,10 +91,11 @@ public class GUI extends Application {
                         responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() + "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
                         break;
                     }
-                    Logger.DEBUG.Log("Refreshed " + (i+1) + (i+1 > 1 ? " times" : " time") + "...");
+                    Logger.DEBUG.Log("Refreshed " + (i + 1) + (i + 1 > 1 ? " times" : " time") + "...");
                     Thread.sleep(2500);
                 }
                 Logger.DEBUG.Log("Server Status: " + (httpServer.getServerStatus() ? "Running" : "Stopped"));
+                SaveHTTPState.setServer(httpServer);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -113,6 +112,7 @@ public class GUI extends Application {
         try {
             if (httpServer.StopServer()) {
                 responseTextArea.setText("HTTP Server Stopped");
+                SaveHTTPState.setServer(null);
             } else {
                 responseTextArea.setText("Cannot stop the server");
             }

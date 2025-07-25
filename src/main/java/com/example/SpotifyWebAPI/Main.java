@@ -1,6 +1,5 @@
 package com.example.SpotifyWebAPI;
 
-import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.JavaFXInterface.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
