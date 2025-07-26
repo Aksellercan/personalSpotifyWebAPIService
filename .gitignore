@@ -47,3 +47,5 @@ Logs/*
 #temporary
 src/main/resources/Icons/
 src/main/resources/Icons/*
+src/main/resources/Styles/
+src/main/resources/Styles/*

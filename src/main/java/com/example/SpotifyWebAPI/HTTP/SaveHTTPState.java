@@ -1,5 +1,7 @@
 package com.example.SpotifyWebAPI.HTTP;
 
+import java.util.HashMap;
+
 /*
 Saves HTTP Server state allowing creation of multiple instances of HTTP Servers
 Adding a Hashmap with port/id binding, a hashset or a simple array to store all instances in one object
@@ -10,14 +12,27 @@ Saving state to an object with array = Maybe more complex, allows multiple insta
 */
 public final class SaveHTTPState {
     private static HTTPServer server;
+    private static final HashMap<String,HTTPServer> stringHTTPServerHashSet = new HashMap<String, HTTPServer>();
 
     private SaveHTTPState() {}
 
-    public static HTTPServer getServer() {
-        return server;
+    public static int getHashMapSize() {
+        return stringHTTPServerHashSet.size();
     }
 
-    public static void setServer(HTTPServer server) {
-        SaveHTTPState.server = server;
+    public static HTTPServer getServer(String serverName) {
+        return stringHTTPServerHashSet.get(serverName);
+    }
+
+    public static void removeServer(String serverName) {
+        stringHTTPServerHashSet.remove(serverName);
+    }
+
+    public static void addHTTPServerToHashMap(String serverName, HTTPServer httpServer) {
+        SaveHTTPState.stringHTTPServerHashSet.put(serverName, httpServer);
+    }
+
+    public static HashMap<String, HTTPServer> getStringHTTPServerHashSet() {
+        return stringHTTPServerHashSet;
     }
 }

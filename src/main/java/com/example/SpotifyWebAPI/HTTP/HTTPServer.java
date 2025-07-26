@@ -16,7 +16,7 @@ public class HTTPServer {
         public volatile boolean isRunning = false;
     }
 
-    static ServerStatus serverStatus = new ServerStatus();
+    ServerStatus serverStatus = new ServerStatus();
     public static Thread thread;
     private final int port;
     private final int backlog;
@@ -47,7 +47,7 @@ public class HTTPServer {
             } else {
                 throw new InterruptedException("Failed to interrupt the thread.");
             }
-            Logger.INFO.Log("Thread Info: " + thread.getName() + " | " + thread.getState() + " | " + thread.isAlive());
+            Logger.INFO.Log("Stopped Thread Info: " + thread.getName() + " | " + thread.getState() + " | " + thread.isAlive());
             return true;
         } catch (Exception ex) {
             Logger.CRITICAL.LogException(ex, "Cannot close socket");
@@ -66,6 +66,7 @@ public class HTTPServer {
     public void StartServer() {
         thread = new Thread(this::StartListening);
         thread.start();
+        thread.setName("HTTPServerProcess");
         Logger.DEBUG.Log("Thread Info: " + thread.getName() + " | " + thread.getState() + " | " + thread.isAlive());
     }
 
@@ -104,7 +105,7 @@ public class HTTPServer {
             Logger.DEBUG.Log("Socket local port: " + socket.getLocalPort());
             while (serverStatus.isRunning) {
                 Socket clientSocket = socket.accept();
-                if (!serverStatus.isRunning) {
+                if (thread.isInterrupted() || !serverStatus.isRunning) {
                     break;
                 }
                 setSocket(clientSocket);

@@ -38,7 +38,7 @@ public class GUI extends Application {
         primaryStage.setOnCloseRequest(event -> {
             System.exit(0);
         });
-//        primaryStage.getIcons().add(new Image("/Icons/appicon.png"));
+        primaryStage.getIcons().add(new Image("/Icons/appicon.png"));
 
 
         Logger.DEBUG.Log("Is Stage NULL? " + ((stage == null) ? "Yes" : "No") + ".");
@@ -71,20 +71,24 @@ public class GUI extends Application {
     @FXML
     protected void OnStartServerButtonClick(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        if (SaveHTTPState.getServer() != null) {
+        if (SaveHTTPState.getHashMapSize() != 0) {
             Logger.INFO.Log("Server already initialized");
-            httpServer = SaveHTTPState.getServer();
+            httpServer = SaveHTTPState.getServer("Fallback");
+            if (httpServer.getSocket() != null)
+                responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() + "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
             return;
         }
         if (httpServer == null) {
             Logger.DEBUG.Log("httpServer is null");
             httpServer = new HTTPServer(0, 10);
+            SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
         }
         if (!httpServer.getServerStatus()) {
             httpServer.StartServer();
         }
+        SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
         responseTextArea.setText("Server Status: Running");
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 for (int i = 0; i < 10; i++) {
                     if (httpServer.getSocket() != null) {
@@ -95,11 +99,14 @@ public class GUI extends Application {
                     Thread.sleep(2500);
                 }
                 Logger.DEBUG.Log("Server Status: " + (httpServer.getServerStatus() ? "Running" : "Stopped"));
-                SaveHTTPState.setServer(httpServer);
+                SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        }).start();
+        });
+        t.start();
+
+        Logger.DEBUG.Log("Active Thread Count: " + Thread.activeCount());
     }
 
     @FXML
@@ -112,7 +119,7 @@ public class GUI extends Application {
         try {
             if (httpServer.StopServer()) {
                 responseTextArea.setText("HTTP Server Stopped");
-                SaveHTTPState.setServer(null);
+                SaveHTTPState.removeServer("Fallback");
             } else {
                 responseTextArea.setText("Cannot stop the server");
             }
