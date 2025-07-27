@@ -1,16 +1,12 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
-import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import java.util.Scanner;
 
 public class MainMenu {
     private final ProgramOptions programOptions = ProgramOptions.getInstance();
-    private final SpotifySession spotifySession = SpotifySession.getInstance();
-    private HelperFunctions helperFunctions;
     private final FileUtil fileUtil;
 
     public MainMenu (FileUtil fileUtil) {
@@ -19,7 +15,7 @@ public class MainMenu {
 
     public void userInterface() {
         Scanner scanner = new Scanner(System.in);
-        helperFunctions = new HelperFunctions(scanner);
+        HelperFunctions helperFunctions = new HelperFunctions(scanner);
         helperFunctions.checkClientCredentials();
         helperFunctions.setFileUtil(fileUtil);
         while (true) {
@@ -29,7 +25,8 @@ public class MainMenu {
             System.out.println("2. Oauth2 Functions");
             System.out.println("3. Set Http Debug Output" + (programOptions.isDebugMode() ? " - Debug Output Enabled" : ""));
             System.out.println("4. Set Auto Mode" + (programOptions.isAutoMode() ? " - Auto Mode Enabled, Program won't launch to CLI on next run" : ""));
-            System.out.println("5. Save Config");
+            System.out.println("5. Set GUI Mode" + (programOptions.LAUNCH_GUI() ? " - GUI Enabled" : ""));
+            System.out.println("6. Save Config");
             System.out.println("0. Exit the program" + (programOptions.isChangesSaved() ? "" : " - Changes not saved"));
             switch (scanner.nextLine()) {
                 case "1":
@@ -41,7 +38,6 @@ public class MainMenu {
                     userRequestsMenu.Oauth2_Functions();
                     break;
                 case "3":
-                    HTTPConnection  httpConnection = HTTPConnection.getInstance();
                     System.out.println("Set Http Debug Output:\nCurrent State is " + programOptions.isDebugMode() +
                             "\nPress y to enable debug output\nPress n to disable debug output");
                     if (scanner.nextLine().equals("y")) {
@@ -71,6 +67,21 @@ public class MainMenu {
                     }
                     break;
                 case "5":
+                    System.out.println("Set GUI Mode:\nCurrent State is " + programOptions.LAUNCH_GUI() +
+                            "\nPress y to enable GUI\nPress n to disable GUI");
+                    if (scanner.nextLine().equals("y")) {
+                        if (!programOptions.LAUNCH_GUI()) {
+                            programOptions.setChangesSaved(false);
+                        }
+                        programOptions.setLAUNCH_GUI(true);
+                        Logger.INFO.Log("GUI set to true");
+                    } else {
+                        programOptions.setChangesSaved(false);
+                        programOptions.setLAUNCH_GUI(false);
+                        System.out.println("GUI set to false");
+                    }
+                    break;
+                case "6":
                     System.out.println("Saving Config...");
                     helperFunctions.saveConfig();
                     break;

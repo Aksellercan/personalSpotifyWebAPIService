@@ -60,16 +60,16 @@ public class HelperFunctions {
 
     public void saveConfig() {
         fileUtil.writeConfig("client_id", spotifySession.getClient_id(), "client_secret", spotifySession.getClient_secret(), "redirect_uri",
-                spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id",programOptions.getPlaylist_id(), "auto_mode",
-                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(programOptions.isDebugMode()),"user_id",spotifySession.getUser_id());
+                spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id",spotifySession.getPlaylist_id(), "auto_mode",
+                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(programOptions.isDebugMode()),
+                "user_id",spotifySession.getUser_id(),"launch_gui", Boolean.toString(programOptions.LAUNCH_GUI()));
         programOptions.setChangesSaved(true);
     }
-
 
     public void getPlaylistItems(User_Request userRequest) {
         int offset = 0;
         int limit = 10;
-        String playlist_id = programOptions.getPlaylist_id();
+        String playlist_id = spotifySession.getPlaylist_id();
         while (checkIfNullOrEmpty(playlist_id)) {
             System.out.println("Enter Playlist ID:");
             playlist_id = scanner.nextLine().trim();
@@ -79,7 +79,7 @@ public class HelperFunctions {
         if (scanner.nextLine().equals("y")) {
             System.out.println("Enter new Playlist ID:");
             playlist_id = scanner.nextLine();
-            programOptions.setPlaylist_id(playlist_id);
+            spotifySession.setPlaylist_id(playlist_id);
             programOptions.setChangesSaved(false);
         }
         System.out.println("Enter offset (default 0):");
@@ -139,11 +139,11 @@ public class HelperFunctions {
     }
 
     public void setPlaylistDetails(User_Request userRequest) {
-        String playlist_id = programOptions.getPlaylist_id();
+        String playlist_id = spotifySession.getPlaylist_id();
         while (checkIfNullOrEmpty(playlist_id)) {
             System.out.println("Enter Playlist ID:");
             playlist_id = scanner.nextLine().trim();
-            programOptions.setPlaylist_id(playlist_id);
+            spotifySession.setPlaylist_id(playlist_id);
             programOptions.setChangesSaved(false);
         }
         String newName = null;
@@ -179,7 +179,7 @@ public class HelperFunctions {
     public void setupAutoMode() {
         while (((checkIfNullOrEmpty(spotifySession.getRefresh_token())) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri())))
                 || ((checkIfNullOrEmpty(spotifySession.getClient_id())) ||
-                (checkIfNullOrEmpty(spotifySession.getClient_secret()))) || (checkIfNullOrEmpty(programOptions.getPlaylist_id())) ||
+                (checkIfNullOrEmpty(spotifySession.getClient_secret()))) || (checkIfNullOrEmpty(spotifySession.getPlaylist_id())) ||
                 (checkIfNullOrEmpty(spotifySession.getUser_id()))) {
             programOptions.setChangesSaved(false);
             if (checkIfNullOrEmpty(spotifySession.getUser_id())) {
@@ -212,10 +212,10 @@ public class HelperFunctions {
                 spotifySession.setRedirect_uri(redirect_uri);
                 continue;
             }
-            if (checkIfNullOrEmpty(programOptions.getPlaylist_id())) {
+            if (checkIfNullOrEmpty(spotifySession.getPlaylist_id())) {
                 System.out.println("Enter Playlist ID:");
                 String playlist_id = scanner.nextLine().trim();
-                programOptions.setPlaylist_id(playlist_id);
+                spotifySession.setPlaylist_id(playlist_id);
             }
         }
         saveConfig();

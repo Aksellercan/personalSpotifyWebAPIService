@@ -1,6 +1,5 @@
 package com.example.SpotifyWebAPI.JavaFXInterface;
 
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public final class SavedScene {

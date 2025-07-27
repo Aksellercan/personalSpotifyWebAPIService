@@ -4,7 +4,6 @@ import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
 import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
-import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
@@ -19,7 +18,6 @@ import javafx.stage.Stage;
 
 public class GUI extends Application {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
-    private final ProgramOptions programOptions = ProgramOptions.getInstance();
     private final Client_Credentials_Token client_credentials_token = new Client_Credentials_Token();
     private final Client_Credentials_Request clientCredentials_Request = new Client_Credentials_Request();
     private HTTPServer httpServer = new HTTPServer(8080, 10);
@@ -141,7 +139,7 @@ public class GUI extends Application {
             responseTextArea.setText("Access token is null");
             return;
         }
-        clientCredentials_Request.getPlaylist(programOptions.getPlaylist_id());
+        clientCredentials_Request.getPlaylist(spotifySession.getPlaylist_id());
         Logger.DEBUG.Log("Event: " + event.toString());
         responseTextArea.setText("Playlist:\n" + "Name: " + clientCredentials_Request.getplaylistName() +
                 "\nDescription: " + clientCredentials_Request.getplaylistDescription() + "\nSize: " + clientCredentials_Request.getplaylistSize());

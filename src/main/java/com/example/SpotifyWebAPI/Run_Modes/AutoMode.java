@@ -1,6 +1,5 @@
 package com.example.SpotifyWebAPI.Run_Modes;
 
-import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
@@ -19,9 +18,9 @@ public class AutoMode {
     private String refresh_token;
     private String playlist_id;
     private boolean auto_mode;
-    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final ConfigMaps configMaps;
     private final FileUtil fileUtil;
+    private boolean launch_gui;
 
     public AutoMode(FileUtil fileUtil, ConfigMaps configMaps) {
         this.configMaps = configMaps;
@@ -36,6 +35,8 @@ public class AutoMode {
         refresh_token = configMaps.getRefresh_token();
         playlist_id = configMaps.getPlaylist_id();
         auto_mode = configMaps.isAutoMode();
+        launch_gui = (configMaps.isLaunchGui() == null || Boolean.parseBoolean(configMaps.isLaunchGui()));
+
         Logger.setDebugOutput(configMaps.isOutputDebug());
     }
 
@@ -80,7 +81,7 @@ public class AutoMode {
                 auto_mode = false;
                 fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
                         redirect_uri, "refresh_token", refresh_token, "playlist_id", userRequest.getPlaylist().getPlaylist_id(), "auto_mode",
-                        Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()), "user_id",user_id);
+                        Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()), "user_id",user_id, "launch_gui", Boolean.toString(launch_gui));
                 return;
             } else if (playlistSize == readDescCount) {
                 Logger.INFO.Log("Playlist size is already set to " + playlistSize);

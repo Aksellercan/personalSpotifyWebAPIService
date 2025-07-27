@@ -1,6 +1,6 @@
 package com.example.SpotifyWebAPI.Objects;
 
-public class HTTPSettings { //either singleton or dependency injection
+public class HTTPSettings {
     private int serverPort = 8080;
     private int backlog_limit = 10;
     private String serverName = "Spotify Web API HTTP 1.0 Server";

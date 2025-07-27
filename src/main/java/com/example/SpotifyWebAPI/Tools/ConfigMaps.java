@@ -12,15 +12,21 @@ public class ConfigMaps {
     private boolean output_debug;
     private boolean auto_mode;
     private String user_id;
+    private String launch_gui;
 
     public ConfigMaps(HashMap<String,String> configMap) {
         this.configMap = configMap;
     }
 
+    public String isLaunchGui() {
+        if (launch_gui == null) {
+            return null;
+        }
+        return launch_gui;
+    }
     public String getUser_id() {
         return user_id;
     }
-
     public String getClient_id() {
         return client_id;
     }
@@ -75,6 +81,9 @@ public class ConfigMaps {
                         break;
                     case "auto_mode":
                         this.auto_mode = Boolean.parseBoolean(value);
+                        break;
+                    case "launch_gui":
+                        this.launch_gui = value;
                         break;
                 }
             } else {

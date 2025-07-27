@@ -151,6 +151,7 @@ Logger Example Output:
 1. HTTP Server won't truly shut down unless another GET request is sent
 2. HTTP Server Logs should be separate to avoid clutter in log files
 3. ```httpServer.getSocket()``` causes NullPointerException because ```socket.accept()``` blocks the process until it receives a request
+4. HTTP Server can't navigate folders currently
 
 ----------
 

@@ -20,11 +20,11 @@ public class CLI_Interface {
     private String refresh_token;
     private String code;
     private String playlist_id;
-    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final Scanner scanner = new Scanner(System.in);
     private final FileUtil fileUtil;
     private final ConfigMaps configMaps;
     private boolean auto_mode = false;
+    private boolean launch_gui = false;
     private boolean changesSaved = true;
 
     public CLI_Interface(FileUtil fileUtil, ConfigMaps configMaps) {
@@ -47,6 +47,8 @@ public class CLI_Interface {
         spotify_session.setUser_id(user_id);
         spotify_session.setRedirect_uri(redirect_uri);
         spotify_session.setRefresh_token(refresh_token);
+        launch_gui = (configMaps.isLaunchGui() == null || Boolean.parseBoolean(configMaps.isLaunchGui()));
+
     }
 
     public void initSession() {
@@ -81,7 +83,8 @@ public class CLI_Interface {
             System.out.println("2. Oauth2 Functions");
             System.out.println("3. Set Http Debug Output" + (Logger.getDebugOutput() ? " - Debug Output Enabled" : ""));
             System.out.println("4. Set Auto Mode" + (auto_mode ? " - Auto Mode Enabled, Program won't launch to CLI on next run" : ""));
-            System.out.println("5. Save Config");
+            System.out.println("5. Set GUI Mode" + (launch_gui ? " - GUI Enabled" : ""));
+            System.out.println("6. Save Config");
             System.out.println("0. Exit the program" + (changesSaved ? "" : " - Changes not saved"));
             switch (scanner.nextLine()) {
                 case "1":
@@ -118,6 +121,21 @@ public class CLI_Interface {
                     }
                     break;
                 case "5":
+                    System.out.println("Set GUI Mode:\nCurrent State is " + launch_gui +
+                            "\nPress y to enable GUI\nPress n to disable GUI");
+                    if (scanner.nextLine().equals("y")) {
+                        if (!launch_gui) {
+                            changesSaved = false;
+                        }
+                        launch_gui = true;
+                        System.out.println("GUI Mode set to true");
+                    } else {
+                        launch_gui = false;
+                        System.out.println("GUI Mode set to false");
+                        changesSaved = false;
+                    }
+                    break;
+                case "6":
                     System.out.println("Saving Config...");
                     saveConfig();
                     break;
@@ -178,7 +196,7 @@ public class CLI_Interface {
     private void saveConfig() {
         fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
                 redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
-                Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()),"user_id",user_id);
+                Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()),"user_id",user_id, "launch_gui", Boolean.toString(launch_gui));
         changesSaved = true;
     }
 

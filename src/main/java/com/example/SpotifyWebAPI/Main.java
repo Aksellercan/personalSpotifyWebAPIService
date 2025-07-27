@@ -13,14 +13,14 @@ import com.example.SpotifyWebAPI.Tools.Logger;
 
 public class Main {
 
-    private static void AutoModeRequirementCheck(ProgramOptions programOptions, SpotifySession spotifySession) {
+    private static void AutoModeRequirementCheck(SpotifySession spotifySession) {
         System.out.println("Auto Mode Requirement Check");
         System.out.println((spotifySession.getUser_id() == null ? "User ID not set!" : "Set User ID: " + spotifySession.getUser_id()));
         System.out.println((spotifySession.getClient_id() == null ? "Client ID not set!" : "Set Client ID: " + spotifySession.getClient_id()));
         System.out.println((spotifySession.getClient_secret() == null ? "Client Secret not set!" : "Set Client Secret: " + spotifySession.getClient_secret()));
         System.out.println((spotifySession.getRedirect_uri() == null ? "Redirect URI not set!" : "Set Redirect URI: " + spotifySession.getRedirect_uri()));
         System.out.println((spotifySession.getRefresh_token() == null ? "Refresh Token not set!" : "Set Refresh Token: " + spotifySession.getRefresh_token()));
-        System.out.println((programOptions.getPlaylist_id() == null) ? "Playlist ID not set!" : "Set Playlist ID: " + programOptions.getPlaylist_id());
+        System.out.println((spotifySession.getPlaylist_id() == null) ? "Playlist ID not set!" : "Set Playlist ID: " + spotifySession.getPlaylist_id());
     }
 
     private static void HelpMenu() {
@@ -46,22 +46,24 @@ public class Main {
 
     private static void SaveConfig(FileUtil fileUtil, SpotifySession spotifySession, ProgramOptions programOptions) {
         fileUtil.writeConfig("client_id", spotifySession.getClient_id(), "client_secret", spotifySession.getClient_secret(), "redirect_uri",
-                spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id", programOptions.getPlaylist_id(), "auto_mode",
-                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(programOptions.isDebugMode()), "user_id", spotifySession.getUser_id());
+                spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id", spotifySession.getPlaylist_id(), "auto_mode",
+                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(programOptions.isDebugMode()),
+                "user_id", spotifySession.getUser_id(),"launch_gui", Boolean.toString(programOptions.LAUNCH_GUI()));
     }
 
     private static void Initialize(FileUtil fileUtil, ConfigMaps configMaps, ProgramOptions programOptions, SpotifySession spotifySession) {
         fileUtil.readConfig();
-        configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id");
+        configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id", "launch_gui");
         programOptions.setAutoMode(configMaps.isAutoMode());
         programOptions.setDebugMode(configMaps.isOutputDebug());
-        programOptions.setPlaylist_id(configMaps.getPlaylist_id());
+        spotifySession.setPlaylist_id(configMaps.getPlaylist_id());
         Logger.setDebugOutput(programOptions.isDebugMode());
         spotifySession.setClient_id(configMaps.getClient_id());
         spotifySession.setClient_secret(configMaps.getClient_secret());
         spotifySession.setRedirect_uri(configMaps.getRedirect_uri());
         spotifySession.setRefresh_token(configMaps.getRefresh_token());
         spotifySession.setUser_id(configMaps.getUser_id());
+        programOptions.setLAUNCH_GUI((configMaps.isLaunchGui() == null ? programOptions.LAUNCH_GUI() : Boolean.parseBoolean(configMaps.isLaunchGui())));
     }
 
     public static void main(String[] args) {
@@ -71,16 +73,27 @@ public class Main {
         SpotifySession spotifySession = SpotifySession.getInstance();
         Initialize(fileUtil, configMaps, programOptions, spotifySession);
 
+        if (args.length == 0) {
+            if (programOptions.LAUNCH_GUI()) {
+                GUI.launch(GUI.class, args);
+                return;
+            } else {
+                MainMenu mainMenu = new MainMenu(fileUtil);
+                mainMenu.userInterface();
+                return;
+            }
+        }
+
         if (args.length == 1) {
             switch (args[0]) {
                 case "--gui":
                     GUI.launch(GUI.class, args);
                     return;
                 case "--req":
-                    AutoModeRequirementCheck(programOptions, spotifySession);
+                    AutoModeRequirementCheck(spotifySession);
                     return;
                 case "--auto-mode":
-                    if (programOptions.getPlaylist_id() == null || spotifySession.getRefresh_token() == null
+                    if (spotifySession.getPlaylist_id() == null || spotifySession.getRefresh_token() == null
                             || spotifySession.getUser_id() == null ||  spotifySession.getClient_id() == null
                             || spotifySession.getClient_secret() == null || spotifySession.getRedirect_uri() == null) {
                         System.out.println("Required parameters not set!");
@@ -109,7 +122,7 @@ public class Main {
             if (args[0].equals("--set")) {
                 switch (args[1]) {
                     case "--playlist-id":
-                        programOptions.setPlaylist_id(args[2].trim());
+                        spotifySession.setPlaylist_id(args[2].trim());
                         SaveConfig(fileUtil, spotifySession, programOptions);
                         return;
                     case "--userid":

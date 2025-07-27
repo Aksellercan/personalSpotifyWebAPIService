@@ -5,8 +5,7 @@ public final class ProgramOptions {
     private boolean AUTO_MODE;
     private boolean DEBUG_MODE;
     private boolean CHANGES_SAVED = true;
-    private boolean LAUNCH_GUI;
-    private String playlist_id;//test
+    private boolean LAUNCH_GUI = true;
 
     private ProgramOptions() {}
 
@@ -26,12 +25,8 @@ public final class ProgramOptions {
     public boolean isDebugMode() {
         return DEBUG_MODE;
     }
-
     public boolean isChangesSaved() {
         return CHANGES_SAVED;
-    }
-    public String getPlaylist_id() {
-        return playlist_id;
     }
 
     public void setAutoMode(boolean autoMode) {
@@ -42,9 +37,6 @@ public final class ProgramOptions {
     }
     public void setChangesSaved(boolean changesSaved) {
         this.CHANGES_SAVED = changesSaved;
-    }
-    public void setPlaylist_id(String playlist_id) {
-        this.playlist_id = playlist_id;
     }
     public void setLAUNCH_GUI(boolean LAUNCH_GUI) {
         this.LAUNCH_GUI = LAUNCH_GUI;

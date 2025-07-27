@@ -10,7 +10,7 @@ public final class SpotifySession {
     private String token_type;
     private String refresh_token;
     private String code;
-    private String playlist_id;//test
+    private String playlist_id;
 
     private SpotifySession() {}
 

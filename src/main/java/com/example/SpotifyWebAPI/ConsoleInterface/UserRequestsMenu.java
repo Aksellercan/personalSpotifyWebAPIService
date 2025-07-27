@@ -1,6 +1,5 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
-import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
@@ -12,7 +11,6 @@ import java.util.Scanner;
 
 public class UserRequestsMenu {
     private final SpotifySession spotify_session = SpotifySession.getInstance();
-    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final Scanner scanner;
     private final ProgramOptions programOptions = ProgramOptions.getInstance();
     private final HelperFunctions helperFunctions;
@@ -100,9 +98,9 @@ public class UserRequestsMenu {
                         userRequest.addPlaylistItems(chosenPlaylist, position, helperFunctions.addTrackUri(), false);
                         break;
                     }
-                    System.out.println("Adding to playlist: " + programOptions.getPlaylist_id());
+                    System.out.println("Adding to playlist: " + spotify_session.getPlaylist_id());
                     position = helperFunctions.setPosition();
-                    userRequest.addPlaylistItems(programOptions.getPlaylist_id(), position, helperFunctions.addTrackUri(), false);
+                    userRequest.addPlaylistItems(spotify_session.getPlaylist_id(), position, helperFunctions.addTrackUri(), false);
                     break;
                 case "6":
                     helperFunctions.createPlaylistDetails(userRequest);
