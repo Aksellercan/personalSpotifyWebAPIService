@@ -11,8 +11,7 @@ Singleton HTTPServer = simple, one instance limitation
 Saving state to an object with array = Maybe more complex, allows multiple instances
 */
 public final class SaveHTTPState {
-    private static HTTPServer server;
-    private static final HashMap<String,HTTPServer> stringHTTPServerHashSet = new HashMap<String, HTTPServer>();
+    private static final HashMap<String,HTTPServer> stringHTTPServerHashSet = new HashMap<>();
 
     private SaveHTTPState() {}
 

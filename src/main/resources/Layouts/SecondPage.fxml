@@ -5,7 +5,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.web.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.JavaFXInterface.Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../Styles/PrimaryPage.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.JavaFXInterface.Controller">
    <children>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#HandleButtonPress" prefHeight="24.0" prefWidth="74.0" text="back">
          <font>

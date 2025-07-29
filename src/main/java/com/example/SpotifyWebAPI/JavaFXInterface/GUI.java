@@ -21,6 +21,7 @@ public class GUI extends Application {
     private final Client_Credentials_Token client_credentials_token = new Client_Credentials_Token();
     private final Client_Credentials_Request clientCredentials_Request = new Client_Credentials_Request();
     private HTTPServer httpServer = new HTTPServer(8080, 10);
+    private final Thread thread = new Thread(httpServer);
     private SavedScene stage = SavedScene.getInstance();
     @FXML
     private TextArea responseTextArea;
@@ -34,9 +35,10 @@ public class GUI extends Application {
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
         primaryStage.setOnCloseRequest(event -> {
+            Logger.INFO.Log("Closed Session.");
             System.exit(0);
         });
-        primaryStage.getIcons().add(new Image("/Icons/appicon.png"));
+        primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
 
 
         Logger.DEBUG.Log("Is Stage NULL? " + ((stage == null) ? "Yes" : "No") + ".");
@@ -52,6 +54,7 @@ public class GUI extends Application {
 
     @FXML
     protected void OnChangeSceneButton(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
         stage = SavedScene.getInstance();
         if (stage.getScene() == null) {
             return;
@@ -82,7 +85,7 @@ public class GUI extends Application {
             SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
         }
         if (!httpServer.getServerStatus()) {
-            httpServer.StartServer();
+            thread.start();
         }
         SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
         responseTextArea.setText("Server Status: Running");
@@ -121,7 +124,7 @@ public class GUI extends Application {
             } else {
                 responseTextArea.setText("Cannot stop the server");
             }
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             Logger.ERROR.LogException(e, "Exception in StopServerTask");
         }
     }

@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 
-public class HTTPServer {
+public class HTTPServer implements Runnable {
     protected static class ServerStatus {
         public volatile boolean isRunning = false;
     }
@@ -35,7 +35,7 @@ public class HTTPServer {
         return serverStatus.isRunning;
     }
 
-    public boolean StopServer() throws InterruptedException {
+    public boolean StopServer() {
         try {
             if (thread == null) {
                 throw new NullPointerException("Server is already stopped or not started");
@@ -47,12 +47,20 @@ public class HTTPServer {
             } else {
                 throw new InterruptedException("Failed to interrupt the thread.");
             }
-            Logger.INFO.Log("Stopped Thread Info: " + thread.getName() + " | " + thread.getState() + " | " + thread.isAlive());
+            Logger.INFO.Log("Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
             return true;
         } catch (Exception ex) {
             Logger.CRITICAL.LogException(ex, "Cannot close socket");
             return false;
         }
+    }
+
+    @Override
+    public void run() {
+        thread = Thread.currentThread();
+        thread.setName(thread.getName() + "-HTTPServer");
+        Logger.DEBUG.Log("Thread name = " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
+        StartListening();
     }
 
     public Socket getSocket() {
@@ -71,7 +79,7 @@ public class HTTPServer {
     }
 
     private String ResponseBody(File file, Charset encoding) throws IOException {
-        if (file == null) {
+        if (!file.exists()) {
             return "";
         }
         byte[] encoded = Files.readAllBytes(file.toPath());
@@ -86,6 +94,43 @@ public class HTTPServer {
         }
         Logger.INFO.Log("File " + fileNameWithExtension + " found.");
         return requestedFilePath;
+    }
+
+    private File GetFolders(String requestedFile) {
+        StringBuilder folders = new StringBuilder();
+        StringBuilder folderNames = new StringBuilder();
+        for (int i = 5; i < requestedFile.length(); i++) {
+            if (requestedFile.charAt(i) == ' ') {
+                break;
+            }
+            if (requestedFile.charAt(i) == '/') {
+                folders.append(folderNames).append(File.separator);
+                folderNames.setLength(0);
+                continue;
+            }
+            folderNames.append(requestedFile.charAt(i));
+        }
+        if (folderNames.toString().isEmpty()) {
+            return GetIndexPage();
+        }
+        return new File(sourceFolder.getAbsolutePath() + File.separator + folders + folderNames);
+    }
+
+    private String GetFilename(String requestType) {
+        StringBuilder requestedFile = new StringBuilder();
+        if (requestType.contains("GET")) {
+            for (int i = 5; i < requestType.length(); i++) {
+                if (requestType.charAt(i) == '/') {
+                    requestedFile.setLength(0);
+                    continue;
+                }
+                if (requestType.charAt(i) == ' ') {
+                    break;
+                }
+                requestedFile.append(requestType.charAt(i));
+            }
+        }
+        return requestedFile.toString();
     }
 
     private File GetIndexPage() {
@@ -119,25 +164,15 @@ public class HTTPServer {
                 Logger.INFO.Log("Request: " + requestType);
 
                 String body = "";
-                StringBuilder requestedFile = new StringBuilder();
+                String requestedFile = null;
                 if (requestType != null) {
                     if (requestType.isEmpty()) {
                         break;
                     }
-                    if (requestType.contains("GET")) {
-                        for (int i = 5; i < requestType.length(); i++) {
-                            if (requestType.charAt(i) == '/') {
-                                requestedFile.setLength(0);
-                                continue;
-                            }
-                            if (requestType.charAt(i) == ' ') {
-                                break;
-                            }
-                            requestedFile.append(requestType.charAt(i));
-                        }
-                        if (!(requestedFile.length() == 0)) {
-                            body = ResponseBody(GetRequestedFile(requestedFile.toString()), StandardCharsets.UTF_8);
-                        }
+                    requestedFile = GetFilename(requestType);
+                    if (!(requestedFile.isEmpty())) {
+                        Logger.DEBUG.Log("Requested file: " + requestedFile);
+                        body = ResponseBody(GetFolders(requestType), StandardCharsets.UTF_8);
                     }
                 }
 
@@ -182,8 +217,7 @@ public class HTTPServer {
                     throw new NullPointerException("Socket Object is NULL");
                 }
                 socket.close();
-                System.gc();
-                Logger.INFO.Log("Socket Closed and cleared resources.");
+                Logger.INFO.Log("Closed Socket.");
             } catch (Exception ex) {
                 Logger.CRITICAL.LogException(ex, "Cannot close socket");
             }

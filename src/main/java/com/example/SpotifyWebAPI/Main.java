@@ -77,11 +77,15 @@ public class Main {
             if (programOptions.LAUNCH_GUI()) {
                 GUI.launch(GUI.class, args);
                 return;
+            }
+            if (programOptions.isAutoMode()) {
+                AutoMode autoMode = new AutoMode(fileUtil, configMaps);
+                autoMode.runFunctions();
             } else {
                 MainMenu mainMenu = new MainMenu(fileUtil);
                 mainMenu.userInterface();
-                return;
             }
+            return;
         }
 
         if (args.length == 1) {
