@@ -36,7 +36,13 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        WebEngine e = webviewBox.getEngine();
-        e.load("http://localhost:8080");//placeholder
+        try {
+            WebEngine e = webviewBox.getEngine();
+            webviewBox.setContextMenuEnabled(true);
+            Logger.DEBUG.Log("Webkit, is Javascript enabled? " + (e.isJavaScriptEnabled() ? "Yes": "No"));
+            e.load("http://127.0.0.1:8080"); //placeholder
+        } catch (Exception ex) {
+            Logger.CRITICAL.LogException(ex, "Webkit Error!");
+        }
     }
 }

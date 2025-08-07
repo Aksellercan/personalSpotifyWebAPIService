@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
+import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import java.util.Scanner;
@@ -23,6 +24,7 @@ public class BasicAuthMenu {
             clientCredentialsToken.post_Access_Request();
             switch (scanner.nextLine()) {
                 case "1":
+                    playlist_id = SpotifySession.getInstance().getPlaylist_id();
                     while (playlist_id == null || playlist_id.isEmpty()) {
                         System.out.println("Enter Playlist ID:");
                         playlist_id = scanner.nextLine().trim();

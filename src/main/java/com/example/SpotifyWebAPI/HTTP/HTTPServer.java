@@ -21,7 +21,7 @@ public class HTTPServer implements Runnable {
     private final int port;
     private final int backlog;
     private Socket currentSocket;
-    private final File sourceFolder = new File("Fallback");
+    private final File sourceFolder = new File("Pages"+ File.separator + "SpotifyWebAPISDK");
     private final File indexFile = new File(sourceFolder + File.separator + "index.html");
     private ServerSocket socket = null;
     private final String serverName = "Spotify Web API HTTP Server";
@@ -48,6 +48,7 @@ public class HTTPServer implements Runnable {
                 throw new InterruptedException("Failed to interrupt the thread.");
             }
             Logger.INFO.Log("Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
+            thread = null;
             return true;
         } catch (Exception ex) {
             Logger.CRITICAL.LogException(ex, "Cannot close socket");

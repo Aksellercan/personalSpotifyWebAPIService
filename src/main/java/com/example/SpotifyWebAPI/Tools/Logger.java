@@ -38,13 +38,17 @@ public enum Logger {
         if (!debugOutput && this == DEBUG) {
             return;
         } else if (this == DEBUG) {
-            debugLogs(message);
+//            debugLogs(message);
+            Log(message,false);
             return;
         }
         Log(message, true);
     }
 
     public void Log(String message, boolean writetoFile) {
+        if (!debugOutput && this == DEBUG) {
+            return;
+        }
         String fullMessage = DateSeverityFormat() + message;
         if (writetoFile) {
             writeLog(fullMessage);
