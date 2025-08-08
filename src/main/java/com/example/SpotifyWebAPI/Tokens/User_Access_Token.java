@@ -10,6 +10,9 @@ import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.util.Base64;
 
+/**
+ * Gets refresh token with scopes set in Fallback page
+ */
 public class User_Access_Token {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
 

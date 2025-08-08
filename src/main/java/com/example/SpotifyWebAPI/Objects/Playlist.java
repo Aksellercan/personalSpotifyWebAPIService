@@ -1,5 +1,8 @@
 package com.example.SpotifyWebAPI.Objects;
 
+/**
+ * Return object for playlist
+ */
 public class Playlist {
     private String name;
     private String description;

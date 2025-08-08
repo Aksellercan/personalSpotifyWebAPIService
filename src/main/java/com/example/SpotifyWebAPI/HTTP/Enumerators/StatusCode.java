@@ -1,5 +1,8 @@
 package com.example.SpotifyWebAPI.HTTP.Enumerators;
 
+/**
+ * HTTP Status Codes
+ */
 public enum StatusCode {
     OK("200 OK"),
     Created("201 Created"),

@@ -1,5 +1,9 @@
 package com.example.SpotifyWebAPI.Objects;
 
+/**
+ * @deprecated
+ * Server settings
+ */
 public class HTTPSettings {
     private int serverPort = 8080;
     private int backlog_limit = 10;

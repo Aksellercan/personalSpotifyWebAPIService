@@ -11,6 +11,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 
+/**
+ * Starts and manages the HTTP Server
+ * Runs asynchronously
+ */
 public class HTTPServer implements Runnable {
     protected static class ServerStatus {
         public volatile boolean isRunning = false;
@@ -21,20 +25,33 @@ public class HTTPServer implements Runnable {
     private final int port;
     private final int backlog;
     private Socket currentSocket;
-    private final File sourceFolder = new File("Pages"+ File.separator + "SpotifyWebAPISDK");
+    private final File sourceFolder = new File("Pages"+ File.separator + "Fallback");
     private final File indexFile = new File(sourceFolder + File.separator + "index.html");
     private ServerSocket socket = null;
     private final String serverName = "Spotify Web API HTTP Server";
 
+    /**
+     * Server constructor
+     * @param port  Set the port the server will run on
+     * @param backlog   Set the limit of connections for the socket
+     */
     public HTTPServer(int port, int backlog) {
         this.port = port;
         this.backlog = backlog;
     }
 
+    /**
+     * Returns the Server status
+     * @return  Server Status
+     */
     public boolean getServerStatus() {
         return serverStatus.isRunning;
     }
 
+    /**
+     * Stops the Server.
+     * @return  returns true if it succeeds
+     */
     public boolean StopServer() {
         try {
             if (thread == null) {
@@ -48,7 +65,6 @@ public class HTTPServer implements Runnable {
                 throw new InterruptedException("Failed to interrupt the thread.");
             }
             Logger.INFO.Log("Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
-            thread = null;
             return true;
         } catch (Exception ex) {
             Logger.CRITICAL.LogException(ex, "Cannot close socket");
@@ -56,6 +72,9 @@ public class HTTPServer implements Runnable {
         }
     }
 
+    /**
+     * Starts server on new thread
+     */
     @Override
     public void run() {
         thread = Thread.currentThread();
@@ -64,14 +83,27 @@ public class HTTPServer implements Runnable {
         StartListening();
     }
 
+    /**
+     * Returns the socket object
+     * @return  Socket object
+     */
     public Socket getSocket() {
         return this.currentSocket;
     }
 
+    /**
+     * Sets the socket object
+     * @param socket    Set socket object
+     */
     private void setSocket(Socket socket) {
         this.currentSocket = socket;
     }
 
+    /**
+     * @deprecated
+     * Starts the server on new thread
+     * Using Runnable interface instead
+     */
     public void StartServer() {
         thread = new Thread(this::StartListening);
         thread.start();
@@ -79,6 +111,13 @@ public class HTTPServer implements Runnable {
         Logger.DEBUG.Log("Thread Info: " + thread.getName() + " | " + thread.getState() + " | " + thread.isAlive());
     }
 
+    /**
+     * Gets the file and encodes it with specified Charset encoding
+     * @param file  File to be encoded
+     * @param encoding  Encoding to use
+     * @return  Encoded file in string
+     * @throws IOException  If the file cannot be read
+     */
     private String ResponseBody(File file, Charset encoding) throws IOException {
         if (!file.exists()) {
             return "";
@@ -87,6 +126,12 @@ public class HTTPServer implements Runnable {
         return new String(encoded, encoding);
     }
 
+    /**
+     * @deprecated
+     * Gets the requested file
+     * @param fileNameWithExtension Name of the requested file with extension
+     * @return  Return the requested file
+     */
     private File GetRequestedFile(String fileNameWithExtension) {
         File requestedFilePath = new File(sourceFolder + File.separator + fileNameWithExtension);
         if (!requestedFilePath.exists()) {
@@ -97,6 +142,11 @@ public class HTTPServer implements Runnable {
         return requestedFilePath;
     }
 
+    /**
+     * Gets files in folders by building the String path as File object
+     * @param requestedFile Requested file
+     * @return  Entire file path. If the string ends without any file extensions it returns index.html
+     */
     private File GetFolders(String requestedFile) {
         StringBuilder folders = new StringBuilder();
         StringBuilder folderNames = new StringBuilder();
@@ -117,6 +167,11 @@ public class HTTPServer implements Runnable {
         return new File(sourceFolder.getAbsolutePath() + File.separator + folders + folderNames);
     }
 
+    /**
+     * Gets the requested file name with extension
+     * @param requestType   Requested file
+     * @return  Name of the file with extension
+     */
     private String GetFilename(String requestType) {
         StringBuilder requestedFile = new StringBuilder();
         if (requestType.contains("GET")) {
@@ -134,6 +189,10 @@ public class HTTPServer implements Runnable {
         return requestedFile.toString();
     }
 
+    /**
+     * Gets the index.html from parent directory
+     * @return  Returns index.html
+     */
     private File GetIndexPage() {
         if (!indexFile.exists()) {
             Logger.WARN.Log("File " + indexFile.getName() + " not found!");
@@ -142,6 +201,11 @@ public class HTTPServer implements Runnable {
         return indexFile;
     }
 
+    /**
+     * Starts listening on the specified socket.
+     * It reads HTTP requests and tries to get the requested files
+     * Depending on the file extension sets the "Content-Type"
+     */
     private void StartListening() {
         try {
             serverStatus.isRunning = true;
@@ -152,6 +216,7 @@ public class HTTPServer implements Runnable {
             while (serverStatus.isRunning) {
                 Socket clientSocket = socket.accept();
                 if (thread.isInterrupted() || !serverStatus.isRunning) {
+                    thread = null;
                     break;
                 }
                 setSocket(clientSocket);
@@ -225,6 +290,14 @@ public class HTTPServer implements Runnable {
         }
     }
 
+    /**
+     * Sends out the response body with headers
+     * @param out   BufferedWriter object
+     * @param body  Body of the response
+     * @param contentType   Content type of the response
+     * @param statusCode    Status code of the response
+     * @throws IOException  If the writer is unsuccessful
+     */
     private void PostResponse(BufferedWriter out, String body, String contentType, String statusCode) throws IOException {
         int bodyLength = body.length();
         Logger.DEBUG.Log("Body Length: " + bodyLength);

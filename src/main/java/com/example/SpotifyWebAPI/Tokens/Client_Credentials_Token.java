@@ -7,6 +7,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
 
+/**
+ * Gets the most basic Access Token
+ */
 public class Client_Credentials_Token {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
 

@@ -2,6 +2,9 @@ package com.example.SpotifyWebAPI.Tools;
 
 import java.util.HashMap;
 
+/**
+ * Maps read configuration HashMap to variables then makes them available with getters
+ */
 public class ConfigMaps {
     private final HashMap<String,String> configMap;
     private String client_id;

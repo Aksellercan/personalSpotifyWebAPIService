@@ -1,5 +1,8 @@
 package com.example.SpotifyWebAPI.HTTP.Enumerators;
 
+/**
+ * HTTP Content Types
+ */
 public enum ContentType {
     ImageXIcon("image/x-icon"),
     JavaScript("text/javascript"),
