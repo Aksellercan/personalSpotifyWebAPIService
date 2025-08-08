@@ -1,5 +1,8 @@
 package com.example.SpotifyWebAPI.Objects;
 
+/**
+ * Object to hold Program settings
+ */
 public final class ProgramOptions {
     private static ProgramOptions instance;
     private boolean AUTO_MODE;

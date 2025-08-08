@@ -7,35 +7,45 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Reads and writes configuration file in "Config/*"
+ */
 public class FileUtil {
     private final File configPath = new File("Config");
     private final File configFile = new File(configPath + File.separator + "config.txt");
     private final HashMap<String, String> configMap = new HashMap<>();
     private final ArrayList<String> comments = new ArrayList<>();
 
-    private void checkExist() {
-        try {
-            if (!configPath.exists()) {
-                boolean createDir = configPath.mkdirs();
-                if (!createDir) {
-                    throw new IOException("Could not create config directory");
-                }
+    /**
+     * Checks if the directory exists if not creates it
+     * @throws  IOException if the file cannot be created
+     */
+    private void checkExist() throws IOException{
+        if (!configPath.exists()) {
+            boolean createDir = configPath.mkdirs();
+            if (!createDir) {
+                throw new IOException("Could not create config directory");
             }
-            if (!configFile.exists()) {
-                boolean createFile = configFile.createNewFile();
-                if (!createFile) {
-                    throw new IOException("Could not create config file");
-                }
+        }
+        if (!configFile.exists()) {
+            boolean createFile = configFile.createNewFile();
+            if (!createFile) {
+                throw new IOException("Could not create config file");
             }
-        } catch (IOException e) {
-            Logger.ERROR.LogException(e, false);
         }
     }
 
+    /**
+     * Returns the mapped HashMap
+     * @return  Hashmap with read values
+     */
     public HashMap<String, String> getConfigMap() {
         return configMap;
     }
 
+    /**
+     * Reads the config file. Uses Hashmap to map values <String, String> and also uses Arraylist to preserve comments in config file with any line starting with '#' or "//"
+     */
     public void readConfig() {
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(configFile))) {
             checkExist();
@@ -60,6 +70,10 @@ public class FileUtil {
         }
     }
 
+    /**
+     * Writes the config file with values provided and comments
+     * @param option    String array in pairs
+     */
     public void writeConfig(String... option) {
         if (option.length % 2 != 0) {
             Logger.ERROR.Log("Invalid number of arguments for writeConfig(String... option)", false);

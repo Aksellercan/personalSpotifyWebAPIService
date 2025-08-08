@@ -11,8 +11,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 
+/**
+ * Class of requests that require Refresh Token with specific scopes
+ */
 public class User_Request {
-    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final SpotifySession spotifySession = SpotifySession.getInstance();
     private Playlist playlist;
     private final HashMap<String, String> songs = new HashMap<>();
@@ -25,12 +27,19 @@ public class User_Request {
         return playlist;
     }
 
-    //Needs playlist-modify-public Scope
+    /**
+     * Sets the details of the playlist with given ID. Requires playlist-modify-public scope
+     * @param playlist_id   Playlist to modify details of
+     * @param name  New name to set
+     * @param description   New description to set
+     * @param publicPlaylist    Set playlist as public (Appear on profile)
+     * @param collaborative     Set playlist as collaborative
+     */
     public void setPlaylistDetails(String playlist_id, String name, String description, boolean publicPlaylist, boolean collaborative) {
         try {
             String fullURL = "https://api.spotify.com/v1/playlists/" + playlist_id;
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "PUT", "Authorization", Bearer, "Content-Type", "application/json");
+            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "PUT", "Authorization", Bearer, "Content-Type", "application/json");
             http.setDoOutput(true);
 
             ObjectMapper mapper = new ObjectMapper();
@@ -40,7 +49,7 @@ public class User_Request {
             playlist.setPlaylist_id(playlist_id);
             String postBody = mapper.writeValueAsString(playlist);
             Logger.DEBUG.Log("postBody: " + postBody);
-            httpConnection.postBody(http, postBody);
+            HTTPConnection.postBody(http, postBody);
             int responseCode = http.getResponseCode();
             if (responseCode == 200) {
                 Logger.INFO.Log("Updated playlist description to " + description + ". HTTP Response Code " + responseCode);
@@ -53,6 +62,13 @@ public class User_Request {
         }
     }
 
+    /**
+     * Builds request URL
+     * @param fullURL   Base URL
+     * @param offset    Starting point. If not given "offset <= 0" then it just appends limit
+     * @param limit     Limit of how many items to request
+     * @return  Built URL as string
+     */
     private String buildURL(String fullURL, int offset, int limit) {
         StringBuilder url = new StringBuilder(fullURL);
         if (offset > 0) {
@@ -63,13 +79,18 @@ public class User_Request {
         return url.toString();
     }
 
-    //Needs playlist-read-private Scope
+    /**
+     * Gets items of the playlist with given starting point and limits. Requires playlist-read-private scope
+     * @param playlist_id   Playlist to modify details of
+     * @param offset    Starting point
+     * @param limit     Limit of how many items to request
+     */
     public void getPlaylistItems(String playlist_id, int offset, int limit) {
         try {
             String fullURL = "https://api.spotify.com/v1/playlists/"+ playlist_id + "/tracks?";
             fullURL = buildURL(fullURL, offset, limit);
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "GET", "Authorization", Bearer);
+            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             int duplicateCount = 0;
@@ -88,6 +109,11 @@ public class User_Request {
         }
     }
 
+    /**
+     * Adds items from Hashmap to JSON Array Node
+     * @param mapper    JSON ObjectMapper object
+     * @return      arrayNode for JSON POST body
+     */
     private ArrayNode addFromPreviousPlaylist(ObjectMapper mapper) {
         ArrayNode arrayNode = mapper.createArrayNode();
         for(String value : songs.values()) {
@@ -96,11 +122,18 @@ public class User_Request {
         return arrayNode;
     }
 
+    /**
+     * Adds items to playlist with given ID
+     * @param playlist_id   Playlist to modify details of
+     * @param position  Starting position to add items
+     * @param track_uri     Track uri of items to be added
+     * @param addFromPreviousPlaylist   Whether to add items from previous playlist. Will add songs from Hashmap songs
+     */
     public void addPlaylistItems(String playlist_id, int position, String track_uri, boolean addFromPreviousPlaylist) {
         try {
             String fullURL = "https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks";
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
+            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
             http.setDoOutput(true);
 
             ObjectMapper mapper = new ObjectMapper();
@@ -114,18 +147,25 @@ public class User_Request {
             }
             rootNode.put("position", position);
             String postBody = mapper.writeValueAsString(rootNode);
-            httpConnection.postBody(http, postBody);
-            httpConnection.readErrorStream(http,400, true);
+            HTTPConnection.postBody(http, postBody);
+            HTTPConnection.readErrorStream(http,400, true);
         } catch (Exception e) {
             Logger.ERROR.LogException(e);
         }
     }
 
+
+    /**
+     * Creates playlist with given name and description. Creates a public non-collaborative playlist
+     * @param user_id   ID for the user that playlist will be created for
+     * @param playlistName  Name of the playlist
+     * @param playlistDescription   Description for the playlist
+     */
     public void createPlaylist(String user_id, String playlistName, String playlistDescription) {
         try {
             String fullURL = "https://api.spotify.com/v1/users/" + user_id + "/playlists";
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
+            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
             http.setDoOutput(true);
             ObjectMapper mapper = new ObjectMapper();
 
@@ -133,9 +173,9 @@ public class User_Request {
             playlist.setPublicPlaylist(true);
             playlist.setCollaborative(false);
             String postBody = mapper.writeValueAsString(playlist);
-            httpConnection.postBody(http, postBody);
+            HTTPConnection.postBody(http, postBody);
             JsonNode node = mapper.readTree(http.getInputStream());
-            httpConnection.postBody(http, postBody);
+            HTTPConnection.postBody(http, postBody);
             String snapshot_id = node.get("snapshot_id").asText();
             String playlist_id = node.get("id").asText();
             String external_urls = node.get("external_urls").get("spotify").asText();

@@ -11,24 +11,30 @@ import java.net.URLEncoder;
 import java.util.Base64;
 
 public class User_Access_Token {
-    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final SpotifySession spotifySession = SpotifySession.getInstance();
 
+    /**
+     * Encodes Authorization Bearer with Base64
+     * @return  Base64 encoded Authorization Bearer
+     */
     private String getEncodedString() {
         return Base64.getEncoder().encodeToString((spotifySession.getClient_id() + ":" + spotifySession.getClient_secret()).getBytes());
     }
 
+    /**
+     * Posts request to get refresh token. Requires "code" from spotify to get refresh token with set privileges
+     */
     public void get_Refresh_Token() {
         try {
             String encodeString = getEncodedString(); //Base64 encoding as required by Spotify
             String Basic = "Basic " + encodeString;
-            HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
+            HttpURLConnection http = HTTPConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
             http.setDoOutput(true);
             http.connect();
             String postBody = "grant_type=authorization_code" + "&code=" + URLEncoder.encode(spotifySession.getCode(), "UTF-8")
                     + "&redirect_uri=" + URLEncoder.encode(spotifySession.getRedirect_uri(), "UTF-8");
             if (Logger.getDebugOutput()) System.out.println("Full PostBody: " + postBody);
-            httpConnection.postBody(http, postBody);
+            HTTPConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             spotifySession.setAccess_token(node.get("access_token").asText()); //exchange token
@@ -45,6 +51,9 @@ public class User_Access_Token {
         }
     }
 
+    /**
+     * Prints the saved User data
+     */
     public void printData() {
         System.out.println("Debug Output: " + Logger.getDebugOutput());
         System.out.println("Refresh Token: " + spotifySession.getRefresh_token());
@@ -53,16 +62,19 @@ public class User_Access_Token {
         System.out.println("Redirect uri: " + spotifySession.getRedirect_uri());
     }
 
+    /**
+     * Refreshes Token using refresh token from the configuration
+     */
     public void refresh_token_with_User_Token() {
         try {
             String encodeString = getEncodedString(); //Base64 encoding as required by Spotify
             String Basic = "Basic " + encodeString;
-            HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
+            HttpURLConnection http = HTTPConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
             http.setDoOutput(true);
             http.connect();
             String postBody = "grant_type=refresh_token" + "&refresh_token=" + spotifySession.getRefresh_token()
                     + "&client_id=" + spotifySession.getClient_id();
-            httpConnection.postBody(http, postBody);
+            HTTPConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             spotifySession.setAccess_token(node.get("access_token").asText()); //exchange token

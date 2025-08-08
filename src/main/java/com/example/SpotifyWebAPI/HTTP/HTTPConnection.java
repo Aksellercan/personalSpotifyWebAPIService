@@ -6,19 +6,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.stream.Collectors;
 
+/**
+ * Stateless Class. Used to make POST and GET requests in the program.
+ * Throws Exceptions which should be handled in parent methods.
+ */
 public final class HTTPConnection {
-    private static HTTPConnection instance;
 
     private HTTPConnection() {}
 
-    public static HTTPConnection getInstance() {
-        if(instance == null){
-            instance = new HTTPConnection();
-        }
-        return instance;
-    }
-
-    public HttpURLConnection connectHTTP(String requestURL, String postType, String... Headers) throws IOException{
+    /**
+     * Establishes the http object then sends the request to the link provided
+     * @param requestURL    URL link which the request will be made
+     * @param postType  Type of request, POST or GET
+     * @param Headers   Sets the request headers. Takes the headers in pairs of strings in an array
+     * @return  Returns the established http object
+     * @throws IOException  Exception IOException will be thrown by url.openConnection() if there is an error when connecting
+     */
+    public static HttpURLConnection connectHTTP(String requestURL, String postType, String... Headers) throws IOException{
         Logger.DEBUG.Log("requestURL: " + requestURL + "\n" + "postType: " + postType, false);
         Logger.DEBUG.Log("Headers: ", false);
         URL url = new URL(requestURL);
@@ -35,31 +39,38 @@ public final class HTTPConnection {
         return http;
     }
 
-    public void postBody(HttpURLConnection http, String postBody) {
-        try (OutputStream os = http.getOutputStream()) {
-            Logger.DEBUG.Log("Full PostBody: " + postBody, false);
-            os.write(postBody.getBytes());
-        } catch (IOException e) {
-            Logger.ERROR.LogException(e);
-        }
+    /**
+     * Used to write the body of the request
+     * @param http  Takes the http object returned by connectHTTP()
+     * @param postBody  The body of the request
+     * @throws IOException  http.getOutputStream() throws IOException when It can't read output stream
+     */
+
+    public static void postBody(HttpURLConnection http, String postBody) throws IOException {
+        OutputStream os = http.getOutputStream();
+        Logger.DEBUG.Log("Full PostBody: " + postBody, false);
+        os.write(postBody.getBytes());
     }
 
-    public void readErrorStream(HttpURLConnection http, int responseCode, boolean equalandGreater) {
-        try {
-            Logger.DEBUG.Log("Response Code: " + http.getResponseCode(), false);
-            if (equalandGreater) {
-                if (http.getResponseCode() >= responseCode) {
-                    InputStream error = http.getErrorStream();
-                    String errorBody = new BufferedReader(new InputStreamReader(error)).lines().collect(Collectors.joining("\n"));
-                    throw new Exception("POST error response: " + errorBody);
-                }
-            } else if (http.getResponseCode() > responseCode) {
+    /**
+     * Handles the response body in case of BadRequest
+     * @param http  Takes the http object returned by connectHTTP()
+     * @param responseCode  Response code returned by the server
+     * @param equalandGreater   I will come back to this, I genuinely don't know what this does
+     * @throws Exception    readErrorStream() will throw Exception to be logged to notify the user
+     */
+    public static void readErrorStream(HttpURLConnection http, int responseCode, boolean equalandGreater) throws Exception {
+        Logger.DEBUG.Log("Response Code: " + http.getResponseCode(), false);
+        if (equalandGreater) {
+            if (http.getResponseCode() >= responseCode) {
                 InputStream error = http.getErrorStream();
                 String errorBody = new BufferedReader(new InputStreamReader(error)).lines().collect(Collectors.joining("\n"));
                 throw new Exception("POST error response: " + errorBody);
             }
-        } catch (Exception e) {
-            Logger.ERROR.LogException(e);
+        } else if (http.getResponseCode() > responseCode) {
+            InputStream error = http.getErrorStream();
+            String errorBody = new BufferedReader(new InputStreamReader(error)).lines().collect(Collectors.joining("\n"));
+            throw new Exception("POST error response: " + errorBody);
         }
     }
 }

@@ -18,6 +18,10 @@ public class ConfigMaps {
         this.configMap = configMap;
     }
 
+    /**
+     * Returns the mapped variable launch_gui by default it is set to true
+     * @return  launch_gui value
+     */
     public String isLaunchGui() {
         if (launch_gui == null) {
             return null;
@@ -49,6 +53,10 @@ public class ConfigMaps {
         return auto_mode;
     }
 
+    /**
+     * Maps credentials to variables. Skips and logs with WARN severity if credential is not recognised or doesn't exist
+     * @param credentials   Credentials to be mapped
+     */
     public void setCredentials(String... credentials) {
         if (credentials.length == 0) {
             Logger.INFO.LogSilently("No credentials provided");

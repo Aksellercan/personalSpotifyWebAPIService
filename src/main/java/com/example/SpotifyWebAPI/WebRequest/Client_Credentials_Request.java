@@ -7,8 +7,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
 
+/**
+ * Class of requests that only require basic Access Token
+ */
+
 public class Client_Credentials_Request {
-    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final SpotifySession spotifySession = SpotifySession.getInstance();
     private String playlistDescription;
     private String playlistName;
@@ -24,11 +27,15 @@ public class Client_Credentials_Request {
         return playlistSize;
     }
 
+    /**
+     * Sends a request to get Playlist details such as: Name, Description and Size
+     * @param playlist_id   ID of Playlist to get details from
+     */
     public void getPlaylist(String playlist_id) {
         try {
             String playlistURL = "https://api.spotify.com/v1/playlists/" + playlist_id;
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = httpConnection.connectHTTP(playlistURL, "GET", "Authorization", Bearer);
+            HttpURLConnection http = HTTPConnection.connectHTTP(playlistURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             playlistName = node.get("name").asText();

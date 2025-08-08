@@ -1,5 +1,8 @@
 package com.example.SpotifyWebAPI.Objects;
 
+/**
+ * Object to hold session data which will be used to construct requests
+ */
 public final class SpotifySession {
     private static SpotifySession instance;
     private String user_id;

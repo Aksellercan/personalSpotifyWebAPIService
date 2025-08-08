@@ -8,16 +8,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
 
 public class Client_Credentials_Token {
-    private final HTTPConnection httpConnection = HTTPConnection.getInstance();
     private final SpotifySession spotifySession = SpotifySession.getInstance();
 
+    /**
+     * Posts request to get Access Token
+     */
     public void post_Access_Request() {
         try {
-            HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded");
+            HttpURLConnection http = HTTPConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded");
             http.setDoOutput(true);
             http.connect();
             String postBody = "grant_type=client_credentials&client_id=" + spotifySession.getClient_id() + "&client_secret=" + spotifySession.getClient_secret();
-            httpConnection.postBody(http, postBody);
+            HTTPConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             spotifySession.setAccess_token(node.get("access_token").asText());

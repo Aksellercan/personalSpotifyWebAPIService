@@ -5,7 +5,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.web.*?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Styles/PrimaryPage.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.JavaFXInterface.GUI">
    <left>
@@ -100,9 +99,6 @@
          </children>
       </GridPane>
    </top>
-   <bottom>
-      <WebView fx:id="webviewBox" prefHeight="107.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
-   </bottom>
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>

@@ -11,8 +11,15 @@ import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
+/**
+ * Main Class and starting point
+ */
 public class Main {
 
+    /**
+     * Checks if all values for Auto Mode are set
+     * @param spotifySession    session object
+     */
     private static void AutoModeRequirementCheck(SpotifySession spotifySession) {
         System.out.println("Auto Mode Requirement Check");
         System.out.println((spotifySession.getUser_id() == null ? "User ID not set!" : "Set User ID: " + spotifySession.getUser_id()));
@@ -51,6 +58,13 @@ public class Main {
                 "user_id", spotifySession.getUser_id(),"launch_gui", Boolean.toString(programOptions.LAUNCH_GUI()));
     }
 
+    /**
+     * Initializes a Session with data read from configuration file. If file doesn't exist or the value is not set it will be null
+     * @param fileUtil  FileUtil object
+     * @param configMaps    Gets values from mapping Object
+     * @param programOptions    Program Options to set
+     * @param spotifySession    Session options and values to set
+     */
     private static void Initialize(FileUtil fileUtil, ConfigMaps configMaps, ProgramOptions programOptions, SpotifySession spotifySession) {
         fileUtil.readConfig();
         configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id", "launch_gui");
