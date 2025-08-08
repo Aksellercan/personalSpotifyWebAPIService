@@ -44,7 +44,7 @@ public class FileUtil {
     }
 
     /**
-     * Reads the config file. Uses Hashmap to map values <String, String> and also uses Arraylist to preserve comments in config file with any line starting with '#' or "//"
+     * Reads the config file. Uses Hashmap to map values String with String and also uses Arraylist to preserve comments in config file with any line starting with '#' or "//"
      */
     public void readConfig() {
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(configFile))) {

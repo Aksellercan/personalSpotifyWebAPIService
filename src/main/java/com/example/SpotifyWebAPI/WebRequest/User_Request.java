@@ -65,7 +65,7 @@ public class User_Request {
     /**
      * Builds request URL
      * @param fullURL   Base URL
-     * @param offset    Starting point. If not given "offset <= 0" then it just appends limit
+     * @param offset    Starting point. If not given "offset is greater or equal to 0" then it just appends limit
      * @param limit     Limit of how many items to request
      * @return  Built URL as string
      */
