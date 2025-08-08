@@ -7,6 +7,9 @@ import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.Scanner;
 
+/**
+ * Shared Functions used by CLI Menus
+ */
 public class HelperFunctions {
 
     private FileUtil fileUtil;
@@ -18,10 +21,17 @@ public class HelperFunctions {
         this.scanner = scanner;
     }
 
+    /**
+     * Sets FileUtil object
+     * @param fileUtil  Set to FileUtil Object
+     */
     public void setFileUtil(FileUtil fileUtil) {
         this.fileUtil = fileUtil;
     }
 
+    /**
+     * Checks if the config is read properly. If not logs it to logfile
+     */
     public void checkClientCredentials() {
         while (checkIfNullOrEmpty(spotifySession.getClient_id()) || checkIfNullOrEmpty(spotifySession.getClient_secret())) {
             if (checkIfNullOrEmpty(spotifySession.getClient_id())) {
@@ -40,10 +50,18 @@ public class HelperFunctions {
         Logger.INFO.LogSilently("Everything is set up correctly, client_id and client_secret are not null or empty.");
     }
 
+    /**
+     * Checks if string is Null or empty
+     * @param str   String to check
+     * @return  Whether string is Null or empty
+     */
     public boolean checkIfNullOrEmpty(String str) {
         return str == null || str.isEmpty();
     }
 
+    /**
+     * Clears terminal screen
+     */
     public void clearScreen() {
         final String getOS = System.getProperty("os.name").toLowerCase();
         try {
@@ -58,6 +76,9 @@ public class HelperFunctions {
         }
     }
 
+    /**
+     * Saves Config
+     */
     public void saveConfig() {
         fileUtil.writeConfig("client_id", spotifySession.getClient_id(), "client_secret", spotifySession.getClient_secret(), "redirect_uri",
                 spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id",spotifySession.getPlaylist_id(), "auto_mode",
@@ -66,6 +87,10 @@ public class HelperFunctions {
         programOptions.setChangesSaved(true);
     }
 
+    /**
+     * Asks user to if they want to change playlist. Then asks where should the returned data start from and end where
+     * @param userRequest   User Request Object
+     */
     public void getPlaylistItems(User_Request userRequest) {
         int offset = 0;
         int limit = 10;
@@ -95,6 +120,10 @@ public class HelperFunctions {
         userRequest.getPlaylistItems(playlist_id,offset, limit);
     }
 
+    /**
+     * Asks user to set position to insert the track
+     * @return  position form user input
+     */
     public int setPosition() {
         int position;
         System.out.println("Enter Position to insert the track:");
@@ -102,6 +131,10 @@ public class HelperFunctions {
         return position;
     }
 
+    /**
+     * Asks user to input Track URI
+     * @return   track_uri from user input
+     */
     public String addTrackUri() {
         String track_uri = null;
         while (checkIfNullOrEmpty(track_uri)) {
@@ -112,6 +145,10 @@ public class HelperFunctions {
         return track_uri;
     }
 
+    /**
+     * Walks user through creating a Playlist
+     * @param userRequest   User Request Object
+     */
     public void createPlaylistDetails(User_Request userRequest) {
         String createName = null;
         String createDescription = null;
@@ -138,6 +175,10 @@ public class HelperFunctions {
         userRequest.createPlaylist(user_id,createName,createDescription);
     }
 
+    /**
+     * Walks user through setting playlist details
+     * @param userRequest   User Request Object
+     */
     public void setPlaylistDetails(User_Request userRequest) {
         String playlist_id = spotifySession.getPlaylist_id();
         while (checkIfNullOrEmpty(playlist_id)) {
@@ -176,6 +217,9 @@ public class HelperFunctions {
         userRequest.setPlaylistDetails(playlist_id, newName, newDescription, isPublic, isCollaborative);
     }
 
+    /**
+     * Walks user through setting up Auto Mode
+     */
     public void setupAutoMode() {
         while (((checkIfNullOrEmpty(spotifySession.getRefresh_token())) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri())))
                 || ((checkIfNullOrEmpty(spotifySession.getClient_id())) ||

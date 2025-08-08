@@ -5,6 +5,9 @@ import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import java.util.Scanner;
 
+/**
+ * CLI Interface Main Menu
+ */
 public class MainMenu {
     private final ProgramOptions programOptions = ProgramOptions.getInstance();
     private final FileUtil fileUtil;
@@ -13,6 +16,9 @@ public class MainMenu {
         this.fileUtil = fileUtil;
     }
 
+    /**
+     * Main menu
+     */
     public void userInterface() {
         Scanner scanner = new Scanner(System.in);
         HelperFunctions helperFunctions = new HelperFunctions(scanner);

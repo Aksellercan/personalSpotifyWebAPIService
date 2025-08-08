@@ -20,6 +20,9 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * JavaFX GUI Class
+ */
 public class GUI extends Application implements Initializable {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
     private final Client_Credentials_Token client_credentials_token = new Client_Credentials_Token();
@@ -32,6 +35,10 @@ public class GUI extends Application implements Initializable {
     @FXML
     private WebView webviewBox;
 
+    /**
+     * Sets up the primary stage
+     * @param primaryStage  JavaFX stage object
+     */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Spotify Web API GUI alpha");

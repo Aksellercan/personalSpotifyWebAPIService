@@ -10,6 +10,9 @@ import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Automation to change description of Playlist to the current size of playlist with limit of 120
+ */
 public class AutoMode {
     private String user_id;
     private String client_id;
@@ -27,6 +30,9 @@ public class AutoMode {
         this.fileUtil = fileUtil;
     }
 
+    /**
+     * Sets variables
+     */
     private void setConfigs() {
         client_id = configMaps.getClient_id();
         client_secret = configMaps.getClient_secret();
@@ -40,6 +46,9 @@ public class AutoMode {
         Logger.setDebugOutput(configMaps.isOutputDebug());
     }
 
+    /**
+     * Executes automation methods in order and catches Exceptions
+     */
     public void runFunctions() {
         // Initialize Spotify session
         Logger.INFO.Log("Starting AutoMode.runFunctions()");
@@ -97,6 +106,11 @@ public class AutoMode {
         }
     }
 
+    /**
+     * Finds what number should the next playlist be
+     * @param str   Name of current playlist name
+     * @return  Number for the next playlist
+     */
     private int nextNumber(String str) {
         int number = 0;
         String[] splitLine;
@@ -112,6 +126,11 @@ public class AutoMode {
         return number;
     }
 
+    /**
+     * Reads the string till '#'. Which is encoded string of '/'
+     * @param str   Playlist description
+     * @return  Read number from description as string
+     */
     private String readString(String str) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {

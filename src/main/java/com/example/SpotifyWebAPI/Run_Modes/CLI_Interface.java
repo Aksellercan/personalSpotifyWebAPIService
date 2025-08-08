@@ -10,6 +10,10 @@ import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.Scanner;
 
+/**
+ * @deprecated
+ * Old CLI Interface, won't be used
+ */
 public class CLI_Interface {
     private SpotifySession spotify_session;
     private String user_id;

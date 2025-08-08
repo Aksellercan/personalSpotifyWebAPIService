@@ -101,8 +101,8 @@ public class HTTPServer implements Runnable {
 
     /**
      * @deprecated
-     * Starts the server on new thread
-     * Using Runnable interface instead
+     * Starts the server on a new thread.
+     * Switched to using Runnable interface instead
      */
     public void StartServer() {
         thread = new Thread(this::StartListening);
@@ -128,7 +128,8 @@ public class HTTPServer implements Runnable {
 
     /**
      * @deprecated
-     * Gets the requested file
+     * Gets the requested file.
+     * Using new way to get Folder structure and files instead, GetFolders(String requestedFile)
      * @param fileNameWithExtension Name of the requested file with extension
      * @return  Return the requested file
      */

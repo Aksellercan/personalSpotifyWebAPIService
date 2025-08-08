@@ -13,10 +13,17 @@ import javafx.scene.web.WebView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Second Page Controller
+ */
 public class Controller implements Initializable {
     private SavedScene savedScene = SavedScene.getInstance();
     @FXML private WebView webviewBox;
 
+    /**
+     * Changes scene to the previous scene
+     * @param event ActionEvent
+     */
     @FXML
     private void HandleButtonPress(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
@@ -34,6 +41,11 @@ public class Controller implements Initializable {
         savedScene.getScene().setScene(window);
     }
 
+    /**
+     * WebEngine setup
+     * @param location  URL Location
+     * @param resources ResourceBundle
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {

@@ -5,6 +5,9 @@ import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import java.util.Scanner;
 
+/**
+ * CLI Menu for Client Access Token requests
+ */
 public class BasicAuthMenu {
     private final Scanner scanner;
     private String playlist_id;
@@ -14,6 +17,10 @@ public class BasicAuthMenu {
         this.scanner = scanner;
         this.helperFunctions = new HelperFunctions(scanner);
     }
+
+    /**
+     * Menu entries
+     */
     public void Basic_auth_Functions() {
         while (true) {
             helperFunctions.clearScreen();

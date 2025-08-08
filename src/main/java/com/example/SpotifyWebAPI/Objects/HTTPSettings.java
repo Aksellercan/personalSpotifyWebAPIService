@@ -2,7 +2,7 @@ package com.example.SpotifyWebAPI.Objects;
 
 /**
  * @deprecated
- * Server settings
+ * Server settings. Never used
  */
 public class HTTPSettings {
     private int serverPort = 8080;

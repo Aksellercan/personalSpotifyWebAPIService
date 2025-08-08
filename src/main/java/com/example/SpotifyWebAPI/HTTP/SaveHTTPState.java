@@ -55,7 +55,8 @@ public final class SaveHTTPState {
 
     /**
      * @deprecated
-     * Returns the HashMap
+     * Returns the HashMap.
+     * Unused
      * @return  HashMap of the running servers
      */
     public static HashMap<String, HTTPServer> getStringHTTPServerHashSet() {

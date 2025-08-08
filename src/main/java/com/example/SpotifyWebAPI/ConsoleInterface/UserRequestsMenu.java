@@ -8,7 +8,9 @@ import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.Scanner;
 
-
+/**
+ * CLI Menu for User Access Token requests
+ */
 public class UserRequestsMenu {
     private final SpotifySession spotify_session = SpotifySession.getInstance();
     private final Scanner scanner;
@@ -22,6 +24,9 @@ public class UserRequestsMenu {
         this.helperFunctions = new HelperFunctions(scanner);
     }
 
+    /**
+     * Menu Entries
+     */
     public void Oauth2_Functions() {
         helperFunctions.setFileUtil(fileUtil);
         while (true) {
