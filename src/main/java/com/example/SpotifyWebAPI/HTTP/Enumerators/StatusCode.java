@@ -18,6 +18,10 @@ public enum StatusCode {
         this.code = code;
     }
 
+    /**
+     * Returns Status Code in string
+     * @return  Status Code as string
+     */
     public String getStatusCode() {
         return code;
     }

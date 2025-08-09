@@ -44,9 +44,13 @@ Config/
 Config/*
 Logs/
 Logs/*
+JavaDocs/
+JavaDocs/*
+
 #temporary
 src/main/resources/Icons/
 src/main/resources/Icons/*
 src/main/resources/Styles/
 src/main/resources/Styles/*
-
+Pages/SpotifyWebAPISDK/
+Pages/SpotifyWebAPISDK/*

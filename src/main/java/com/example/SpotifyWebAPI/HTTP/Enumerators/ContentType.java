@@ -18,6 +18,10 @@ public enum ContentType {
         this.typeHeader = typeHeader;
     }
 
+    /**
+     * Returns Content Type in string
+     * @return  Content Type as string
+     */
     public String getContentType() {
         return typeHeader;
     }

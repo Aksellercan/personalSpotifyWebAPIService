@@ -51,7 +51,10 @@ public class GUI extends Application implements Initializable {
             Logger.INFO.Log("Closed Session.");
             System.exit(0);
         });
-        primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
+        /*
+        Sets the icon of the program, commented out because icon is not available
+         */
+        //primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
 
 
         Logger.DEBUG.Log("Is Stage NULL? " + ((stage == null) ? "Yes" : "No") + ".");

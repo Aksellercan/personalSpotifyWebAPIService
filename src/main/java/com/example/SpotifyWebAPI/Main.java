@@ -30,6 +30,9 @@ public class Main {
         System.out.println((spotifySession.getPlaylist_id() == null) ? "Playlist ID not set!" : "Set Playlist ID: " + spotifySession.getPlaylist_id());
     }
 
+    /**
+     * Prints Help Menu on console
+     */
     private static void HelpMenu() {
         System.out.println("Usage: program [OPTION]");
         System.out.println("\nOptions:");
@@ -80,6 +83,13 @@ public class Main {
         programOptions.setLAUNCH_GUI((configMaps.isLaunchGui() == null ? programOptions.LAUNCH_GUI() : Boolean.parseBoolean(configMaps.isLaunchGui())));
     }
 
+    /**
+     * Main Method.
+     * Takes commandline arguments.
+     * If no arguments are given, reads from configuration to either launch into CLI, Auto Mode or JavaFX GUI.
+     * If there is no configuration file or the values not set by default launches into JavaFX GUI.
+     * @param args  Commandline arguments, allows maximum of 3 arguments and lowest no arguments.
+     */
     public static void main(String[] args) {
         FileUtil fileUtil = new FileUtil();
         ConfigMaps configMaps = new ConfigMaps(fileUtil.getConfigMap());
