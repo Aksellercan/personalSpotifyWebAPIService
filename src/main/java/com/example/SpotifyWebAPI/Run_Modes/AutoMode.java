@@ -41,7 +41,8 @@ public class AutoMode {
         refresh_token = configMaps.getRefresh_token();
         playlist_id = configMaps.getPlaylist_id();
         auto_mode = configMaps.isAutoMode();
-        launch_gui = (configMaps.isLaunchGui() == null || Boolean.parseBoolean(configMaps.isLaunchGui()));
+//        launch_gui = (configMaps.isLaunchGui() == null || Boolean.parseBoolean(configMaps.isLaunchGui()));
+        launch_gui = configMaps.isLaunchGui();
 
         Logger.setDebugOutput(configMaps.isOutputDebug());
     }

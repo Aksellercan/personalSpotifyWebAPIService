@@ -80,7 +80,8 @@ public class Main {
         spotifySession.setRedirect_uri(configMaps.getRedirect_uri());
         spotifySession.setRefresh_token(configMaps.getRefresh_token());
         spotifySession.setUser_id(configMaps.getUser_id());
-        programOptions.setLAUNCH_GUI((configMaps.isLaunchGui() == null ? programOptions.LAUNCH_GUI() : Boolean.parseBoolean(configMaps.isLaunchGui())));
+        //programOptions.setLAUNCH_GUI((configMaps.isLaunchGui() == null ? programOptions.LAUNCH_GUI() : Boolean.parseBoolean(configMaps.isLaunchGui())));
+        programOptions.setLAUNCH_GUI(configMaps.isLaunchGui());
     }
 
     /**

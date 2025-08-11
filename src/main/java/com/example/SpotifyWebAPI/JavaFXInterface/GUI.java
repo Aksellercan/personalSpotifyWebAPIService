@@ -54,7 +54,7 @@ public class GUI extends Application implements Initializable {
         /*
         Sets the icon of the program, commented out because icon is not available
          */
-        //primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
+        primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
 
 
         Logger.DEBUG.Log("Is Stage NULL? " + ((stage == null) ? "Yes" : "No") + ".");

@@ -22,14 +22,19 @@ public class ConfigMaps {
     }
 
     /**
-     * Returns the mapped variable launch_gui by default it is set to true
-     * @return  launch_gui value
+     * Returns the mapped variable launch_gui by default it is set to true.
+     * Even if the config line launch_gui is malformed it will launch GUI
+     * @return  boolean launch_gui
      */
-    public String isLaunchGui() {
+    public boolean isLaunchGui() {
         if (launch_gui == null) {
-            return null;
+            return true;
         }
-        return launch_gui;
+        Logger.DEBUG.Log("launch_gui=" + launch_gui);
+        if (launch_gui.equalsIgnoreCase("true") || launch_gui.equalsIgnoreCase("false")) {
+            return launch_gui.equalsIgnoreCase("true");
+        }
+        return true;
     }
     public String getUser_id() {
         return user_id;
