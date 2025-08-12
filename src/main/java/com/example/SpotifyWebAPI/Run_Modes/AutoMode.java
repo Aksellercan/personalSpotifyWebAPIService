@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.Run_Modes;
 
+import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
@@ -20,10 +21,8 @@ public class AutoMode {
     private String redirect_uri;
     private String refresh_token;
     private String playlist_id;
-    private boolean auto_mode;
     private final ConfigMaps configMaps;
     private final FileUtil fileUtil;
-    private boolean launch_gui;
 
     public AutoMode(FileUtil fileUtil, ConfigMaps configMaps) {
         this.configMaps = configMaps;
@@ -40,11 +39,8 @@ public class AutoMode {
         redirect_uri = configMaps.getRedirect_uri();
         refresh_token = configMaps.getRefresh_token();
         playlist_id = configMaps.getPlaylist_id();
-        auto_mode = configMaps.isAutoMode();
-//        launch_gui = (configMaps.isLaunchGui() == null || Boolean.parseBoolean(configMaps.isLaunchGui()));
-        launch_gui = configMaps.isLaunchGui();
-
         Logger.setDebugOutput(configMaps.isOutputDebug());
+        Logger.setVerboseLogFile(configMaps.isVerboseLogFile());
     }
 
     /**
@@ -88,10 +84,8 @@ public class AutoMode {
                 int nextNumber = nextNumber(prevPlaylistName);
                 userRequest.createPlaylist(user_id, "Favorites " + nextNumber, "0/120");
                 Logger.INFO.Log("New playlist created with playlist_id: " + playlist_id + " and Name: " + "Favorites " + nextNumber);
-                auto_mode = false;
-                fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
-                        redirect_uri, "refresh_token", refresh_token, "playlist_id", userRequest.getPlaylist().getPlaylist_id(), "auto_mode",
-                        Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()), "user_id",user_id, "launch_gui", Boolean.toString(launch_gui));
+                ProgramOptions.getInstance().setAutoMode(false);
+                fileUtil.WriteConfig();
                 return;
             } else if (playlistSize == readDescCount) {
                 Logger.INFO.Log("Playlist size is already set to " + playlistSize);

@@ -50,7 +50,6 @@ public class CLI_Interface {
         spotify_session.setUser_id(user_id);
         spotify_session.setRedirect_uri(redirect_uri);
         spotify_session.setRefresh_token(refresh_token);
-//        launch_gui = (configMaps.isLaunchGui() == null || Boolean.parseBoolean(configMaps.isLaunchGui()));
         launch_gui = configMaps.isLaunchGui();
     }
 
