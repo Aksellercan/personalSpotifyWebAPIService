@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class FileUtil {
     private final File configPath = new File("Config");
-    private final File configFile = new File(configPath + File.separator + "config.txt");
+    private final File configFile = new File(configPath + File.separator + "config.yaml");
     private final HashMap<String, String> configMap = new HashMap<>();
     private final ArrayList<String> comments = new ArrayList<>();
 
@@ -52,11 +52,11 @@ public class FileUtil {
             String line;
             String[] splitLine;
             while ((line = reader.readLine()) != null) {
-                if (line.startsWith("#") || line.startsWith("//") || line.isEmpty()) {
+                if (line.startsWith("#") || line.isEmpty()) {
                     comments.add(line);
                     continue;
                 }
-                splitLine = line.split("=");
+                splitLine = line.split(":",2);
                 if (splitLine.length == 2) {
                     String key = splitLine[0].trim();
                     String value = splitLine[1].trim();
@@ -92,7 +92,7 @@ public class FileUtil {
                     } else {
                         String key = option[i].trim();
                         String value = option[i + 1].trim();
-                        writer.write(key + "=" + value + "\n");
+                        writer.write(key + ": " + value + "\n");
                     }
                 }
             }
