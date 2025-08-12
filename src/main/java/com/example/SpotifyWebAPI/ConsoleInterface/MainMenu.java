@@ -15,8 +15,6 @@ public class MainMenu extends HelperFunctions {
      * Main menu
      */
     public void userInterface() {
-        Scanner scanner = new Scanner(System.in);
-//        HelperFunctions helperFunctions = new HelperFunctions();
         checkClientCredentials();
         while (true) {
             clearScreen();

@@ -18,19 +18,7 @@ public class HelperFunctions {
     protected final SpotifySession spotifySession = SpotifySession.getInstance();
     protected final Scanner scanner = new Scanner(System.in);
 
-//    public HelperFunctions(FileUtil fileUtil) {
-//        this.fileUtil = new FileUtil();
-//    }
-
     public HelperFunctions() {}
-
-    /**
-     * Sets FileUtil object
-     * @param fileUtil  Set to FileUtil Object
-     */
-    public void setFileUtil(FileUtil fileUtil) {
-        this.fileUtil = fileUtil;
-    }
 
     protected FileUtil getFileUtil() {
         return fileUtil;
@@ -39,7 +27,7 @@ public class HelperFunctions {
     /**
      * Checks if the config is read properly. If not logs it to logfile
      */
-    public void checkClientCredentials() {
+    protected void checkClientCredentials() {
         while (checkIfNullOrEmpty(spotifySession.getClient_id()) || checkIfNullOrEmpty(spotifySession.getClient_secret())) {
             if (checkIfNullOrEmpty(spotifySession.getClient_id())) {
                 System.out.println("Enter Spotify client_id:");
@@ -62,14 +50,14 @@ public class HelperFunctions {
      * @param str   String to check
      * @return  Whether string is Null or empty
      */
-    public boolean checkIfNullOrEmpty(String str) {
+    protected boolean checkIfNullOrEmpty(String str) {
         return str == null || str.isEmpty();
     }
 
     /**
      * Clears terminal screen
      */
-    public void clearScreen() {
+    protected void clearScreen() {
         final String getOS = System.getProperty("os.name").toLowerCase();
         try {
             if (getOS.contains("windows")) {
@@ -87,7 +75,7 @@ public class HelperFunctions {
      * Asks user to if they want to change playlist. Then asks where should the returned data start from and end where
      * @param userRequest   User Request Object
      */
-    public void getPlaylistItems(User_Request userRequest) {
+    protected void getPlaylistItems(User_Request userRequest) {
         int offset = 0;
         int limit = 10;
         String playlist_id = spotifySession.getPlaylist_id();
@@ -120,7 +108,7 @@ public class HelperFunctions {
      * Asks user to set position to insert the track
      * @return  position form user input
      */
-    public int setPosition() {
+    protected int setPosition() {
         int position;
         System.out.println("Enter Position to insert the track:");
         position = scanner.nextInt();
@@ -131,7 +119,7 @@ public class HelperFunctions {
      * Asks user to input Track URI
      * @return   track_uri from user input
      */
-    public String addTrackUri() {
+    protected String addTrackUri() {
         String track_uri = null;
         while (checkIfNullOrEmpty(track_uri)) {
             System.out.println("Enter Track URI:");
@@ -145,7 +133,7 @@ public class HelperFunctions {
      * Walks user through creating a Playlist
      * @param userRequest   User Request Object
      */
-    public void createPlaylistDetails(User_Request userRequest) {
+    protected void createPlaylistDetails(User_Request userRequest) {
         String createName = null;
         String createDescription = null;
         String user_id = spotifySession.getUser_id();
@@ -175,7 +163,7 @@ public class HelperFunctions {
      * Walks user through setting playlist details
      * @param userRequest   User Request Object
      */
-    public void setPlaylistDetails(User_Request userRequest) {
+    protected void setPlaylistDetails(User_Request userRequest) {
         String playlist_id = spotifySession.getPlaylist_id();
         while (checkIfNullOrEmpty(playlist_id)) {
             System.out.println("Enter Playlist ID:");
@@ -216,7 +204,7 @@ public class HelperFunctions {
     /**
      * Walks user through setting up Auto Mode
      */
-    public void setupAutoMode() {
+    protected void setupAutoMode() {
         while (((checkIfNullOrEmpty(spotifySession.getRefresh_token())) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri())))
                 || ((checkIfNullOrEmpty(spotifySession.getClient_id())) ||
                 (checkIfNullOrEmpty(spotifySession.getClient_secret()))) || (checkIfNullOrEmpty(spotifySession.getPlaylist_id())) ||
@@ -258,7 +246,7 @@ public class HelperFunctions {
                 spotifySession.setPlaylist_id(playlist_id);
             }
         }
-        //getFileUtil().WriteConfig();
+        fileUtil.WriteConfig();
         System.out.println("Done");
     }
 }

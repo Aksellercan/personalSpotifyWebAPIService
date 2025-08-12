@@ -69,7 +69,6 @@ public class Main {
     public static void main(String[] args) {
         String[] Credentials = {"client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id",
                 "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file"};
-//        FileUtil fileUtil = new FileUtil();
         fileUtil.AddToConfigMap(Credentials);
         ConfigMaps configMaps = new ConfigMaps(fileUtil.getConfigMap());
         ProgramOptions programOptions = ProgramOptions.getInstance();
