@@ -31,9 +31,11 @@ public class SettingsMenu extends HelperFunctions {
                         Logger.setDebugOutput(true);
                         System.out.println("Http Debug Output set to true");
                     } else {
+                        if (Logger.getDebugOutput()) {
+                            programOptions.setChangesSaved(false);
+                        }
                         Logger.setDebugOutput(false);
                         System.out.println("Http Debug Output set to false");
-                        programOptions.setChangesSaved(false);
                     }
                     break;
                 case "2":
@@ -46,9 +48,11 @@ public class SettingsMenu extends HelperFunctions {
                         Logger.setVerboseLogFile(true);
                         System.out.println("Debugs will be included in log file");
                     } else {
+                        if (Logger.getVerboseLogFile()) {
+                            programOptions.setChangesSaved(false);
+                        }
                         Logger.setVerboseLogFile(false);
                         System.out.println("Debugs won't included in log file");
-                        programOptions.setChangesSaved(false);
                     }
                     break;
                 case "3":
@@ -59,6 +63,9 @@ public class SettingsMenu extends HelperFunctions {
                         Logger.INFO.Log("Auto Mode set to true");
                         setupAutoMode();
                     } else {
+                        if (programOptions.isAutoMode()) {
+                            programOptions.setChangesSaved(false);
+                        }
                         programOptions.setAutoMode(false);
                         System.out.println("Auto Mode set to false");
                     }
@@ -73,7 +80,9 @@ public class SettingsMenu extends HelperFunctions {
                         programOptions.setLAUNCH_GUI(true);
                         Logger.INFO.Log("GUI set to true");
                     } else {
-                        programOptions.setChangesSaved(false);
+                        if (programOptions.LAUNCH_GUI()) {
+                            programOptions.setChangesSaved(false);
+                        }
                         programOptions.setLAUNCH_GUI(false);
                         System.out.println("GUI set to false");
                     }

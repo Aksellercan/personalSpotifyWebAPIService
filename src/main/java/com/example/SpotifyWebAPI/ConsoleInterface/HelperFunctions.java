@@ -18,7 +18,7 @@ public class HelperFunctions {
     protected final SpotifySession spotifySession = SpotifySession.getInstance();
     protected final Scanner scanner = new Scanner(System.in);
 
-    public HelperFunctions() {}
+    protected HelperFunctions() {}
 
     protected FileUtil getFileUtil() {
         return fileUtil;
@@ -33,14 +33,13 @@ public class HelperFunctions {
                 System.out.println("Enter Spotify client_id:");
                 String client_id = scanner.nextLine().trim();
                 spotifySession.setClient_id(client_id);
-                programOptions.setChangesSaved(false);
             }
             if (checkIfNullOrEmpty(spotifySession.getClient_secret())) {
                 System.out.println("Enter Spotify client_secret:");
                 String client_secret = scanner.nextLine().trim();
                 spotifySession.setClient_secret(client_secret);
-                programOptions.setChangesSaved(false);
             }
+            programOptions.setChangesSaved(false);
         }
         Logger.INFO.LogSilently("Everything is set up correctly, client_id and client_secret are not null or empty.");
     }
@@ -246,7 +245,7 @@ public class HelperFunctions {
                 spotifySession.setPlaylist_id(playlist_id);
             }
         }
-        fileUtil.WriteConfig();
+        getFileUtil().WriteConfig();
         System.out.println("Done");
     }
 }

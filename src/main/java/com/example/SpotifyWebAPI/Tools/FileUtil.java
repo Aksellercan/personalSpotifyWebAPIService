@@ -162,6 +162,10 @@ public class FileUtil {
     public void WriteConfig() {
         try {
             checkExist();
+            if (ProgramOptions.getInstance().isChangesSaved()) {
+                Logger.INFO.Log("Nothing to commit", false);
+                return;
+            }
             try (FileWriter fileWriter = new FileWriter(configFile, false)) {
                 if (!comments.isEmpty()) {
                     for (String comment : comments) {
@@ -169,10 +173,6 @@ public class FileUtil {
                     }
                 }
                 for (String key : configMap.keySet()) {
-                    if (ProgramOptions.getInstance().isChangesSaved()) {
-                        Logger.INFO.Log("Nothing to commit", false);
-                        return;
-                    }
                     UpdateConfig(key);
                     if(configMap.get(key).isEmpty()) continue;
                     fileWriter.write(key + ": " + configMap.get(key) + "\n");
