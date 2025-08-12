@@ -2,7 +2,6 @@ package com.example.SpotifyWebAPI.Tools;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
@@ -36,6 +35,15 @@ public class FileUtil {
             if (!createFile) {
                 throw new IOException("Could not create config file");
             }
+        }
+    }
+
+    public void AddToConfigMap(String... keys) {
+        if (!configMap.isEmpty()) {
+            return;
+        }
+        for (String key : keys) {
+            configMap.put(key, "");
         }
     }
 
@@ -166,6 +174,7 @@ public class FileUtil {
                         return;
                     }
                     UpdateConfig(key);
+                    if(configMap.get(key).isEmpty()) continue;
                     fileWriter.write(key + ": " + configMap.get(key) + "\n");
                 }
                 ProgramOptions.getInstance().setChangesSaved(true);

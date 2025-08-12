@@ -21,26 +21,10 @@ public class AutoMode {
     private String redirect_uri;
     private String refresh_token;
     private String playlist_id;
-    private final ConfigMaps configMaps;
     private final FileUtil fileUtil;
 
-    public AutoMode(FileUtil fileUtil, ConfigMaps configMaps) {
-        this.configMaps = configMaps;
+    public AutoMode(FileUtil fileUtil) {
         this.fileUtil = fileUtil;
-    }
-
-    /**
-     * Sets variables
-     */
-    private void setConfigs() {
-        client_id = configMaps.getClient_id();
-        client_secret = configMaps.getClient_secret();
-        user_id = configMaps.getUser_id();
-        redirect_uri = configMaps.getRedirect_uri();
-        refresh_token = configMaps.getRefresh_token();
-        playlist_id = configMaps.getPlaylist_id();
-        Logger.setDebugOutput(configMaps.isOutputDebug());
-        Logger.setVerboseLogFile(configMaps.isVerboseLogFile());
     }
 
     /**
@@ -49,13 +33,12 @@ public class AutoMode {
     public void runFunctions() {
         // Initialize Spotify session
         Logger.INFO.Log("Starting AutoMode.runFunctions()");
-        setConfigs();
         SpotifySession spotify_session = SpotifySession.getInstance();
-        spotify_session.setClient_id(client_id);
-        spotify_session.setClient_secret(client_secret);
-        spotify_session.setRedirect_uri(redirect_uri);
-        spotify_session.setRefresh_token(refresh_token);
-
+        client_id = spotify_session.getClient_id();
+        client_secret = spotify_session.getClient_secret();
+        redirect_uri = spotify_session.getRedirect_uri();
+        refresh_token = spotify_session.getRefresh_token();
+        playlist_id = spotify_session.getPlaylist_id();
         try {
             // Perform authentication
             User_Access_Token userAccessToken = new User_Access_Token();

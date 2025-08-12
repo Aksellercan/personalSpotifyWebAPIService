@@ -3,27 +3,19 @@ package com.example.SpotifyWebAPI.ConsoleInterface;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
-import java.util.Scanner;
 
 /**
  * CLI Menu for Client Access Token requests
  */
-public class BasicAuthMenu {
-    private final Scanner scanner;
+public class BasicAuthMenu extends HelperFunctions{
     private String playlist_id;
-    private final HelperFunctions helperFunctions;
-
-    public BasicAuthMenu(Scanner scanner) {
-        this.scanner = scanner;
-        this.helperFunctions = new HelperFunctions(scanner);
-    }
 
     /**
      * Menu entries
      */
     public void Basic_auth_Functions() {
         while (true) {
-            helperFunctions.clearScreen();
+            clearScreen();
             System.out.println("Basic Auth Functions");
             System.out.println("1. Get Playlist by ID");
             System.out.println("0. Go Back");

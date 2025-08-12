@@ -11,10 +11,15 @@ import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
+import java.util.Scanner;
+
 /**
  * Main Class and starting point
  */
 public class Main {
+    public static final FileUtil fileUtil = new FileUtil();
+
+    public static final Scanner scanner = new Scanner(System.in);
 
     /**
      * Checks if all values for Auto Mode are set
@@ -54,42 +59,6 @@ public class Main {
         System.out.println("  --get-refresh-token <code> <redirect uri>     get refresh token");
     }
 
-    private static void SaveConfig(FileUtil fileUtil, SpotifySession spotifySession, ProgramOptions programOptions) {
-        fileUtil.writeConfig("client_id", spotifySession.getClient_id(), "client_secret", spotifySession.getClient_secret(), "redirect_uri",
-                spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id", spotifySession.getPlaylist_id(), "auto_mode",
-                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(Logger.getDebugOutput()),
-                "user_id", spotifySession.getUser_id(),"launch_gui", Boolean.toString(programOptions.LAUNCH_GUI()), "verbose_log_file", Boolean.toString(Logger.getVerboseLogFile()));
-    }
-
-    /**
-     * Initializes a Session with data read from configuration file. If file doesn't exist or the value is not set it will be null
-     * @param fileUtil  FileUtil object
-     * @param configMaps    Gets values from mapping Object
-     * @param programOptions    Program Options to set
-     * @param spotifySession    Session options and values to set
-     */
-    private static void Initialize(FileUtil fileUtil, ConfigMaps configMaps, ProgramOptions programOptions, SpotifySession spotifySession) {
-        fileUtil.readConfig();
-        configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file");
-        programOptions.setAutoMode(configMaps.isAutoMode());
-        spotifySession.setPlaylist_id(configMaps.getPlaylist_id());
-        Logger.setDebugOutput(configMaps.isOutputDebug());
-        Logger.setVerboseLogFile(configMaps.isVerboseLogFile());
-        spotifySession.setClient_id(configMaps.getClient_id());
-        spotifySession.setClient_secret(configMaps.getClient_secret());
-        spotifySession.setRedirect_uri(configMaps.getRedirect_uri());
-        spotifySession.setRefresh_token(configMaps.getRefresh_token());
-        spotifySession.setUser_id(configMaps.getUser_id());
-        programOptions.setLAUNCH_GUI(configMaps.isLaunchGui());
-
-        //Settings
-        Logger.DEBUG.Log("launch_gui=" + programOptions.LAUNCH_GUI(), false);
-        Logger.DEBUG.Log("auto_mode=" + programOptions.isAutoMode(), false);
-        Logger.DEBUG.Log("verbose_log_file=" + Logger.getVerboseLogFile(), false);
-        Logger.DEBUG.Log("debug_output=" + Logger.getDebugOutput(), false);
-
-    }
-
     /**
      * Main Method.
      * Takes commandline arguments.
@@ -98,11 +67,21 @@ public class Main {
      * @param args  Commandline arguments, allows maximum of 3 arguments and lowest no arguments.
      */
     public static void main(String[] args) {
-        FileUtil fileUtil = new FileUtil();
+        String[] Credentials = {"client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id",
+                "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file"};
+//        FileUtil fileUtil = new FileUtil();
+        fileUtil.AddToConfigMap(Credentials);
         ConfigMaps configMaps = new ConfigMaps(fileUtil.getConfigMap());
         ProgramOptions programOptions = ProgramOptions.getInstance();
         SpotifySession spotifySession = SpotifySession.getInstance();
-        Initialize(fileUtil, configMaps, programOptions, spotifySession);
+        fileUtil.readConfig();
+        configMaps.setCredentials(Credentials);
+
+        //Settings
+        Logger.DEBUG.Log("launch_gui=" + programOptions.LAUNCH_GUI(), false);
+        Logger.DEBUG.Log("auto_mode=" + programOptions.isAutoMode(), false);
+        Logger.DEBUG.Log("verbose_log_file=" + Logger.getVerboseLogFile(), false);
+        Logger.DEBUG.Log("debug_output=" + Logger.getDebugOutput(), false);
 
         if (args.length == 0) {
             if (programOptions.LAUNCH_GUI()) {
@@ -110,10 +89,10 @@ public class Main {
                 return;
             }
             if (programOptions.isAutoMode()) {
-                AutoMode autoMode = new AutoMode(fileUtil, configMaps);
+                AutoMode autoMode = new AutoMode(fileUtil);
                 autoMode.runFunctions();
             } else {
-                MainMenu mainMenu = new MainMenu(fileUtil);
+                MainMenu mainMenu = new MainMenu();
                 mainMenu.userInterface();
             }
             return;
@@ -134,15 +113,15 @@ public class Main {
                         System.out.println("Required parameters not set!");
                         return;
                     }
-                    AutoMode autoMode = new AutoMode(fileUtil, configMaps);
+                    AutoMode autoMode = new AutoMode(fileUtil);
                     autoMode.runFunctions();
                     return;
                 case "--cli":
-                    MainMenu mainMenu = new MainMenu(fileUtil);
+                    MainMenu mainMenu = new MainMenu();
                     mainMenu.userInterface();
                     return;
                 case "--cli-test":
-                    CLI_Interface cli = new CLI_Interface(fileUtil, configMaps);
+                    CLI_Interface cli = new CLI_Interface(fileUtil);
                     cli.initSession();
                     return;
                 case "--help":
@@ -158,31 +137,20 @@ public class Main {
                 switch (args[1]) {
                     case "--playlist-id":
                         spotifySession.setPlaylist_id(args[2].trim());
-                        SaveConfig(fileUtil, spotifySession, programOptions);
-                        return;
                     case "--userid":
                         spotifySession.setUser_id(args[2].trim());
-                        SaveConfig(fileUtil, spotifySession, programOptions);
-                        return;
                     case "--client-id":
                         spotifySession.setClient_id(args[2].trim());
-                        SaveConfig(fileUtil, spotifySession, programOptions);
-                        return;
                     case "--client-secret":
                         spotifySession.setClient_secret(args[2].trim());
-                        SaveConfig(fileUtil, spotifySession, programOptions);
-                        return;
                     case "--redirect-uri":
                         spotifySession.setRedirect_uri(args[2].trim());
-                        SaveConfig(fileUtil, spotifySession, programOptions);
-                        return;
                     case "--refresh-token":
                         spotifySession.setRefresh_token(args[2].trim());
-                        SaveConfig(fileUtil, spotifySession, programOptions);
-                        return;
                     default:
                         HelpMenu();
                 }
+                fileUtil.WriteConfig();
             }
 
             if (args[0].equals("--get-refresh-token")) {
@@ -193,7 +161,7 @@ public class Main {
                     }
                     if (spotifySession.getRedirect_uri() == null || spotifySession.getRedirect_uri().isEmpty()) {
                         spotifySession.setRedirect_uri(args[2].trim());
-                        SaveConfig(fileUtil, spotifySession, programOptions);
+                        fileUtil.WriteConfig();
                     } else {
                         break;
                     }

@@ -3,7 +3,6 @@ package com.example.SpotifyWebAPI.Run_Modes;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.ConfigMaps;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
@@ -25,32 +24,20 @@ public class CLI_Interface {
     private String playlist_id;
     private final Scanner scanner = new Scanner(System.in);
     private final FileUtil fileUtil;
-    private final ConfigMaps configMaps;
     private boolean auto_mode = false;
     private boolean launch_gui = false;
     private boolean changesSaved = true;
 
-    public CLI_Interface(FileUtil fileUtil, ConfigMaps configMaps) {
+    public CLI_Interface(FileUtil fileUtil) {
         this.fileUtil = fileUtil;
-        this.configMaps = configMaps;
     }
 
     private void setConfigs() {
-        spotify_session = SpotifySession.getInstance();
-        client_id = configMaps.getClient_id();
-        client_secret = configMaps.getClient_secret();
-        redirect_uri = configMaps.getRedirect_uri();
-        refresh_token = configMaps.getRefresh_token();
-        playlist_id = configMaps.getPlaylist_id();
-        auto_mode = configMaps.isAutoMode();
-        user_id = configMaps.getUser_id();
-        Logger.setDebugOutput(configMaps.isOutputDebug());
         spotify_session.setClient_id(client_id);
         spotify_session.setClient_secret(client_secret);
         spotify_session.setUser_id(user_id);
         spotify_session.setRedirect_uri(redirect_uri);
         spotify_session.setRefresh_token(refresh_token);
-        launch_gui = configMaps.isLaunchGui();
     }
 
     public void initSession() {

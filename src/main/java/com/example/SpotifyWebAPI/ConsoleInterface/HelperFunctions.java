@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
+import com.example.SpotifyWebAPI.Main;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
@@ -12,14 +13,16 @@ import java.util.Scanner;
  */
 public class HelperFunctions {
 
-    private FileUtil fileUtil;
-    private final ProgramOptions programOptions = ProgramOptions.getInstance();
-    private final SpotifySession spotifySession = SpotifySession.getInstance();
-    private final Scanner scanner;
+    protected FileUtil fileUtil = Main.fileUtil;
+    protected final ProgramOptions programOptions = ProgramOptions.getInstance();
+    protected final SpotifySession spotifySession = SpotifySession.getInstance();
+    protected final Scanner scanner = new Scanner(System.in);
 
-    public HelperFunctions(Scanner scanner) {
-        this.scanner = scanner;
-    }
+//    public HelperFunctions(FileUtil fileUtil) {
+//        this.fileUtil = new FileUtil();
+//    }
+
+    public HelperFunctions() {}
 
     /**
      * Sets FileUtil object
@@ -27,6 +30,10 @@ public class HelperFunctions {
      */
     public void setFileUtil(FileUtil fileUtil) {
         this.fileUtil = fileUtil;
+    }
+
+    protected FileUtil getFileUtil() {
+        return fileUtil;
     }
 
     /**
@@ -74,17 +81,6 @@ public class HelperFunctions {
         } catch (Exception e) {
             Logger.ERROR.LogSilently("Error clearing screen, Operating System: " + getOS + ", " + e.getMessage());
         }
-    }
-
-    /**
-     * Saves Config
-     */
-    public void saveConfig() {
-        fileUtil.writeConfig("client_id", spotifySession.getClient_id(), "client_secret", spotifySession.getClient_secret(), "redirect_uri",
-                spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id",spotifySession.getPlaylist_id(), "auto_mode",
-                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(Logger.getDebugOutput()),
-                "user_id",spotifySession.getUser_id(),"launch_gui", Boolean.toString(programOptions.LAUNCH_GUI()), "verbose_log_file", Boolean.toString(Logger.getVerboseLogFile()));
-        programOptions.setChangesSaved(true);
     }
 
     /**
@@ -262,7 +258,7 @@ public class HelperFunctions {
                 spotifySession.setPlaylist_id(playlist_id);
             }
         }
-        saveConfig();
+        //getFileUtil().WriteConfig();
         System.out.println("Done");
     }
 }

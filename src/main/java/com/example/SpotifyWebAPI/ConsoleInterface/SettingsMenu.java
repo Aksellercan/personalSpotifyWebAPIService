@@ -1,27 +1,18 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
-import com.example.SpotifyWebAPI.Objects.ProgramOptions;
+
 import com.example.SpotifyWebAPI.Tools.Logger;
 
-import java.util.Scanner;
 /**
  * CLI Interface Settings Menu
  */
-public class SettingsMenu {
-    private final ProgramOptions programOptions = ProgramOptions.getInstance();
-    private final Scanner scanner;
-    private final HelperFunctions helperFunctions;
-
-    public SettingsMenu(Scanner scanner, HelperFunctions helperFunctions) {
-        this.scanner = scanner;
-        this.helperFunctions = helperFunctions;
-    }
+public class SettingsMenu extends HelperFunctions {
 
     /**
      * Settings menu
      */
     public void Menu() {
         while (true) {
-            helperFunctions.clearScreen();
+            clearScreen();
             System.out.println("Settings ");
             System.out.println("1. Set Http Debug Output" + (Logger.getDebugOutput() ? " - Debug Output Enabled" : ""));
             System.out.println("2. Include Debugs in log file (More Verbose)" + (Logger.getVerboseLogFile() ? " - Debugs will be included in log file" : ""));
@@ -55,7 +46,7 @@ public class SettingsMenu {
                         Logger.setVerboseLogFile(true);
                         System.out.println("Debugs will be included in log file");
                     } else {
-                        Logger.setDebugOutput(false);
+                        Logger.setVerboseLogFile(false);
                         System.out.println("Debugs won't included in log file");
                         programOptions.setChangesSaved(false);
                     }
@@ -66,7 +57,7 @@ public class SettingsMenu {
                     if (scanner.nextLine().equals("y")) {
                         programOptions.setAutoMode(true);
                         Logger.INFO.Log("Auto Mode set to true");
-                        helperFunctions.setupAutoMode();
+                        setupAutoMode();
                     } else {
                         programOptions.setAutoMode(false);
                         System.out.println("Auto Mode set to false");
@@ -89,7 +80,7 @@ public class SettingsMenu {
                     break;
                 case "5":
                     System.out.println("Saving Config...");
-                    helperFunctions.saveConfig();
+                    getFileUtil().WriteConfig();
                     break;
                 case "0":
                     return;

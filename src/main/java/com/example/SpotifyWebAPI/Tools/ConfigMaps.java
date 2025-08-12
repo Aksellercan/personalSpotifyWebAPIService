@@ -1,5 +1,8 @@
 package com.example.SpotifyWebAPI.Tools;
 
+import com.example.SpotifyWebAPI.Objects.ProgramOptions;
+import com.example.SpotifyWebAPI.Objects.SpotifySession;
+
 import java.util.HashMap;
 
 /**
@@ -7,61 +10,9 @@ import java.util.HashMap;
  */
 public class ConfigMaps {
     private final HashMap<String,String> configMap;
-    private String client_id;
-    private String client_secret;
-    private String redirect_uri;
-    private String refresh_token;
-    private String playlist_id;
-    private boolean output_debug;
-    private boolean auto_mode;
-    private String user_id;
-    private String launch_gui;
-    private boolean verbose_log_file;
 
     public ConfigMaps(HashMap<String,String> configMap) {
         this.configMap = configMap;
-    }
-
-    /**
-     * Returns the mapped variable launch_gui by default it is set to true.
-     * Even if the config line launch_gui is malformed it will launch GUI
-     * @return  boolean launch_gui
-     */
-    public boolean isLaunchGui() {
-        if (launch_gui == null) {
-            return true;
-        }
-        if (launch_gui.equalsIgnoreCase("true") || launch_gui.equalsIgnoreCase("false")) {
-            return launch_gui.equalsIgnoreCase("true");
-        }
-        return true;
-    }
-    public boolean isVerboseLogFile() {
-        return verbose_log_file;
-    }
-    public String getUser_id() {
-        return user_id;
-    }
-    public String getClient_id() {
-        return client_id;
-    }
-    public String getClient_secret() {
-        return client_secret;
-    }
-    public String getRedirect_uri() {
-        return redirect_uri;
-    }
-    public String getRefresh_token() {
-        return refresh_token;
-    }
-    public String getPlaylist_id() {
-        return playlist_id;
-    }
-    public boolean isOutputDebug() {
-        return output_debug;
-    }
-    public boolean isAutoMode() {
-        return auto_mode;
     }
 
     /**
@@ -78,34 +29,42 @@ public class ConfigMaps {
                 String value = configMap.get(credential);
                 switch (credential) {
                     case "user_id":
-                        this.user_id = value;
+                        SpotifySession.getInstance().setUser_id(value);
                         break;
                     case "client_id":
-                        this.client_id = value;
+                        SpotifySession.getInstance().setClient_id(value);
                         break;
                     case "client_secret":
-                        this.client_secret = value;
+                        SpotifySession.getInstance().setClient_secret(value);
                         break;
                     case "redirect_uri":
-                        this.redirect_uri = value;
+                        SpotifySession.getInstance().setRedirect_uri(value);
                         break;
                     case "refresh_token":
-                        this.refresh_token = value;
+                        SpotifySession.getInstance().setRefresh_token(value);
                         break;
                     case "playlist_id":
-                        this.playlist_id = value;
+                        SpotifySession.getInstance().setPlaylist_id(value);
                         break;
                     case "output_debug":
-                        this.output_debug = Boolean.parseBoolean(value);
+                        Logger.setDebugOutput(Boolean.parseBoolean(value));
                         break;
                     case "auto_mode":
-                        this.auto_mode = Boolean.parseBoolean(value);
+                        ProgramOptions.getInstance().setAutoMode(Boolean.parseBoolean(value));
                         break;
                     case "launch_gui":
-                        this.launch_gui = value;
+                        if (value == null) {
+                            ProgramOptions.getInstance().setLAUNCH_GUI(true);
+                            break;
+                        }
+                        if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+                            ProgramOptions.getInstance().setLAUNCH_GUI(value.equalsIgnoreCase("true"));
+                            break;
+                        }
+                        ProgramOptions.getInstance().setLAUNCH_GUI(true);
                         break;
                     case "verbose_log_file":
-                        this.verbose_log_file = Boolean.parseBoolean(value);
+                        Logger.setVerboseLogFile(Boolean.parseBoolean(value));
                         break;
                 }
             } else {

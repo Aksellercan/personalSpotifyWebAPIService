@@ -1,37 +1,20 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
-import com.example.SpotifyWebAPI.Objects.ProgramOptions;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
-import java.util.Scanner;
 
 /**
  * CLI Menu for User Access Token requests
  */
-public class UserRequestsMenu {
-    private final SpotifySession spotify_session = SpotifySession.getInstance();
-    private final Scanner scanner;
-    private final ProgramOptions programOptions = ProgramOptions.getInstance();
-    private final HelperFunctions helperFunctions;
-    private final FileUtil fileUtil;
-
-    public UserRequestsMenu(Scanner scanner, FileUtil fileUtil) {
-        this.scanner = scanner;
-        this.fileUtil = fileUtil;
-        this.helperFunctions = new HelperFunctions(scanner);
-    }
-
+public class UserRequestsMenu extends HelperFunctions {
     /**
      * Menu Entries
      */
     public void Oauth2_Functions() {
-        helperFunctions.setFileUtil(fileUtil);
         while (true) {
-            helperFunctions.clearScreen();
-            System.out.println("User Requests Menu" + (helperFunctions.checkIfNullOrEmpty(spotify_session.getRefresh_token()) ? " - No Refresh Token. Get Token First" : ""));
+            clearScreen();
+            System.out.println("User Requests Menu" + (checkIfNullOrEmpty(spotifySession.getRefresh_token()) ? " - No Refresh Token. Get Token First" : ""));
             System.out.println("1. Get Refresh Token to access User Requests");
             System.out.println("2. Refresh access token using refresh token");
             System.out.println("3. Edit Details of a Playlist");
@@ -45,70 +28,70 @@ public class UserRequestsMenu {
             switch (scanner.nextLine()) {
                 case "1":
                     String code = null;
-                    while (helperFunctions.checkIfNullOrEmpty(code) || (helperFunctions.checkIfNullOrEmpty(spotify_session.getRedirect_uri()))) {
+                    while (checkIfNullOrEmpty(code) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri()))) {
                         programOptions.setChangesSaved(false);
-                        if (helperFunctions.checkIfNullOrEmpty(code)) {
+                        if (checkIfNullOrEmpty(code)) {
                             System.out.println("Enter Spotify code:");
                             code = scanner.nextLine().trim();
-                            spotify_session.setCode(code);
+                            spotifySession.setCode(code);
                             continue;
                         }
-                        if (helperFunctions.checkIfNullOrEmpty(spotify_session.getRedirect_uri())) {
+                        if (checkIfNullOrEmpty(spotifySession.getRedirect_uri())) {
                             System.out.println("Enter Redirect URI:");
                             String redirect_uri = scanner.nextLine().trim();
-                            spotify_session.setRedirect_uri(redirect_uri);
+                            spotifySession.setRedirect_uri(redirect_uri);
                         }
                     }
                     userAccessToken.get_Refresh_Token();
                     System.out.println("Save the refresh token to config?");
                     if (scanner.nextLine().equals("y")) {
-                        helperFunctions.saveConfig();
+                        getFileUtil().WriteConfig();
                         Logger.INFO.Log("Saved Config successfully!");
                     }
                     break;
                 case "2":
-                    while (helperFunctions.checkIfNullOrEmpty(spotify_session.getRefresh_token()) || (helperFunctions.checkIfNullOrEmpty(spotify_session.getRedirect_uri()))) {
+                    while (checkIfNullOrEmpty(spotifySession.getRefresh_token()) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri()))) {
                         programOptions.setChangesSaved(false);
-                        if (helperFunctions.checkIfNullOrEmpty(spotify_session.getRefresh_token())) {
+                        if (checkIfNullOrEmpty(spotifySession.getRefresh_token())) {
                             System.out.println("Enter Refresh Token:");
                             String refresh_token = scanner.nextLine().trim();
-                            spotify_session.setRefresh_token(refresh_token);
+                            spotifySession.setRefresh_token(refresh_token);
                             continue;
                         }
-                        if (helperFunctions.checkIfNullOrEmpty(spotify_session.getRedirect_uri())) {
+                        if (checkIfNullOrEmpty(spotifySession.getRedirect_uri())) {
                             System.out.println("Enter Redirect URI:");
                             String redirect_uri = scanner.nextLine().trim();
-                            spotify_session.setRedirect_uri(redirect_uri);
+                            spotifySession.setRedirect_uri(redirect_uri);
                         }
                     }
                     userAccessToken.refresh_token_with_User_Token();
                     break;
                 case "3":
-                    helperFunctions.setPlaylistDetails(userRequest);
+                    setPlaylistDetails(userRequest);
                     break;
                 case "4":
-                    helperFunctions.getPlaylistItems(userRequest);
+                    getPlaylistItems(userRequest);
                     break;
                 case "5":
                     System.out.println("Add to new playlist? (y/n)");
                     String chosenPlaylist = null;
                     int position;
                     if (scanner.nextLine().equals("y")) {
-                        while (helperFunctions.checkIfNullOrEmpty(chosenPlaylist)) {
+                        while (checkIfNullOrEmpty(chosenPlaylist)) {
                             System.out.println("Enter Playlist ID:");
                             chosenPlaylist = scanner.nextLine().trim();
                         }
                         System.out.println("Adding to playlist: " + chosenPlaylist);
-                        position = helperFunctions.setPosition();
-                        userRequest.addPlaylistItems(chosenPlaylist, position, helperFunctions.addTrackUri(), false);
+                        position = setPosition();
+                        userRequest.addPlaylistItems(chosenPlaylist, position, addTrackUri(), false);
                         break;
                     }
-                    System.out.println("Adding to playlist: " + spotify_session.getPlaylist_id());
-                    position = helperFunctions.setPosition();
-                    userRequest.addPlaylistItems(spotify_session.getPlaylist_id(), position, helperFunctions.addTrackUri(), false);
+                    System.out.println("Adding to playlist: " + spotifySession.getPlaylist_id());
+                    position = setPosition();
+                    userRequest.addPlaylistItems(spotifySession.getPlaylist_id(), position, addTrackUri(), false);
                     break;
                 case "6":
-                    helperFunctions.createPlaylistDetails(userRequest);
+                    createPlaylistDetails(userRequest);
                     break;
                 case "0":
                     return;

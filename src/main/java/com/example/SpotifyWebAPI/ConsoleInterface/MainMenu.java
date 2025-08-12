@@ -1,31 +1,25 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
-
+import com.example.SpotifyWebAPI.Main;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
-import com.example.SpotifyWebAPI.Tools.Logger;
 import java.util.Scanner;
 
 /**
  * CLI Interface Main Menu
  */
-public class MainMenu {
+public class MainMenu extends HelperFunctions {
     private final ProgramOptions programOptions = ProgramOptions.getInstance();
-    private final FileUtil fileUtil;
-
-    public MainMenu (FileUtil fileUtil) {
-        this.fileUtil = fileUtil;
-    }
+    private final FileUtil fileUtil = Main.fileUtil;
 
     /**
      * Main menu
      */
     public void userInterface() {
         Scanner scanner = new Scanner(System.in);
-        HelperFunctions helperFunctions = new HelperFunctions(scanner);
-        helperFunctions.checkClientCredentials();
-        helperFunctions.setFileUtil(fileUtil);
+//        HelperFunctions helperFunctions = new HelperFunctions();
+        checkClientCredentials();
         while (true) {
-            helperFunctions.clearScreen();
+            clearScreen();
             System.out.println("Spotify Web API CLI Interface");
             System.out.println("1. Basic auth Functions");
             System.out.println("2. Oauth2 Functions");
@@ -34,23 +28,24 @@ public class MainMenu {
             System.out.println("0. Exit the program" + (programOptions.isChangesSaved() ? "" : " - Changes not saved"));
             switch (scanner.nextLine()) {
                 case "1":
-                    BasicAuthMenu basicAuthMenu = new BasicAuthMenu(scanner);
+                    BasicAuthMenu basicAuthMenu = new BasicAuthMenu();
                     basicAuthMenu.Basic_auth_Functions();
                     break;
                 case "2":
-                    UserRequestsMenu userRequestsMenu = new UserRequestsMenu(scanner, fileUtil);
+                    UserRequestsMenu userRequestsMenu = new UserRequestsMenu();
                     userRequestsMenu.Oauth2_Functions();
                     break;
                 case "3":
-                    SettingsMenu settingsMenu = new SettingsMenu(scanner, helperFunctions);
+                    SettingsMenu settingsMenu = new SettingsMenu();
                     settingsMenu.Menu();
                     break;
                 case "4":
                     System.out.println("Saving Config...");
-                    helperFunctions.saveConfig();
+                    fileUtil.WriteConfig();
                     break;
                 case "0":
                     System.out.println("Exiting the program...");
+                    scanner.close();
                     return;
                 default:
                     System.out.println("Invalid input. Please try again.");
