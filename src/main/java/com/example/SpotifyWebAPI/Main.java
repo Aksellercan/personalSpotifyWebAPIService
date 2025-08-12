@@ -57,8 +57,8 @@ public class Main {
     private static void SaveConfig(FileUtil fileUtil, SpotifySession spotifySession, ProgramOptions programOptions) {
         fileUtil.writeConfig("client_id", spotifySession.getClient_id(), "client_secret", spotifySession.getClient_secret(), "redirect_uri",
                 spotifySession.getRedirect_uri(), "refresh_token", spotifySession.getRefresh_token(), "playlist_id", spotifySession.getPlaylist_id(), "auto_mode",
-                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(programOptions.isDebugMode()),
-                "user_id", spotifySession.getUser_id(),"launch_gui", Boolean.toString(programOptions.LAUNCH_GUI()));
+                Boolean.toString(programOptions.isAutoMode()), "output_debug", Boolean.toString(Logger.getDebugOutput()),
+                "user_id", spotifySession.getUser_id(),"launch_gui", Boolean.toString(programOptions.LAUNCH_GUI()), "verbose_log_file", Boolean.toString(Logger.getVerboseLogFile()));
     }
 
     /**
@@ -70,18 +70,24 @@ public class Main {
      */
     private static void Initialize(FileUtil fileUtil, ConfigMaps configMaps, ProgramOptions programOptions, SpotifySession spotifySession) {
         fileUtil.readConfig();
-        configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id", "launch_gui");
+        configMaps.setCredentials("client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id", "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file");
         programOptions.setAutoMode(configMaps.isAutoMode());
-        programOptions.setDebugMode(configMaps.isOutputDebug());
         spotifySession.setPlaylist_id(configMaps.getPlaylist_id());
-        Logger.setDebugOutput(programOptions.isDebugMode());
+        Logger.setDebugOutput(configMaps.isOutputDebug());
+        Logger.setVerboseLogFile(configMaps.isVerboseLogFile());
         spotifySession.setClient_id(configMaps.getClient_id());
         spotifySession.setClient_secret(configMaps.getClient_secret());
         spotifySession.setRedirect_uri(configMaps.getRedirect_uri());
         spotifySession.setRefresh_token(configMaps.getRefresh_token());
         spotifySession.setUser_id(configMaps.getUser_id());
-        //programOptions.setLAUNCH_GUI((configMaps.isLaunchGui() == null ? programOptions.LAUNCH_GUI() : Boolean.parseBoolean(configMaps.isLaunchGui())));
         programOptions.setLAUNCH_GUI(configMaps.isLaunchGui());
+
+        //Settings
+        Logger.DEBUG.Log("launch_gui=" + programOptions.LAUNCH_GUI(), false);
+        Logger.DEBUG.Log("auto_mode=" + programOptions.isAutoMode(), false);
+        Logger.DEBUG.Log("verbose_log_file=" + Logger.getVerboseLogFile(), false);
+        Logger.DEBUG.Log("debug_output=" + Logger.getDebugOutput(), false);
+
     }
 
     /**

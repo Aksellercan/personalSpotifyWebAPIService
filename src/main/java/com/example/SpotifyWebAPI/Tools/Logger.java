@@ -21,6 +21,7 @@ public enum Logger {
 
     private final String severity;
     private static boolean debugOutput = false;
+    private static boolean verboseLogFile = true;
 
     /**
      * Constructor for logger takes severity level as input
@@ -39,11 +40,27 @@ public enum Logger {
     }
 
     /**
+     * Sets if debug severities should be included in log file or not
+     * @param verboseLogFile    Takes a boolean to set
+     */
+    public static void setVerboseLogFile(boolean verboseLogFile) {
+        Logger.verboseLogFile = verboseLogFile;
+    }
+
+    /**
      * Returns debugOutput value
      * @return debugOutput value
      */
     public static boolean getDebugOutput() {
         return debugOutput;
+    }
+
+    /**
+     * Returns verboseLogFile value
+     * @return  verboseLogFile value
+     */
+    public static boolean getVerboseLogFile() {
+        return verboseLogFile;
     }
 
     /**
@@ -57,17 +74,11 @@ public enum Logger {
     }
 
     /**
-     * Logs message and writes it to logfile. If "debugOutput" is set to false it won't display it or write it to file
+     * Logs message and writes it to logfile
      * @param message   Message to be logged
      */
     public void Log(String message) {
-        if (!debugOutput && this == DEBUG) {
-            return;
-        } else if (this == DEBUG) {
-            Log(message,false);
-            return;
-        }
-        Log(message, true);
+        WriteLog(message, true);
     }
 
     /**
@@ -76,12 +87,31 @@ public enum Logger {
      * @param writetoFile Whether to write to logfile or not
      */
     public void Log(String message, boolean writetoFile) {
+        WriteLog(message, writetoFile);
+    }
+
+    /**
+     * Decides what to do with logs depending on settings.
+     *  If only "debugOutput" is set to false it won't display it and by default will not write to file.
+     *  If "debugOutput" is set to false but "verboseLogFile" is set to true, It will only write it to log file.
+     *  If only "verboseLogFile" is set to false but "debugOutput" is set to true, then it will only display it on console.
+     *  Parameter "writeToFile" still has priority on deciding whether to write to file or not however.
+     * @param message   Message to be logged
+     * @param writetoFile   Whether to write to log file or not
+     */
+    private void WriteLog(String message, boolean writetoFile) {
+        String fullMessage = DateSeverityFormat() + message;
         if (!debugOutput && this == DEBUG) {
+            if (verboseLogFile && writetoFile) SaveLog(fullMessage);
             return;
         }
-        String fullMessage = DateSeverityFormat() + message;
+        else if (this == DEBUG) {
+            if (verboseLogFile && writetoFile) SaveLog(fullMessage);
+            System.out.println(fullMessage);
+            return;
+        }
         if (writetoFile) {
-            writeLog(fullMessage);
+            SaveLog(fullMessage);
         }
         System.out.println(fullMessage);
     }
@@ -130,7 +160,7 @@ public enum Logger {
     private void WriteExceptions(Exception e, boolean writetoFile) {
         String fullMessage = DateSeverityFormat()  + e.getMessage();
         if (writetoFile) {
-            writeLog(fullMessage);
+            SaveLog(fullMessage);
         }
         System.out.println(fullMessage);
     }
@@ -144,7 +174,7 @@ public enum Logger {
     private void WriteExceptionMessageLogs(Exception e, String message, boolean writetoFile) {
         String fullMessage = DateSeverityFormat()  + message + ". Exception: " + e.getMessage();
         if (writetoFile) {
-            writeLog(fullMessage);
+            SaveLog(fullMessage);
         }
         System.out.println(fullMessage);
     }
@@ -155,7 +185,7 @@ public enum Logger {
      */
     public void LogSilently(String message) {
         String fullMessage = DateSeverityFormat() + message;
-        writeLog(fullMessage);
+        SaveLog(fullMessage);
     }
 
     /**
@@ -172,7 +202,7 @@ public enum Logger {
      * Same for logfile as well, checks if the file exists if it does, it appends to it. Otherwise, creates it.
      * @param fullMessage   Full formatted message that will be written to logfile
      */
-    private void writeLog(String fullMessage) {
+    private void SaveLog(String fullMessage) {
         try {
             LocalDateTime today = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -195,7 +225,7 @@ public enum Logger {
                 writer.write(fullMessage + "\n");
             }
         } catch (IOException e) {
-            LogException(e, "writeLog(String fullMessage)");
+            LogException(e, "SaveLog(String fullMessage)");
         }
     }
 }

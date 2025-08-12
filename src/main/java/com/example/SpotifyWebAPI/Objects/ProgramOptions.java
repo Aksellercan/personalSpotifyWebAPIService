@@ -6,7 +6,6 @@ package com.example.SpotifyWebAPI.Objects;
 public final class ProgramOptions {
     private static ProgramOptions instance;
     private boolean AUTO_MODE;
-    private boolean DEBUG_MODE;
     private boolean CHANGES_SAVED = true;
     private boolean LAUNCH_GUI = true;
 
@@ -25,18 +24,12 @@ public final class ProgramOptions {
     public boolean isAutoMode() {
         return AUTO_MODE;
     }
-    public boolean isDebugMode() {
-        return DEBUG_MODE;
-    }
     public boolean isChangesSaved() {
         return CHANGES_SAVED;
     }
 
     public void setAutoMode(boolean autoMode) {
         this.AUTO_MODE = autoMode;
-    }
-    public void setDebugMode(boolean debugMode) {
-        this.DEBUG_MODE = debugMode;
     }
     public void setChangesSaved(boolean changesSaved) {
         this.CHANGES_SAVED = changesSaved;

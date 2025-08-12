@@ -16,6 +16,7 @@ public class ConfigMaps {
     private boolean auto_mode;
     private String user_id;
     private String launch_gui;
+    private boolean verbose_log_file;
 
     public ConfigMaps(HashMap<String,String> configMap) {
         this.configMap = configMap;
@@ -30,11 +31,13 @@ public class ConfigMaps {
         if (launch_gui == null) {
             return true;
         }
-        Logger.DEBUG.Log("launch_gui=" + launch_gui);
         if (launch_gui.equalsIgnoreCase("true") || launch_gui.equalsIgnoreCase("false")) {
             return launch_gui.equalsIgnoreCase("true");
         }
         return true;
+    }
+    public boolean isVerboseLogFile() {
+        return verbose_log_file;
     }
     public String getUser_id() {
         return user_id;
@@ -100,6 +103,9 @@ public class ConfigMaps {
                         break;
                     case "launch_gui":
                         this.launch_gui = value;
+                        break;
+                    case "verbose_log_file":
+                        this.verbose_log_file = Boolean.parseBoolean(value);
                         break;
                 }
             } else {
