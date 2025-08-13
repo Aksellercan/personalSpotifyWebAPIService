@@ -38,6 +38,10 @@ public class FileUtil {
         }
     }
 
+    /**
+     * If config files does not exist, it fills the hashmap with empty values
+     * @param keys  Hashmap keys
+     */
     public void AddToConfigMap(String... keys) {
         if (!configMap.isEmpty()) {
             return;
@@ -57,7 +61,7 @@ public class FileUtil {
     }
 
     /**
-     * Override read HashMap config with new values
+     * Overrides in memory HashMap config with new values
      * @param key   HashMap key
      */
     private void UpdateConfig(String key) {
@@ -94,6 +98,9 @@ public class FileUtil {
             case "auto_mode":
                 configMap.put(key, String.valueOf(programOptions.isAutoMode()));
                 break;
+            case "coloured_output":
+                configMap.put(key, String.valueOf(Logger.getColouredOutput()));
+                break;
         }
     }
 
@@ -116,7 +123,7 @@ public class FileUtil {
                     String value = splitLine[1].trim();
                     configMap.put(key, value);
                 } else {
-                    Logger.ERROR.LogSilently("Invalid config line: " + line + ", expected format: key=value. Continue reading the file.");
+                    Logger.ERROR.LogSilently("Invalid config line: " + line + ", expected format: \"key: value\". Continue reading the file.");
                 }
             }
         } catch (IOException e) {
@@ -125,7 +132,9 @@ public class FileUtil {
     }
 
     /**
-     * Writes the config file with values provided and comments
+     * @deprecated
+     * Writes the config file with values provided and comments. Uses config.txt as config file
+     * Using newer WriteConfig() instead
      *
      * @param option String array in pairs
      */
@@ -133,9 +142,22 @@ public class FileUtil {
         if (option.length % 2 != 0) {
             Logger.ERROR.Log("Invalid number of arguments for writeConfig(String... option)", false);
         }
+        File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
         try {
+            if (!deprecatedConfigFile.exists()) {
+                boolean createDir = deprecatedConfigFile.mkdirs();
+                if (!createDir) {
+                    throw new IOException("Could not create config directory");
+                }
+            }
+            if (!deprecatedConfigFile.exists()) {
+                boolean createFile = deprecatedConfigFile.createNewFile();
+                if (!createFile) {
+                    throw new IOException("Could not create config file");
+                }
+            }
             checkExist();
-            try (FileWriter writer = new FileWriter(configFile, false)) {
+            try (FileWriter writer = new FileWriter(deprecatedConfigFile, false)) {
                 if (!comments.isEmpty()) {
                     for (String comment : comments) {
                         writer.write(comment + "\n");
@@ -147,7 +169,7 @@ public class FileUtil {
                     } else {
                         String key = option[i].trim();
                         String value = option[i + 1].trim();
-                        writer.write(key + ": " + value + "\n");
+                        writer.write(key + "=" + value + "\n");
                     }
                 }
             }
@@ -157,13 +179,13 @@ public class FileUtil {
     }
 
     /**
-     * Simpler Config writer. Overrides current config file when the changes are not saved
+     * Simpler Config writer. Overrides current config file when the changes are not saved. Uses YAML format as config file
      */
     public void WriteConfig() {
         try {
             checkExist();
             if (ProgramOptions.getInstance().isChangesSaved()) {
-                Logger.INFO.Log("Nothing to commit", false);
+                Logger.INFO.Log("Nothing to save", false);
                 return;
             }
             try (FileWriter fileWriter = new FileWriter(configFile, false)) {

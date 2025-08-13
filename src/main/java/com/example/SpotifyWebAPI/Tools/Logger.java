@@ -20,8 +20,18 @@ public enum Logger {
     CRITICAL(" [ CRITICAL ] "),;
 
     private final String severity;
+    /**
+     * Default set to false
+     */
     private static boolean debugOutput = false;
+    /**
+     * Default set to true
+     */
     private static boolean verboseLogFile = true;
+    /**
+     * Default set to false for compatibility
+     */
+    private static boolean colouredOutput = false;
 
     /**
      * Constructor for logger takes severity level as input
@@ -48,11 +58,27 @@ public enum Logger {
     }
 
     /**
+     * Enable or disable ANSI colours on console
+     * @param colouredOutput    Takes a boolean to set
+     */
+    public static void setColouredOutput(boolean colouredOutput) {
+        Logger.colouredOutput = colouredOutput;
+    }
+
+    /**
      * Returns debugOutput value
      * @return debugOutput value
      */
     public static boolean getDebugOutput() {
         return debugOutput;
+    }
+
+    /**
+     * Returns colouredOutput value
+     * @return  colouredOutput value
+     */
+    public static boolean getColouredOutput() {
+        return colouredOutput;
     }
 
     /**
@@ -82,12 +108,13 @@ public enum Logger {
     }
 
     /**
-     * Logs message and writes it to logfile if "writetoFile" variable it set to true. If debugOutput is set to false it won't display it or write it to file
+     * Logs message and writes it to logfile if "writeToFile" variable it set to true.
+     * If debugOutput is set to false it won't display it or write it to file
      * @param message   Message to be logged
-     * @param writetoFile Whether to write to logfile or not
+     * @param writeToFile Whether to write to logfile or not
      */
-    public void Log(String message, boolean writetoFile) {
-        WriteLog(message, writetoFile);
+    public void Log(String message, boolean writeToFile) {
+        WriteLog(message, writeToFile);
     }
 
     /**
@@ -95,25 +122,51 @@ public enum Logger {
      *  If only "debugOutput" is set to false it won't display it and by default will not write to file.
      *  If "debugOutput" is set to false but "verboseLogFile" is set to true, It will only write it to log file.
      *  If only "verboseLogFile" is set to false but "debugOutput" is set to true, then it will only display it on console.
-     *  Parameter "writeToFile" still has priority on deciding whether to write to file or not however.
+     *  Parameter "writeToFile" still has priority on deciding whether to write to file or not, however.
      * @param message   Message to be logged
-     * @param writetoFile   Whether to write to log file or not
+     * @param writeToFile   Whether to write to log file or not
      */
-    private void WriteLog(String message, boolean writetoFile) {
+    private void WriteLog(String message, boolean writeToFile) {
         String fullMessage = DateSeverityFormat() + message;
         if (!debugOutput && this == DEBUG) {
-            if (verboseLogFile && writetoFile) SaveLog(fullMessage);
+            if (verboseLogFile && writeToFile) SaveLog(fullMessage);
             return;
         }
         else if (this == DEBUG) {
-            if (verboseLogFile && writetoFile) SaveLog(fullMessage);
-            System.out.println(fullMessage);
+            if (verboseLogFile && writeToFile) SaveLog(fullMessage);
+            ColourOutput(fullMessage);
             return;
         }
-        if (writetoFile) {
+        if (writeToFile) {
             SaveLog(fullMessage);
         }
-        System.out.println(fullMessage);
+        ColourOutput(fullMessage);
+    }
+
+    /**
+     * Colour console output depending on severity level
+     * @param fullMessage   Message to be logged
+     */
+    private void ColourOutput(String fullMessage) {
+        if (colouredOutput) {
+            switch (this) {
+                case DEBUG:
+                    System.out.println(ConsoleColours.YELLOW_UNDERLINED + fullMessage + ConsoleColours.RESET);
+                    break;
+                case WARN:
+                    System.out.println(ConsoleColours.YELLOW + fullMessage + ConsoleColours.RESET);
+                    break;
+                case ERROR:
+                case CRITICAL:
+                    System.out.println(ConsoleColours.RED + fullMessage + ConsoleColours.RESET);
+                    break;
+                case INFO:
+                    System.out.println(ConsoleColours.GREEN + fullMessage + ConsoleColours.RESET);
+                    break;
+            }
+        } else {
+            System.out.println(fullMessage);
+        }
     }
 
     /**
@@ -126,13 +179,13 @@ public enum Logger {
     }
 
     /**
-     * Used to log exceptions with messages and writes them to logfile if "writetoFile" is set to true
+     * Used to log exceptions with messages and writes them to logfile if "writeToFile" is set to true
      * @param e Exception to be logged
      * @param message   Message to be logged
-     * @param writetoFile   Whether to write to logfile or not
+     * @param writeToFile   Whether to write to logfile or not
      */
-    public void LogException(Exception e, String message, boolean writetoFile) {
-        WriteExceptionMessageLogs(e, message, writetoFile);
+    public void LogException(Exception e, String message, boolean writeToFile) {
+        WriteExceptionMessageLogs(e, message, writeToFile);
     }
 
     /**
@@ -144,39 +197,39 @@ public enum Logger {
     }
 
     /**
-     * Used to log exceptions and writes them to logfile if "writetoFile" is set to true
+     * Used to log exceptions and writes them to logfile if "writeToFile" is set to true
      * @param e Exception to be logged
-     * @param writetoFile   Whether to write to logfile or not
+     * @param writeToFile   Whether to write to logfile or not
      */
-    public void LogException(Exception e, boolean writetoFile) {
-        WriteExceptions(e, writetoFile);
+    public void LogException(Exception e, boolean writeToFile) {
+        WriteExceptions(e, writeToFile);
     }
 
     /**
-     * Formats Exceptions with date and severity then writes them to file if "writetoFile" is set to true
+     * Formats Exceptions with date and severity then writes them to file if "writeToFile" is set to true
      * @param e Exception to be formatted
-     * @param writetoFile   Whether to write to logfile or not
+     * @param writeToFile   Whether to write to logfile or not
      */
-    private void WriteExceptions(Exception e, boolean writetoFile) {
+    private void WriteExceptions(Exception e, boolean writeToFile) {
         String fullMessage = DateSeverityFormat()  + e.getMessage();
-        if (writetoFile) {
+        if (writeToFile) {
             SaveLog(fullMessage);
         }
-        System.out.println(fullMessage);
+        ColourOutput(fullMessage);
     }
 
     /**
-     * Formats Exceptions with message, date and severity then writes them to file if "writetoFile" is set to true
+     * Formats Exceptions with message, date and severity then writes them to file if "writeToFile" is set to true
      * @param e Exception to be formatted
      * @param message   Message to be formatted
-     * @param writetoFile   Whether to write to logfile or not
+     * @param writeToFile   Whether to write to logfile or not
      */
-    private void WriteExceptionMessageLogs(Exception e, String message, boolean writetoFile) {
+    private void WriteExceptionMessageLogs(Exception e, String message, boolean writeToFile) {
         String fullMessage = DateSeverityFormat()  + message + ". Exception: " + e.getMessage();
-        if (writetoFile) {
+        if (writeToFile) {
             SaveLog(fullMessage);
         }
-        System.out.println(fullMessage);
+        ColourOutput(fullMessage);
     }
 
     /**

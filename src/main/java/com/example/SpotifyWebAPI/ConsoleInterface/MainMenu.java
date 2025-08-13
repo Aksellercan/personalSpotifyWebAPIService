@@ -1,6 +1,7 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 import com.example.SpotifyWebAPI.Main;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
+import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import java.util.Scanner;
 
@@ -23,7 +24,7 @@ public class MainMenu extends HelperFunctions {
             System.out.println("2. Oauth2 Functions");
             System.out.println("3. Settings");
             System.out.println("4. Save Config");
-            System.out.println("0. Exit the program" + (programOptions.isChangesSaved() ? "" : " - Changes not saved"));
+            System.out.println("0. Exit the program" + (programOptions.isChangesSaved() ? "" : ConsoleColours.RED + " - Changes not saved" + ConsoleColours.RESET));
             switch (scanner.nextLine()) {
                 case "1":
                     BasicAuthMenu basicAuthMenu = new BasicAuthMenu();
@@ -38,15 +39,15 @@ public class MainMenu extends HelperFunctions {
                     settingsMenu.Menu();
                     break;
                 case "4":
-                    System.out.println("Saving Config...");
+                    System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
                     fileUtil.WriteConfig();
                     break;
                 case "0":
-                    System.out.println("Exiting the program...");
+                    System.out.println(ConsoleColours.GREEN + "Exiting the program..." + ConsoleColours.RESET);
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Invalid input. Please try again.");
+                    System.out.println(ConsoleColours.RED + "Invalid input" + ConsoleColours.RESET);
                     break;
             }
         }

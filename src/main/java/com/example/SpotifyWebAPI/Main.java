@@ -7,10 +7,10 @@ import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
 import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
 import com.example.SpotifyWebAPI.Tools.ConfigMaps;
+import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Logger;
-
 import java.util.Scanner;
 
 /**
@@ -19,20 +19,24 @@ import java.util.Scanner;
 public class Main {
     public static final FileUtil fileUtil = new FileUtil();
 
-    public static final Scanner scanner = new Scanner(System.in);
-
     /**
      * Checks if all values for Auto Mode are set
      * @param spotifySession    session object
      */
     private static void AutoModeRequirementCheck(SpotifySession spotifySession) {
         System.out.println("Auto Mode Requirement Check");
-        System.out.println((spotifySession.getUser_id() == null ? "User ID not set!" : "Set User ID: " + spotifySession.getUser_id()));
-        System.out.println((spotifySession.getClient_id() == null ? "Client ID not set!" : "Set Client ID: " + spotifySession.getClient_id()));
-        System.out.println((spotifySession.getClient_secret() == null ? "Client Secret not set!" : "Set Client Secret: " + spotifySession.getClient_secret()));
-        System.out.println((spotifySession.getRedirect_uri() == null ? "Redirect URI not set!" : "Set Redirect URI: " + spotifySession.getRedirect_uri()));
-        System.out.println((spotifySession.getRefresh_token() == null ? "Refresh Token not set!" : "Set Refresh Token: " + spotifySession.getRefresh_token()));
-        System.out.println((spotifySession.getPlaylist_id() == null) ? "Playlist ID not set!" : "Set Playlist ID: " + spotifySession.getPlaylist_id());
+        System.out.println((spotifySession.getUser_id() == null ? ConsoleColours.RED + "User ID not set!" + ConsoleColours.RESET
+                : "Set User ID: " + spotifySession.getUser_id()));
+        System.out.println((spotifySession.getClient_id() == null ? ConsoleColours.RED + "Client ID not set!" + ConsoleColours.RESET
+                : "Set Client ID: " + spotifySession.getClient_id()));
+        System.out.println((spotifySession.getClient_secret() == null ? ConsoleColours.RED + "Client Secret not set!" + ConsoleColours.RESET
+                : "Set Client Secret: " + spotifySession.getClient_secret()));
+        System.out.println((spotifySession.getRedirect_uri() == null ? ConsoleColours.RED + "Redirect URI not set!" + ConsoleColours.RESET
+                : "Set Redirect URI: " + spotifySession.getRedirect_uri()));
+        System.out.println((spotifySession.getRefresh_token() == null ? ConsoleColours.RED + "Refresh Token not set!" + ConsoleColours.RESET
+                : "Set Refresh Token: " + spotifySession.getRefresh_token()));
+        System.out.println((spotifySession.getPlaylist_id() == null) ? ConsoleColours.RED + "Playlist ID not set!" + ConsoleColours.RESET
+                : "Set Playlist ID: " + spotifySession.getPlaylist_id());
     }
 
     /**
@@ -67,8 +71,9 @@ public class Main {
      * @param args  Commandline arguments, allows maximum of 3 arguments and lowest no arguments.
      */
     public static void main(String[] args) {
+        // Sets what keys should be in config file
         String[] Credentials = {"client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id",
-                "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file"};
+                "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file", "coloured_output"};
         fileUtil.AddToConfigMap(Credentials);
         ConfigMaps configMaps = new ConfigMaps(fileUtil.getConfigMap());
         ProgramOptions programOptions = ProgramOptions.getInstance();
@@ -77,10 +82,11 @@ public class Main {
         configMaps.setCredentials(Credentials);
 
         //Settings
-        Logger.DEBUG.Log("launch_gui=" + programOptions.LAUNCH_GUI(), false);
-        Logger.DEBUG.Log("auto_mode=" + programOptions.isAutoMode(), false);
-        Logger.DEBUG.Log("verbose_log_file=" + Logger.getVerboseLogFile(), false);
-        Logger.DEBUG.Log("debug_output=" + Logger.getDebugOutput(), false);
+        Logger.DEBUG.Log("launch_gui: " + programOptions.LAUNCH_GUI(), false);
+        Logger.DEBUG.Log("auto_mode: " + programOptions.isAutoMode(), false);
+        Logger.DEBUG.Log("verbose_log_file: " + Logger.getVerboseLogFile(), false);
+        Logger.DEBUG.Log("debug_output: " + Logger.getDebugOutput(), false);
+        Logger.DEBUG.Log("coloured_output: " + Logger.getColouredOutput(), false);
 
         if (args.length == 0) {
             if (programOptions.LAUNCH_GUI()) {

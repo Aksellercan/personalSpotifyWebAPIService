@@ -2,6 +2,7 @@ package com.example.SpotifyWebAPI.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
+import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 
 /**
@@ -35,7 +36,7 @@ public class BasicAuthMenu extends HelperFunctions{
                 case "0":
                     return;
                 default:
-                    System.out.println("Invalid input. Please try again.");
+                    System.out.println(ConsoleColours.RED + "Invalid input" + ConsoleColours.RESET);
                     break;
             }
         }

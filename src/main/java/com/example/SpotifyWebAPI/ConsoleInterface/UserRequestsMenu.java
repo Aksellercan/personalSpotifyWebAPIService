@@ -1,6 +1,7 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
+import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 
@@ -96,7 +97,7 @@ public class UserRequestsMenu extends HelperFunctions {
                 case "0":
                     return;
                 default:
-                    System.out.println("Invalid input. Please try again.");
+                    System.out.println(ConsoleColours.RED + "Invalid input" + ConsoleColours.RESET);
                     break;
             }
         }

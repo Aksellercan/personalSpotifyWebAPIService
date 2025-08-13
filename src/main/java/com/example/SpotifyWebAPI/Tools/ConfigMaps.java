@@ -66,6 +66,9 @@ public class ConfigMaps {
                     case "verbose_log_file":
                         Logger.setVerboseLogFile(Boolean.parseBoolean(value));
                         break;
+                    case "coloured_output":
+                        Logger.setColouredOutput(Boolean.parseBoolean(value));
+                        break;
                 }
             } else {
                 Logger.WARN.LogSilently("Credential " + credential + " not found in config map");

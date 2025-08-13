@@ -14,7 +14,7 @@ import java.util.Scanner;
  * Old CLI Interface, won't be used
  */
 public class CLI_Interface {
-    private SpotifySession spotify_session;
+    private SpotifySession spotify_session = SpotifySession.getInstance();
     private String user_id;
     private String client_id;
     private String client_secret;
@@ -33,11 +33,10 @@ public class CLI_Interface {
     }
 
     private void setConfigs() {
-        spotify_session.setClient_id(client_id);
-        spotify_session.setClient_secret(client_secret);
-        spotify_session.setUser_id(user_id);
-        spotify_session.setRedirect_uri(redirect_uri);
-        spotify_session.setRefresh_token(refresh_token);
+        client_id = spotify_session.getClient_id();
+        client_secret = spotify_session.getClient_secret();
+        redirect_uri = spotify_session.getRedirect_uri();
+        refresh_token = spotify_session.getRefresh_token();
     }
 
     public void initSession() {

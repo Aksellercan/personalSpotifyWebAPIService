@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
+import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
 /**
@@ -14,11 +15,18 @@ public class SettingsMenu extends HelperFunctions {
         while (true) {
             clearScreen();
             System.out.println("Settings ");
-            System.out.println("1. Set Http Debug Output" + (Logger.getDebugOutput() ? " - Debug Output Enabled" : ""));
-            System.out.println("2. Include Debugs in log file (More Verbose)" + (Logger.getVerboseLogFile() ? " - Debugs will be included in log file" : ""));
-            System.out.println("3. Set Auto Mode" + (programOptions.isAutoMode() ? " - Auto Mode Enabled, Program won't launch to CLI on next run" : ""));
-            System.out.println("4. Set GUI Mode" + (programOptions.LAUNCH_GUI() ? " - GUI Enabled" : ""));
-            System.out.println("5. Save Config" + (programOptions.isChangesSaved() ? "" : " - Changes not saved"));
+            System.out.println("1. Set Http Debug Output" +
+                    (Logger.getDebugOutput() ? ConsoleColours.GREEN + " - Debug Output Enabled" + ConsoleColours.RESET : ""));
+            System.out.println("2. Include Debugs in log file (More Verbose)" +
+                    (Logger.getVerboseLogFile() ? ConsoleColours.GREEN + " - Debugs will be included in log file" + ConsoleColours.RESET : ""));
+            System.out.println("3. Set Coloured Logger Output" +
+                    (Logger.getColouredOutput() ? ConsoleColours.GREEN + " - Logger will output ANSI Coloured lines" + ConsoleColours.RESET: ""));
+            System.out.println("4. Set Auto Mode" +
+                    (programOptions.isAutoMode() ? ConsoleColours.GREEN + " - Auto Mode Enabled, Program won't launch to CLI on next run" + ConsoleColours.RESET: ""));
+            System.out.println("5. Set GUI Mode" +
+                    (programOptions.LAUNCH_GUI() ? ConsoleColours.GREEN + " - GUI Enabled" + ConsoleColours.RESET : ""));
+            System.out.println("6. Save Config" +
+                    (programOptions.isChangesSaved() ? "" : ConsoleColours.RED + " - Changes not saved" + ConsoleColours.RESET));
             System.out.println("0. Go Back");
             switch (scanner.nextLine()) {
                 case "1":
@@ -56,11 +64,28 @@ public class SettingsMenu extends HelperFunctions {
                     }
                     break;
                 case "3":
+                    System.out.println((Logger.getColouredOutput() ? "Logger will output ANSI coloured lines" : "Logger will not output ANSI coloured lines") +
+                            "\nPress y to enable\nPress n to disable");
+                    if (scanner.nextLine().equals("y")) {
+                        if (!Logger.getColouredOutput()) {
+                            programOptions.setChangesSaved(false);
+                        }
+                        Logger.setColouredOutput(true);
+                        System.out.println("Logger will output ANSI coloured lines");
+                    } else {
+                        if (Logger.getColouredOutput()) {
+                            programOptions.setChangesSaved(false);
+                        }
+                        Logger.setColouredOutput(false);
+                        System.out.println("Logger will not output ANSI coloured lines");
+                    }
+                    break;
+                case "4":
                     System.out.println("Set Auto Mode:\nCurrent State is " + programOptions.isAutoMode() +
                             "\nPress y to enable Auto Mode\nPress n to disable Auto Mode");
                     if (scanner.nextLine().equals("y")) {
                         programOptions.setAutoMode(true);
-                        Logger.INFO.Log("Auto Mode set to true");
+                        System.out.println("Auto Mode set to true");
                         setupAutoMode();
                     } else {
                         if (programOptions.isAutoMode()) {
@@ -70,7 +95,7 @@ public class SettingsMenu extends HelperFunctions {
                         System.out.println("Auto Mode set to false");
                     }
                     break;
-                case "4":
+                case "5":
                     System.out.println("Set GUI Mode:\nCurrent State is " + programOptions.LAUNCH_GUI() +
                             "\nPress y to enable GUI\nPress n to disable GUI");
                     if (scanner.nextLine().equals("y")) {
@@ -78,7 +103,7 @@ public class SettingsMenu extends HelperFunctions {
                             programOptions.setChangesSaved(false);
                         }
                         programOptions.setLAUNCH_GUI(true);
-                        Logger.INFO.Log("GUI set to true");
+                        System.out.println("GUI set to true");
                     } else {
                         if (programOptions.LAUNCH_GUI()) {
                             programOptions.setChangesSaved(false);
@@ -87,14 +112,14 @@ public class SettingsMenu extends HelperFunctions {
                         System.out.println("GUI set to false");
                     }
                     break;
-                case "5":
-                    System.out.println("Saving Config...");
+                case "6":
+                    System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
                     getFileUtil().WriteConfig();
                     break;
                 case "0":
                     return;
                 default:
-                    System.out.println("Invalid input");
+                    System.out.println(ConsoleColours.RED + "Invalid input" + ConsoleColours.RESET);
                     break;
             }
         }
