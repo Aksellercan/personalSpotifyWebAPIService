@@ -2,10 +2,10 @@ package com.example.SpotifyWebAPI.Tools;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-
 import java.util.HashMap;
 
 /**
+ * @deprecated
  * Maps read configuration HashMap to variables then makes them available with getters
  */
 public class ConfigMaps {
@@ -16,6 +16,7 @@ public class ConfigMaps {
     }
 
     /**
+     * @deprecated
      * Maps credentials to variables. Skips and logs with WARN severity if credential is not recognised or doesn't exist
      * @param credentials   Credentials to be mapped
      */

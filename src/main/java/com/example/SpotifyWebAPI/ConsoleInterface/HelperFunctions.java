@@ -204,11 +204,11 @@ public class HelperFunctions {
      * Walks user through setting up Auto Mode
      */
     protected void setupAutoMode() {
+        programOptions.setChangesSaved(false);
         while (((checkIfNullOrEmpty(spotifySession.getRefresh_token())) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri())))
                 || ((checkIfNullOrEmpty(spotifySession.getClient_id())) ||
                 (checkIfNullOrEmpty(spotifySession.getClient_secret()))) || (checkIfNullOrEmpty(spotifySession.getPlaylist_id())) ||
                 (checkIfNullOrEmpty(spotifySession.getUser_id()))) {
-            programOptions.setChangesSaved(false);
             if (checkIfNullOrEmpty(spotifySession.getUser_id())) {
                 System.out.println("Enter User ID:");
                 String user_id = scanner.nextLine().trim();

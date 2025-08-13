@@ -33,6 +33,8 @@ public class CLI_Interface {
     }
 
     private void setConfigs() {
+        playlist_id = spotify_session.getPlaylist_id();
+        user_id = spotify_session.getUser_id();
         client_id = spotify_session.getClient_id();
         client_secret = spotify_session.getClient_secret();
         redirect_uri = spotify_session.getRedirect_uri();
@@ -66,7 +68,7 @@ public class CLI_Interface {
     private void userInterface() {
         while (true) {
             clearScreen();
-            System.out.println("Spotify Web API CLI Interface [ OLD ]");
+            System.out.println("Spotify Web API CLI Interface [ DEPRECATED ]");
             System.out.println("1. Basic auth Functions");
             System.out.println("2. Oauth2 Functions");
             System.out.println("3. Set Http Debug Output" + (Logger.getDebugOutput() ? " - Debug Output Enabled" : ""));

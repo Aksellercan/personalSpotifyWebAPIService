@@ -23,7 +23,7 @@ public class FileUtil {
      *
      * @throws IOException if the file cannot be created
      */
-    private void checkExist() throws IOException {
+    private void checkExist(File configPath, File configFile) throws IOException {
         if (!configPath.exists()) {
             boolean createDir = configPath.mkdirs();
             if (!createDir) {
@@ -61,45 +61,103 @@ public class FileUtil {
     }
 
     /**
-     * Overrides in memory HashMap config with new values
+     * For Configs that are true by default
+     * @param str   configMap.get(key)
+     * @return  True is value is null or invalid, otherwise sets value according to file
+     */
+    private boolean returnTrueifNull(String str) {
+        if (str.equals("true") || str.equals("false")) {
+            return str.equals("true");
+        }
+        return true;
+    }
+
+    /**
+     * Overrides in memory HashMap config with new values if "update" is true.
+     * If "update" is false then it will map values in configMap with objects.
+     * New settings should be added here
      * @param key   HashMap key
      */
-    private void UpdateConfig(String key) {
+    private void UpdateConfig(String key, boolean update) {
         ProgramOptions programOptions = ProgramOptions.getInstance();
         SpotifySession spotifySession = SpotifySession.getInstance();
         switch (key) {
             case "client_id":
-                configMap.put(key, spotifySession.getClient_id());
+                if (update)  {
+                    configMap.put(key, spotifySession.getClient_id());
+                    break;
+                }
+                spotifySession.setClient_id(configMap.get(key));
                 break;
             case "client_secret":
-                configMap.put(key, spotifySession.getClient_secret());
+                if (update) {
+                    configMap.put(key, spotifySession.getClient_secret());
+                    break;
+                }
+                spotifySession.setClient_secret(configMap.get(key));
                 break;
             case "refresh_token":
-                configMap.put(key, spotifySession.getRefresh_token());
+                if (update) {
+                    configMap.put(key, spotifySession.getRefresh_token());
+                    break;
+                }
+                spotifySession.setRefresh_token(configMap.get(key));
                 break;
             case "user_id":
-                configMap.put(key, spotifySession.getUser_id());
+                if (update) {
+                    configMap.put(key, spotifySession.getUser_id());
+                    break;
+                }
+                spotifySession.setUser_id(configMap.get(key));
                 break;
             case "redirect_uri":
-                configMap.put(key, spotifySession.getRedirect_uri());
+                if (update) {
+                    configMap.put(key, spotifySession.getRedirect_uri());
+                    break;
+                }
+                spotifySession.setRedirect_uri(configMap.get(key));
                 break;
             case "playlist_id":
-                configMap.put(key, spotifySession.getPlaylist_id());
+                if (update) {
+                    configMap.put(key, spotifySession.getPlaylist_id());
+                    break;
+                }
+                spotifySession.setPlaylist_id(configMap.get(key));
                 break;
             case "output_debug":
-                configMap.put(key, String.valueOf(Logger.getDebugOutput()));
+                if (update) {
+                    configMap.put(key, String.valueOf(Logger.getDebugOutput()));
+                    break;
+                }
+                Logger.setDebugOutput(Boolean.parseBoolean(configMap.get(key)));
                 break;
             case "verbose_log_file":
-                configMap.put(key, String.valueOf(Logger.getVerboseLogFile()));
+                if (update) {
+                    configMap.put(key, String.valueOf(Logger.getVerboseLogFile()));
+                    break;
+                }
+                Logger.setVerboseLogFile(returnTrueifNull(configMap.get(key)));
                 break;
             case "launch_gui":
-                configMap.put(key, String.valueOf(programOptions.LAUNCH_GUI()));
+                if (update) {
+                    configMap.put(key, String.valueOf(programOptions.LAUNCH_GUI()));
+                    break;
+                }
+                programOptions.setLAUNCH_GUI(returnTrueifNull(configMap.get(key)));
                 break;
             case "auto_mode":
-                configMap.put(key, String.valueOf(programOptions.isAutoMode()));
+                if (update) {
+                    configMap.put(key, String.valueOf(programOptions.isAutoMode()));
+                    break;
+                }
+                programOptions.setAutoMode(Boolean.parseBoolean(configMap.get(key)));
                 break;
             case "coloured_output":
-                configMap.put(key, String.valueOf(Logger.getColouredOutput()));
+                if (update) {
+                    configMap.put(key, String.valueOf(Logger.getColouredOutput()));
+                    break;
+                }
+                Logger.setColouredOutput(Boolean.parseBoolean(configMap.get(key)));
                 break;
         }
     }
@@ -109,7 +167,7 @@ public class FileUtil {
      */
     public void readConfig() {
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(configFile))) {
-            checkExist();
+            checkExist(configPath, configFile);
             String line;
             String[] splitLine;
             while ((line = reader.readLine()) != null) {
@@ -125,6 +183,9 @@ public class FileUtil {
                 } else {
                     Logger.ERROR.LogSilently("Invalid config line: " + line + ", expected format: \"key: value\". Continue reading the file.");
                 }
+            }
+            for (String key : configMap.keySet()) {
+                UpdateConfig(key, false);
             }
         } catch (IOException e) {
             Logger.ERROR.LogExceptionSilently(e, "readConfig()");
@@ -144,19 +205,7 @@ public class FileUtil {
         }
         File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
         try {
-            if (!deprecatedConfigFile.exists()) {
-                boolean createDir = deprecatedConfigFile.mkdirs();
-                if (!createDir) {
-                    throw new IOException("Could not create config directory");
-                }
-            }
-            if (!deprecatedConfigFile.exists()) {
-                boolean createFile = deprecatedConfigFile.createNewFile();
-                if (!createFile) {
-                    throw new IOException("Could not create config file");
-                }
-            }
-            checkExist();
+            checkExist(configPath, deprecatedConfigFile);
             try (FileWriter writer = new FileWriter(deprecatedConfigFile, false)) {
                 if (!comments.isEmpty()) {
                     for (String comment : comments) {
@@ -183,7 +232,7 @@ public class FileUtil {
      */
     public void WriteConfig() {
         try {
-            checkExist();
+            checkExist(configPath, configFile);
             if (ProgramOptions.getInstance().isChangesSaved()) {
                 Logger.INFO.Log("Nothing to save", false);
                 return;
@@ -195,7 +244,7 @@ public class FileUtil {
                     }
                 }
                 for (String key : configMap.keySet()) {
-                    UpdateConfig(key);
+                    UpdateConfig(key, true);
                     if(configMap.get(key).isEmpty()) continue;
                     fileWriter.write(key + ": " + configMap.get(key) + "\n");
                 }

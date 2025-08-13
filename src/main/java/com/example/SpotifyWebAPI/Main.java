@@ -6,12 +6,10 @@ import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
 import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
-import com.example.SpotifyWebAPI.Tools.ConfigMaps;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Logger;
-import java.util.Scanner;
 
 /**
  * Main Class and starting point
@@ -75,11 +73,9 @@ public class Main {
         String[] Credentials = {"client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id",
                 "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file", "coloured_output"};
         fileUtil.AddToConfigMap(Credentials);
-        ConfigMaps configMaps = new ConfigMaps(fileUtil.getConfigMap());
         ProgramOptions programOptions = ProgramOptions.getInstance();
         SpotifySession spotifySession = SpotifySession.getInstance();
         fileUtil.readConfig();
-        configMaps.setCredentials(Credentials);
 
         //Settings
         Logger.DEBUG.Log("launch_gui: " + programOptions.LAUNCH_GUI(), false);
