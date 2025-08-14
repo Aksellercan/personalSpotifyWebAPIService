@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Reads and writes configuration file in "Config/*"
@@ -245,7 +246,8 @@ public class FileUtil {
                 }
                 for (String key : configMap.keySet()) {
                     UpdateConfig(key, true);
-                    if(configMap.get(key).isEmpty()) continue;
+                    Logger.DEBUG.Log("Key \"" + key + "\", Value \"" + configMap.get(key) + "\"");
+                    if(configMap.get(key) == null || configMap.get(key).isEmpty()) continue;
                     fileWriter.write(key + ": " + configMap.get(key) + "\n");
                 }
                 ProgramOptions.getInstance().setChangesSaved(true);
