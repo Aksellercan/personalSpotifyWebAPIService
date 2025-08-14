@@ -151,7 +151,7 @@ public enum Logger {
         if (colouredOutput) {
             switch (this) {
                 case DEBUG:
-                    System.out.println(ConsoleColours.YELLOW_UNDERLINED + fullMessage + ConsoleColours.RESET);
+                    System.out.println(ConsoleColours.WHITE + fullMessage + ConsoleColours.RESET);
                     break;
                 case WARN:
                     System.out.println(ConsoleColours.YELLOW + fullMessage + ConsoleColours.RESET);
@@ -260,25 +260,30 @@ public enum Logger {
             LocalDateTime today = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             String fileName = "log_" + today.format(formatter);
-            File logPath = new File("Logs");
-            if (!logPath.exists()) {
-                boolean createDir = logPath.mkdirs();
-                if (!createDir) {
-                    throw new IOException("Could not create log directory");
-                }
-            }
-            File logFile = new File(logPath + File.separator + fileName + ".log");
-            if (!logFile.exists()) {
-                boolean createFile = logFile.createNewFile();
-                if (!createFile) {
-                    throw new IOException("Could not create log file");
-                }
-            }
+            File logFile = getLogFile(fileName);
             try (FileWriter writer = new FileWriter(logFile, true)) {
                 writer.write(fullMessage + "\n");
             }
         } catch (IOException e) {
             LogException(e, "SaveLog(String fullMessage)");
         }
+    }
+
+    private File getLogFile(String fileName) throws IOException {
+        File logPath = new File("Logs");
+        if (!logPath.exists()) {
+            boolean createDir = logPath.mkdirs();
+            if (!createDir) {
+                throw new IOException("Could not create log directory");
+            }
+        }
+        File logFile = new File(logPath + File.separator + fileName + ".log");
+        if (!logFile.exists()) {
+            boolean createFile = logFile.createNewFile();
+            if (!createFile) {
+                throw new IOException("Could not create log file");
+            }
+        }
+        return logFile;
     }
 }

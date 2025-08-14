@@ -14,7 +14,7 @@
                <children>
                   <VBox prefHeight="367.0" prefWidth="105.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#OnStopServerButtonClick" prefHeight="24.0" prefWidth="99.0" text="Close Server" textAlignment="CENTER">
+                        <Button mnemonicParsing="false" onAction="#OnStartServerButtonClick" prefHeight="24.0" prefWidth="101.0" text="Start Server">
                            <font>
                               <Font size="11.0" />
                            </font>
@@ -22,15 +22,7 @@
                               <Insets top="100.0" />
                            </VBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#OnStartServerButtonClick" prefHeight="24.0" prefWidth="101.0" text="Start Server">
-                           <font>
-                              <Font size="11.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
-                        </Button>
-                        <Button id="getPlaylistDataBTN" mnemonicParsing="false" onAction="#OnGetPlaylistDataButtonClick" prefHeight="24.0" prefWidth="100.0" text="Get Playlist Data">
+                        <Button mnemonicParsing="false" onAction="#OnStopServerButtonClick" prefHeight="24.0" prefWidth="99.0" text="Close Server" textAlignment="CENTER">
                            <font>
                               <Font size="11.0" />
                            </font>
@@ -42,6 +34,14 @@
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="5.0" />
+                           </VBox.margin>
+                        </Button>
+                        <Button id="getPlaylistDataBTN" mnemonicParsing="false" onAction="#OnGetPlaylistDataButtonClick" prefHeight="24.0" prefWidth="100.0" text="Get Playlist Data">
                            <font>
                               <Font size="11.0" />
                            </font>
@@ -111,7 +111,7 @@
          <children>
             <TextArea fx:id="responseTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.rowIndex="1">
                <GridPane.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" />
+                  <Insets bottom="160.0" left="20.0" right="300.0" />
                </GridPane.margin></TextArea>
             <Label prefHeight="37.0" prefWidth="152.0" style="-fx-text-fill: white;" text="Response" underline="true">
                <font>
