@@ -25,9 +25,9 @@ public enum Logger {
      */
     private static boolean debugOutput = false;
     /**
-     * Default set to true
+     * Default set to false
      */
-    private static boolean verboseLogFile = true;
+    private static boolean verboseLogFile = false;
     /**
      * Default set to false for compatibility
      */
@@ -150,9 +150,6 @@ public enum Logger {
     private void ColourOutput(String fullMessage) {
         if (colouredOutput) {
             switch (this) {
-                case DEBUG:
-                    System.out.println(ConsoleColours.WHITE + fullMessage + ConsoleColours.RESET);
-                    break;
                 case WARN:
                     System.out.println(ConsoleColours.YELLOW + fullMessage + ConsoleColours.RESET);
                     break;
@@ -163,6 +160,8 @@ public enum Logger {
                 case INFO:
                     System.out.println(ConsoleColours.GREEN + fullMessage + ConsoleColours.RESET);
                     break;
+                default:
+                    System.out.println(fullMessage);
             }
         } else {
             System.out.println(fullMessage);
@@ -269,6 +268,12 @@ public enum Logger {
         }
     }
 
+    /**
+     * Returns the logfile
+     * @param fileName  logfile name
+     * @return  return the found logfile
+     * @throws IOException  If the file doesn't exist
+     */
     private File getLogFile(String fileName) throws IOException {
         File logPath = new File("Logs");
         if (!logPath.exists()) {
