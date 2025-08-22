@@ -128,6 +128,9 @@ public class Main {
                 case "--help":
                     HelpMenu();
                     return;
+                case "--migrate":
+                    fileUtil.MigrateToYAML();
+                    return;
                 default:
                     System.out.println("Unknown argument: " + args[0]);
                     return;

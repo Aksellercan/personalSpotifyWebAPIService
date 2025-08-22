@@ -73,6 +73,14 @@ public class FileUtil {
         return true;
     }
 
+    public void MigrateToYAML() {
+        Logger.DEBUG.Log("Reading config...");
+        OldConfigReader();
+        ProgramOptions.getInstance().setChangesSaved(false);
+        Logger.DEBUG.Log("Config read. Now writing it as YAML");
+        WriteConfig();
+    }
+
     /**
      * Overrides in memory HashMap config with new values if "update" is true.
      * If "update" is false then it will map values in configMap with objects.
@@ -137,7 +145,7 @@ public class FileUtil {
                     configMap.put(key, String.valueOf(Logger.getVerboseLogFile()));
                     break;
                 }
-                Logger.setVerboseLogFile(returnTrueifNull(configMap.get(key)));
+                Logger.setVerboseLogFile(Boolean.parseBoolean(configMap.get(key)));
                 break;
             case "launch_gui":
                 if (update) {
@@ -160,6 +168,37 @@ public class FileUtil {
                 }
                 Logger.setColouredOutput(Boolean.parseBoolean(configMap.get(key)));
                 break;
+        }
+    }
+
+    private void OldConfigReader() {
+        File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
+        int lineNumber = 0;
+        try (BufferedReader reader = new BufferedReader(new java.io.FileReader(deprecatedConfigFile))) {
+            checkExist(configPath, deprecatedConfigFile);
+            String line;
+            String[] splitLine;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("#") || line.isEmpty()) {
+                    comments.add(line);
+                    lineNumber++;
+                    continue;
+                }
+                splitLine = line.split("=", 2);
+                if (splitLine.length == 2) {
+                    String key = splitLine[0].trim();
+                    String value = splitLine[1].trim();
+                    configMap.put(key, value);
+                } else {
+                    Logger.ERROR.LogSilently("Invalid config line at " + lineNumber + ": " + line + ", expected format: \"key=value\". Continue reading the file.");
+                }
+            }
+            lineNumber++;
+            for (String key : configMap.keySet()) {
+                UpdateConfig(key, false);
+            }
+        } catch (IOException e) {
+            Logger.ERROR.LogExceptionSilently(e, "readConfig() Line number: " + lineNumber);
         }
     }
 
