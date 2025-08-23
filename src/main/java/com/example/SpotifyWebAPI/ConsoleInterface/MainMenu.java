@@ -3,13 +3,11 @@ import com.example.SpotifyWebAPI.Main;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
-import java.util.Scanner;
 
 /**
  * CLI Interface Main Menu
  */
 public class MainMenu extends HelperFunctions {
-//    private final ProgramOptions programOptions = ProgramOptions.getInstance();
     private final FileUtil fileUtil = Main.fileUtil;
 
     /**

@@ -14,7 +14,6 @@ import java.util.Scanner;
 public class HelperFunctions {
 
     protected FileUtil fileUtil = Main.fileUtil;
-//    protected final ProgramOptions programOptions = ProgramOptions.getInstance();
     protected final SpotifySession spotifySession = SpotifySession.getInstance();
     protected final Scanner scanner = new Scanner(System.in);
 

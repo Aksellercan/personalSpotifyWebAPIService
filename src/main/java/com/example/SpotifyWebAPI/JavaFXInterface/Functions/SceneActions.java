@@ -4,14 +4,48 @@ import com.example.SpotifyWebAPI.Tools.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Stage;
 import java.net.URL;
 
 /**
  * Shared functions used by JavaFX Controllers
  */
 public final class SceneActions {
+    private static Stage currentStage;
+    private static String defaultStylesheet;
+
     private SceneActions() {}
 
+    public static void SetCurrentStage(Stage stage) {
+        currentStage = stage;
+    }
+
+    public static void SetDefaultStylesheet(String stylesheet) {
+        defaultStylesheet = stylesheet;
+    }
+
+    public static void ChangeScene(String sceneName) {
+        if (defaultStylesheet.isEmpty()){
+            Logger.WARN.Log("Default Stylesheet not set!");
+            return;
+        }
+        ChangeScene(sceneName, defaultStylesheet);
+    }
+
+        public static void ChangeScene(String sceneName, String sceneStylesheet) {
+        if (currentStage == null) {
+            Logger.CRITICAL.Log("Current scene is null");
+            return;
+        }
+        Parent root = SceneActions.setFXMLFile(sceneName);
+        if (root == null) {
+            Logger.CRITICAL.Log("FXML root is null");
+            return;
+        }
+        Scene window = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
+        SceneActions.setStyleSheet(window, sceneStylesheet);
+        currentStage.setScene(window);
+    }
     /**
      * Sets stylesheet for the scene
      * @param scene Scene to apply stylesheet for

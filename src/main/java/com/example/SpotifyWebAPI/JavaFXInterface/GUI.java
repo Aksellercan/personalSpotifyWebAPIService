@@ -29,7 +29,6 @@ public class GUI extends Application implements Initializable {
     private final Client_Credentials_Request clientCredentials_Request = new Client_Credentials_Request();
     private HTTPServer httpServer = new HTTPServer(8080, 10);
     private final Thread thread = new Thread(httpServer);
-    private SavedScene stage = SavedScene.getInstance();
     @FXML
     private TextArea responseTextArea;
     @FXML
@@ -57,15 +56,16 @@ public class GUI extends Application implements Initializable {
         primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
 
 
-        Logger.DEBUG.Log("Is Stage NULL? " + ((stage == null) ? "Yes" : "No") + ".");
+        Logger.DEBUG.Log("Is 2+2 more than 5????? " + ((2+2 > 5) ? "Yes" : "No") + ".");
 
         Parent root = SceneActions.setFXMLFile("PrimaryPage");
 
         Scene window = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
         SceneActions.setStyleSheet(window, "PrimaryPage");
+        SceneActions.SetDefaultStylesheet("PrimaryPage");
         primaryStage.setScene(window);
         primaryStage.show();
-        stage.setScene(primaryStage);
+        SceneActions.SetCurrentStage(primaryStage);
     }
 
     @Override
@@ -86,35 +86,13 @@ public class GUI extends Application implements Initializable {
     @FXML
     protected void OnChangeSceneButton(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        stage = SavedScene.getInstance();
-        if (stage.getScene() == null) {
-            return;
-        }
-        Parent root = SceneActions.setFXMLFile("SecondPage");
-        if (root == null) {
-            Logger.CRITICAL.Log("FXML root is null");
-            return;
-        }
-        Scene window = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-        SceneActions.setStyleSheet(window, "PrimaryPage");
-        stage.getScene().setScene(window);
+        SceneActions.ChangeScene("SecondPage");
     }
 
     @FXML
     protected void GoToSettingsScene(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        stage = SavedScene.getInstance();
-        if (stage.getScene() == null) {
-            return;
-        }
-        Parent root = SceneActions.setFXMLFile("SettingsPage");
-        if (root == null) {
-            Logger.CRITICAL.Log("FXML root is null");
-            return;
-        }
-        Scene window = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
-        SceneActions.setStyleSheet(window, "PrimaryPage");
-        stage.getScene().setScene(window);
+        SceneActions.ChangeScene("SettingsPage");
     }
 
     @FXML

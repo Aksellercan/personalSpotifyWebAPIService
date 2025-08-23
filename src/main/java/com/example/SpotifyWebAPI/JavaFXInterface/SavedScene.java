@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.JavaFXInterface;
 import javafx.stage.Stage;
 
 /**
+ * @deprecated
  * Saves the state of the scene
  */
 public final class SavedScene {
