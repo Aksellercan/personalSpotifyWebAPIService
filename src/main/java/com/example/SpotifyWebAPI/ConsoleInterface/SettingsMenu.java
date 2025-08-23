@@ -2,13 +2,13 @@ package com.example.SpotifyWebAPI.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
 /**
  * CLI Interface Settings Menu
  */
 public class SettingsMenu extends HelperFunctions {
-
     /**
      * Settings menu
      */
@@ -115,11 +115,11 @@ public class SettingsMenu extends HelperFunctions {
                     }
                     break;
                 case "6":
-                    fileUtil.MigrateToYAML();
+                    FileUtil.MigrateToYAML();
                     break;
                 case "7":
                     System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
-                    getFileUtil().WriteConfig();
+                    FileUtil.WriteConfig();
                     break;
                 case "0":
                     return;

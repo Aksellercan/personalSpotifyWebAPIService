@@ -1,6 +1,5 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
-import com.example.SpotifyWebAPI.Main;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
@@ -12,16 +11,10 @@ import java.util.Scanner;
  * Shared Functions used by CLI Menus
  */
 public class HelperFunctions {
-
-    protected FileUtil fileUtil = Main.fileUtil;
     protected final SpotifySession spotifySession = SpotifySession.getInstance();
     protected final Scanner scanner = new Scanner(System.in);
 
     protected HelperFunctions() {}
-
-    protected FileUtil getFileUtil() {
-        return fileUtil;
-    }
 
     /**
      * Checks if the config is read properly. If not logs it to logfile
@@ -244,7 +237,7 @@ public class HelperFunctions {
                 spotifySession.setPlaylist_id(playlist_id);
             }
         }
-        getFileUtil().WriteConfig();
+        FileUtil.WriteConfig();
         System.out.println("Done");
     }
 }

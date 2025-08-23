@@ -14,17 +14,6 @@ import java.util.regex.Pattern;
  * Automation to change description of Playlist to the current size of playlist with limit of 120
  */
 public class AutoMode {
-    private String user_id;
-    private String client_id;
-    private String client_secret;
-    private String redirect_uri;
-    private String refresh_token;
-    private String playlist_id;
-    private final FileUtil fileUtil;
-
-    public AutoMode(FileUtil fileUtil) {
-        this.fileUtil = fileUtil;
-    }
 
     /**
      * Executes automation methods in order and catches Exceptions
@@ -33,11 +22,6 @@ public class AutoMode {
         // Initialize Spotify session
         Logger.INFO.Log("Starting AutoMode.runFunctions()");
         SpotifySession spotify_session = SpotifySession.getInstance();
-        client_id = spotify_session.getClient_id();
-        client_secret = spotify_session.getClient_secret();
-        redirect_uri = spotify_session.getRedirect_uri();
-        refresh_token = spotify_session.getRefresh_token();
-        playlist_id = spotify_session.getPlaylist_id();
         try {
             // Perform authentication
             User_Access_Token userAccessToken = new User_Access_Token();
@@ -46,7 +30,7 @@ public class AutoMode {
             User_Request userRequest = new User_Request();
             //Get the size of the playlist
             Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
-            clientCredentialsRequest.getPlaylist(playlist_id);
+            clientCredentialsRequest.getPlaylist(spotify_session.getPlaylist_id());
             int playlistSize = clientCredentialsRequest.getplaylistSize();
             String stringDescCount = readString(clientCredentialsRequest.getplaylistDescription());
             int readDescCount;
@@ -55,7 +39,7 @@ public class AutoMode {
             if (matcher.find()) {
                 Logger.INFO.Log("Playlist size: " + playlistSize);
                 // Set the playlist description
-                userRequest.setPlaylistDetails(playlist_id, clientCredentialsRequest.getplaylistName(),playlistSize + "/120",true,false);
+                userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getplaylistName(),playlistSize + "/120",true,false);
                 Logger.INFO.Log("Completed the automated run");
                 return;
             } else {
@@ -64,10 +48,10 @@ public class AutoMode {
             if (playlistSize == 120) {
                 String prevPlaylistName = clientCredentialsRequest.getplaylistName();
                 int nextNumber = nextNumber(prevPlaylistName);
-                userRequest.createPlaylist(user_id, "Favorites " + nextNumber, "0/120");
-                Logger.INFO.Log("New playlist created with playlist_id: " + playlist_id + " and Name: " + "Favorites " + nextNumber);
+                userRequest.createPlaylist(spotify_session.getUser_id(), "Favorites " + nextNumber, "0/120");
+                Logger.INFO.Log("New playlist created with playlist_id: " + spotify_session.getPlaylist_id() + " and Name: " + "Favorites " + nextNumber);
                 ProgramOptions.setAutoMode(false);
-                fileUtil.WriteConfig();
+                FileUtil.WriteConfig();
                 return;
             } else if (playlistSize == readDescCount) {
                 Logger.INFO.Log("Playlist size is already set to " + playlistSize);
@@ -76,7 +60,7 @@ public class AutoMode {
             }
             Logger.INFO.Log("Playlist size: " + playlistSize);
             // Set the playlist description
-            userRequest.setPlaylistDetails(playlist_id, clientCredentialsRequest.getplaylistName(),playlistSize + "/120",true,false);
+            userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getplaylistName(),playlistSize + "/120",true,false);
             Logger.INFO.Log("Completed the automated run");
         } catch (Exception e) {
             Logger.ERROR.LogException(e,"Auto Mode");

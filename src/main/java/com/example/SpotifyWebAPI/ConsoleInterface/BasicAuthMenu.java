@@ -9,8 +9,6 @@ import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
  * CLI Menu for Client Access Token requests
  */
 public class BasicAuthMenu extends HelperFunctions{
-    private String playlist_id;
-
     /**
      * Menu entries
      */
@@ -24,14 +22,13 @@ public class BasicAuthMenu extends HelperFunctions{
             clientCredentialsToken.post_Access_Request();
             switch (scanner.nextLine()) {
                 case "1":
-                    playlist_id = SpotifySession.getInstance().getPlaylist_id();
-                    while (playlist_id == null || playlist_id.isEmpty()) {
+                    while (checkIfNullOrEmpty(spotifySession.getPlaylist_id())) {
                         System.out.println("Enter Playlist ID:");
-                        playlist_id = scanner.nextLine().trim();
+                        spotifySession.setPlaylist_id(scanner.nextLine().trim());
                     }
                     System.out.println("API Response: ");
                     Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
-                    clientCredentialsRequest.getPlaylist(playlist_id);
+                    clientCredentialsRequest.getPlaylist(spotifySession.getPlaylist_id());
                     break;
                 case "0":
                     return;

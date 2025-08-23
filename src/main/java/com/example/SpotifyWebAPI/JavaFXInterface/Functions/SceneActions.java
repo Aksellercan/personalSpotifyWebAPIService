@@ -16,14 +16,26 @@ public final class SceneActions {
 
     private SceneActions() {}
 
+    /**
+     * Set Stage object
+     * @param stage JavaFX Stage Object
+     */
     public static void SetCurrentStage(Stage stage) {
         currentStage = stage;
     }
 
+    /**
+     * Set stylesheet to use for every Scene
+     * @param stylesheet    Stylesheet filename
+     */
     public static void SetDefaultStylesheet(String stylesheet) {
         defaultStylesheet = stylesheet;
     }
 
+    /**
+     * Change Scene with just FXML filename. Uses default stylesheet.
+     * @param sceneName FXML filename
+     */
     public static void ChangeScene(String sceneName) {
         if (defaultStylesheet.isEmpty()){
             Logger.WARN.Log("Default Stylesheet not set!");
@@ -32,18 +44,23 @@ public final class SceneActions {
         ChangeScene(sceneName, defaultStylesheet);
     }
 
-        public static void ChangeScene(String sceneName, String sceneStylesheet) {
+    /**
+     * Change Scene
+     * @param sceneName FXML filename
+     * @param sceneStylesheet   Stylesheet filename
+     */
+    public static void ChangeScene(String sceneName, String sceneStylesheet) {
         if (currentStage == null) {
             Logger.CRITICAL.Log("Current scene is null");
             return;
         }
-        Parent root = SceneActions.setFXMLFile(sceneName);
+        Parent root = setFXMLFile(sceneName);
         if (root == null) {
             Logger.CRITICAL.Log("FXML root is null");
             return;
         }
         Scene window = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
-        SceneActions.setStyleSheet(window, sceneStylesheet);
+        setStyleSheet(window, sceneStylesheet);
         currentStage.setScene(window);
     }
     /**

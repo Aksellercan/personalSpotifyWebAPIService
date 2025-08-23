@@ -10,20 +10,16 @@ import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * JavaFX GUI Class
  */
-public class GUI extends Application implements Initializable {
+public class GUI extends Application {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
     private final Client_Credentials_Token client_credentials_token = new Client_Credentials_Token();
     private final Client_Credentials_Request clientCredentials_Request = new Client_Credentials_Request();
@@ -31,8 +27,6 @@ public class GUI extends Application implements Initializable {
     private final Thread thread = new Thread(httpServer);
     @FXML
     private TextArea responseTextArea;
-    @FXML
-    private WebView webviewBox;
 
     /**
      * Sets up the primary stage
@@ -53,34 +47,14 @@ public class GUI extends Application implements Initializable {
         /*
         Sets the icon of the program, commented out because icon is not available
          */
-        primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
-
-
-        Logger.DEBUG.Log("Is 2+2 more than 5????? " + ((2+2 > 5) ? "Yes" : "No") + ".");
-
+//        primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
         Parent root = SceneActions.setFXMLFile("PrimaryPage");
-
         Scene window = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
         SceneActions.setStyleSheet(window, "PrimaryPage");
         SceneActions.SetDefaultStylesheet("PrimaryPage");
         primaryStage.setScene(window);
         primaryStage.show();
         SceneActions.SetCurrentStage(primaryStage);
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-//        if (httpServer == null) {
-//            Logger.DEBUG.Log("httpServer is null");
-//            httpServer = new HTTPServer(8080, 10);
-//            SaveHTTPState.addHTTPServerToHashMap("playback", httpServer);
-//        }
-//        if (!httpServer.getServerStatus()) {
-//            thread.start();
-//        }
-//        WebEngine e = webviewBox.getEngine();
-//        e.load("http://localhost:8080");//placeholder
-//        Logger.DEBUG.Log(e.getLocation());
     }
 
     @FXML

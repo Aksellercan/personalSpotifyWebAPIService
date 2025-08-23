@@ -8,8 +8,6 @@ import com.example.SpotifyWebAPI.Tools.FileUtil;
  * CLI Interface Main Menu
  */
 public class MainMenu extends HelperFunctions {
-    private final FileUtil fileUtil = Main.fileUtil;
-
     /**
      * Main menu
      */
@@ -38,7 +36,7 @@ public class MainMenu extends HelperFunctions {
                     break;
                 case "4":
                     System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
-                    fileUtil.WriteConfig();
+                    FileUtil.WriteConfig();
                     break;
                 case "0":
                     System.out.println(ConsoleColours.GREEN + "Exiting the program..." + ConsoleColours.RESET);

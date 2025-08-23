@@ -15,8 +15,6 @@ import com.example.SpotifyWebAPI.Tools.Logger;
  * Main Class and starting point
  */
 public class Main {
-    public static final FileUtil fileUtil = new FileUtil();
-
     /**
      * Checks if all values for Auto Mode are set
      * @param spotifySession    session object
@@ -69,13 +67,25 @@ public class Main {
      * @param args  Commandline arguments, allows maximum of 3 arguments and lowest no arguments.
      */
     public static void main(String[] args) {
-        // Sets what keys should be in config file
-        String[] Credentials = {"client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id",
-                "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file", "coloured_output"};
-        fileUtil.AddToConfigMap(Credentials);
-//        ProgramOptions programOptions = ProgramOptions.getInstance();
+        /*
+        Set what keys should be in config file
+         */
+        String[] Credentials = {
+                "client_id",
+                "client_secret",
+                "redirect_uri",
+                "refresh_token",
+                "playlist_id",
+                "output_debug",
+                "auto_mode",
+                "user_id",
+                "launch_gui",
+                "verbose_log_file",
+                "coloured_output"
+        };
+        FileUtil.AddToConfigMap(Credentials);
         SpotifySession spotifySession = SpotifySession.getInstance();
-        fileUtil.readConfig();
+        FileUtil.readConfig();
 
         //Settings
         Logger.DEBUG.Log("launch_gui: " + ProgramOptions.LAUNCH_GUI(), false);
@@ -90,7 +100,7 @@ public class Main {
                 return;
             }
             if (ProgramOptions.isAutoMode()) {
-                AutoMode autoMode = new AutoMode(fileUtil);
+                AutoMode autoMode = new AutoMode();
                 autoMode.runFunctions();
             } else {
                 MainMenu mainMenu = new MainMenu();
@@ -114,7 +124,7 @@ public class Main {
                         System.out.println("Required parameters not set!");
                         return;
                     }
-                    AutoMode autoMode = new AutoMode(fileUtil);
+                    AutoMode autoMode = new AutoMode();
                     autoMode.runFunctions();
                     return;
                 case "--cli":
@@ -122,14 +132,14 @@ public class Main {
                     mainMenu.userInterface();
                     return;
                 case "--cli-test":
-                    CLI_Interface cli = new CLI_Interface(fileUtil);
+                    CLI_Interface cli = new CLI_Interface();
                     cli.initSession();
                     return;
                 case "--help":
                     HelpMenu();
                     return;
                 case "--migrate":
-                    fileUtil.MigrateToYAML();
+                    FileUtil.MigrateToYAML();
                     return;
                 default:
                     System.out.println("Unknown argument: " + args[0]);
@@ -154,7 +164,7 @@ public class Main {
                     default:
                         HelpMenu();
                 }
-                fileUtil.WriteConfig();
+                FileUtil.WriteConfig();
             }
 
             if (args[0].equals("--get-refresh-token")) {
@@ -165,7 +175,7 @@ public class Main {
                     }
                     if (spotifySession.getRedirect_uri() == null || spotifySession.getRedirect_uri().isEmpty()) {
                         spotifySession.setRedirect_uri(args[2].trim());
-                        fileUtil.WriteConfig();
+                        FileUtil.WriteConfig();
                     } else {
                         break;
                     }

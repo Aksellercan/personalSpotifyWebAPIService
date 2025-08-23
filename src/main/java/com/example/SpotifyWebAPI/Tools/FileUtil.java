@@ -12,17 +12,19 @@ import java.util.HashMap;
 /**
  * Reads and writes configuration file in "Config/*"
  */
-public class FileUtil {
-    private final File configPath = new File("Config");
-    private final File configFile = new File(configPath + File.separator + "config.yaml");
-    private final HashMap<String, String> configMap = new HashMap<>();
-    private final ArrayList<String> comments = new ArrayList<>();
+public final class FileUtil {
+    private static final File configPath = new File("Config");
+    private static final File configFile = new File(configPath + File.separator + "config.yaml");
+    private static final HashMap<String, String> configMap = new HashMap<>();
+    private static final ArrayList<String> comments = new ArrayList<>();
+
+    private FileUtil() {}
 
     /**
      * Checks if the directory exists if not creates it
      * @throws IOException if the file cannot be created
      */
-    private void checkExist(File configPath, File configFile) throws IOException {
+    private static void checkExist(File configPath, File configFile) throws IOException {
         if (!configPath.exists()) {
             boolean createDir = configPath.mkdirs();
             if (!createDir) {
@@ -41,7 +43,7 @@ public class FileUtil {
      * If config files does not exist, it fills the hashmap with empty values
      * @param keys  Hashmap keys
      */
-    public void AddToConfigMap(String... keys) {
+    public static void AddToConfigMap(String... keys) {
         if (!configMap.isEmpty()) {
             return;
         }
@@ -54,7 +56,7 @@ public class FileUtil {
      * Returns the mapped HashMap
      * @return Hashmap with read values
      */
-    public HashMap<String, String> getConfigMap() {
+    public static HashMap<String, String> getConfigMap() {
         return configMap;
     }
 
@@ -64,7 +66,7 @@ public class FileUtil {
      * @param returnValue Return value of parse
      * @return  True is value is null or invalid, otherwise sets value according to file
      */
-    private boolean BooleanParse(String value, boolean returnValue) {
+    private static boolean BooleanParse(String value, boolean returnValue) {
         if (value.equals("true") || value.equals("false")) {
             return value.equals("true");
         }
@@ -75,7 +77,7 @@ public class FileUtil {
     /**
      * Migrates configuration from "config.txt" to "config.yaml"
      */
-    public void MigrateToYAML() {
+    public static void MigrateToYAML() {
         Logger.INFO.Log("Reading config...", false);
         OldConfigReader();
         ProgramOptions.setChangesSaved(false);
@@ -89,7 +91,7 @@ public class FileUtil {
      * New settings should be added here
      * @param key   HashMap key
      */
-    private void UpdateConfig(String key, boolean update) {
+    private static void UpdateConfig(String key, boolean update) {
         SpotifySession spotifySession = SpotifySession.getInstance();
         switch (key) {
             case "client_id":
@@ -175,7 +177,7 @@ public class FileUtil {
     /**
      * Reads the old config
      */
-    private void OldConfigReader() {
+    private static void OldConfigReader() {
         File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
         int lineNumber = 0;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(deprecatedConfigFile))) {
@@ -212,7 +214,7 @@ public class FileUtil {
     /**
      * Reads the config file. Uses Hashmap to map values String with String and also uses Arraylist to preserve comments in config file with any line starting with '#' or "//"
      */
-    public void readConfig() {
+    public static void readConfig() {
         int lineNumber = 0;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(configFile))) {
             checkExist(configPath, configFile);
@@ -240,7 +242,7 @@ public class FileUtil {
         }
     }
 
-    private void FormatLine(int lineNumber, String line, String[] splitLine) {
+    private static void FormatLine(int lineNumber, String line, String[] splitLine) {
         String key = splitLine[0].trim();
         if (!configMap.containsKey(key)) {
             Logger.ERROR.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", Key \"" + key + "\" not found. Continue reading the file.");
@@ -258,7 +260,7 @@ public class FileUtil {
      *
      * @param option String array in pairs
      */
-    public void writeConfig(String... option) {
+    public static void writeConfig(String... option) {
         if (option.length % 2 != 0) {
             Logger.ERROR.Log("[ DEPRECATED ] Invalid number of arguments for writeConfig(String... option)", false);
         }
@@ -289,7 +291,7 @@ public class FileUtil {
     /**
      * Simpler Config writer. Overrides current config file when the changes are not saved. Uses YAML format as config file
      */
-    public void WriteConfig() {
+    public static void WriteConfig() {
         try {
             checkExist(configPath, configFile);
             if (ProgramOptions.isChangesSaved()) {

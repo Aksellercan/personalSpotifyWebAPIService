@@ -24,14 +24,9 @@ public class CLI_Interface {
     private String code;
     private String playlist_id;
     private final Scanner scanner = new Scanner(System.in);
-    private final FileUtil fileUtil;
     private boolean auto_mode = false;
     private boolean launch_gui = false;
     private boolean changesSaved = true;
-
-    public CLI_Interface(FileUtil fileUtil) {
-        this.fileUtil = fileUtil;
-    }
 
     private void setConfigs() {
         playlist_id = spotify_session.getPlaylist_id();
@@ -185,7 +180,7 @@ public class CLI_Interface {
     }
 
     private void saveConfig() {
-        fileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
+        FileUtil.writeConfig("client_id", client_id, "client_secret", client_secret, "redirect_uri",
                 redirect_uri, "refresh_token", refresh_token, "playlist_id", playlist_id, "auto_mode",
                 Boolean.toString(auto_mode), "output_debug", Boolean.toString(Logger.getDebugOutput()),"user_id",user_id, "launch_gui", Boolean.toString(launch_gui));
         changesSaved = true;
