@@ -51,18 +51,18 @@ public class ConfigMaps {
                         Logger.setDebugOutput(Boolean.parseBoolean(value));
                         break;
                     case "auto_mode":
-                        ProgramOptions.getInstance().setAutoMode(Boolean.parseBoolean(value));
+                        ProgramOptions.setAutoMode(Boolean.parseBoolean(value));
                         break;
                     case "launch_gui":
                         if (value == null) {
-                            ProgramOptions.getInstance().setLAUNCH_GUI(true);
+                            ProgramOptions.setLAUNCH_GUI(true);
                             break;
                         }
                         if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-                            ProgramOptions.getInstance().setLAUNCH_GUI(value.equalsIgnoreCase("true"));
+                            ProgramOptions.setLAUNCH_GUI(value.equalsIgnoreCase("true"));
                             break;
                         }
-                        ProgramOptions.getInstance().setLAUNCH_GUI(true);
+                        ProgramOptions.setLAUNCH_GUI(true);
                         break;
                     case "verbose_log_file":
                         Logger.setVerboseLogFile(Boolean.parseBoolean(value));

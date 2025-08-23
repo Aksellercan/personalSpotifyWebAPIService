@@ -73,23 +73,23 @@ public class Main {
         String[] Credentials = {"client_id", "client_secret", "redirect_uri", "refresh_token", "playlist_id",
                 "output_debug", "auto_mode", "user_id", "launch_gui", "verbose_log_file", "coloured_output"};
         fileUtil.AddToConfigMap(Credentials);
-        ProgramOptions programOptions = ProgramOptions.getInstance();
+//        ProgramOptions programOptions = ProgramOptions.getInstance();
         SpotifySession spotifySession = SpotifySession.getInstance();
         fileUtil.readConfig();
 
         //Settings
-        Logger.DEBUG.Log("launch_gui: " + programOptions.LAUNCH_GUI(), false);
-        Logger.DEBUG.Log("auto_mode: " + programOptions.isAutoMode(), false);
+        Logger.DEBUG.Log("launch_gui: " + ProgramOptions.LAUNCH_GUI(), false);
+        Logger.DEBUG.Log("auto_mode: " + ProgramOptions.isAutoMode(), false);
         Logger.DEBUG.Log("verbose_log_file: " + Logger.getVerboseLogFile(), false);
         Logger.DEBUG.Log("debug_output: " + Logger.getDebugOutput(), false);
         Logger.DEBUG.Log("coloured_output: " + Logger.getColouredOutput(), false);
 
         if (args.length == 0) {
-            if (programOptions.LAUNCH_GUI()) {
+            if (ProgramOptions.LAUNCH_GUI()) {
                 GUI.launch(GUI.class, args);
                 return;
             }
-            if (programOptions.isAutoMode()) {
+            if (ProgramOptions.isAutoMode()) {
                 AutoMode autoMode = new AutoMode(fileUtil);
                 autoMode.runFunctions();
             } else {

@@ -66,7 +66,7 @@ public class AutoMode {
                 int nextNumber = nextNumber(prevPlaylistName);
                 userRequest.createPlaylist(user_id, "Favorites " + nextNumber, "0/120");
                 Logger.INFO.Log("New playlist created with playlist_id: " + playlist_id + " and Name: " + "Favorites " + nextNumber);
-                ProgramOptions.getInstance().setAutoMode(false);
+                ProgramOptions.setAutoMode(false);
                 fileUtil.WriteConfig();
                 return;
             } else if (playlistSize == readDescCount) {

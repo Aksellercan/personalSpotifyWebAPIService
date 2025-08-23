@@ -9,7 +9,7 @@ import java.util.Scanner;
  * CLI Interface Main Menu
  */
 public class MainMenu extends HelperFunctions {
-    private final ProgramOptions programOptions = ProgramOptions.getInstance();
+//    private final ProgramOptions programOptions = ProgramOptions.getInstance();
     private final FileUtil fileUtil = Main.fileUtil;
 
     /**
@@ -24,7 +24,7 @@ public class MainMenu extends HelperFunctions {
             System.out.println("2. Oauth2 Functions");
             System.out.println("3. Settings");
             System.out.println("4. Save Config");
-            System.out.println("0. Exit the program" + (programOptions.isChangesSaved() ? "" : ConsoleColours.RED + " - Changes not saved" + ConsoleColours.RESET));
+            System.out.println("0. Exit the program" + (ProgramOptions.isChangesSaved() ? "" : ConsoleColours.RED + " - Changes not saved" + ConsoleColours.RESET));
             switch (scanner.nextLine()) {
                 case "1":
                     BasicAuthMenu basicAuthMenu = new BasicAuthMenu();

@@ -78,7 +78,7 @@ public class FileUtil {
     public void MigrateToYAML() {
         Logger.INFO.Log("Reading config...", false);
         OldConfigReader();
-        ProgramOptions.getInstance().setChangesSaved(false);
+        ProgramOptions.setChangesSaved(false);
         Logger.INFO.Log("Config read. Now writing it as YAML", false);
         WriteConfig();
     }
@@ -90,7 +90,6 @@ public class FileUtil {
      * @param key   HashMap key
      */
     private void UpdateConfig(String key, boolean update) {
-        ProgramOptions programOptions = ProgramOptions.getInstance();
         SpotifySession spotifySession = SpotifySession.getInstance();
         switch (key) {
             case "client_id":
@@ -151,17 +150,17 @@ public class FileUtil {
                 break;
             case "launch_gui":
                 if (update) {
-                    configMap.put(key, String.valueOf(programOptions.LAUNCH_GUI()));
+                    configMap.put(key, String.valueOf(ProgramOptions.LAUNCH_GUI()));
                     break;
                 }
-                programOptions.setLAUNCH_GUI(BooleanParse(configMap.get(key), true));
+                ProgramOptions.setLAUNCH_GUI(BooleanParse(configMap.get(key), true));
                 break;
             case "auto_mode":
                 if (update) {
-                    configMap.put(key, String.valueOf(programOptions.isAutoMode()));
+                    configMap.put(key, String.valueOf(ProgramOptions.isAutoMode()));
                     break;
                 }
-                programOptions.setAutoMode(BooleanParse(configMap.get(key), false));
+                ProgramOptions.setAutoMode(BooleanParse(configMap.get(key), false));
                 break;
             case "coloured_output":
                 if (update) {
@@ -293,7 +292,7 @@ public class FileUtil {
     public void WriteConfig() {
         try {
             checkExist(configPath, configFile);
-            if (ProgramOptions.getInstance().isChangesSaved()) {
+            if (ProgramOptions.isChangesSaved()) {
                 Logger.INFO.Log("Nothing to save", false);
                 return;
             }
@@ -306,10 +305,11 @@ public class FileUtil {
                 for (String key : configMap.keySet()) {
                     UpdateConfig(key, true);
                     if(configMap.get(key) == null || configMap.get(key).isEmpty()) continue;
-                    Logger.DEBUG.Log("Key \"" + key + "\", Value \"" + configMap.get(key) + "\"");
+                    Logger.DEBUG.Log("Key \"" + key + "\", Value \"" + configMap.get(key) + "\"", false);
                     fileWriter.write(key + ": " + configMap.get(key) + "\n");
                 }
-                ProgramOptions.getInstance().setChangesSaved(true);
+                ProgramOptions.setChangesSaved(true);
+                Logger.INFO.Log("Saved configuration. Changes saved: "+ProgramOptions.isChangesSaved(), false);
             }
         } catch (IOException e) {
             Logger.ERROR.LogExceptionSilently(e, "writeConfig()");

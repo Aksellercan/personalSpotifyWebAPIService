@@ -101,6 +101,23 @@ public class GUI extends Application implements Initializable {
     }
 
     @FXML
+    protected void GoToSettingsScene(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        stage = SavedScene.getInstance();
+        if (stage.getScene() == null) {
+            return;
+        }
+        Parent root = SceneActions.setFXMLFile("SettingsPage");
+        if (root == null) {
+            Logger.CRITICAL.Log("FXML root is null");
+            return;
+        }
+        Scene window = new Scene(root, stage.getScene().getWidth(), stage.getScene().getHeight());
+        SceneActions.setStyleSheet(window, "PrimaryPage");
+        stage.getScene().setScene(window);
+    }
+
+    @FXML
     protected void OnStartServerButtonClick(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         if (SaveHTTPState.getHashMapSize() != 0) {

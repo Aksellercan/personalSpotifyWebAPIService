@@ -46,8 +46,13 @@
                               <Font size="11.0" />
                            </font>
                            <VBox.margin>
-                              <Insets top="5.0" />
+                              <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
+                        </Button>
+                        <Button fx:id="SettingsBTN" mnemonicParsing="false" onAction="#GoToSettingsScene" prefHeight="24.0" prefWidth="99.0" text="Settings">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
                         </Button>
                      </children>
                   </VBox>

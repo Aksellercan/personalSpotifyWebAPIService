@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
+import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Logger;
@@ -30,7 +31,7 @@ public class UserRequestsMenu extends HelperFunctions {
                 case "1":
                     String code = null;
                     while (checkIfNullOrEmpty(code) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri()))) {
-                        programOptions.setChangesSaved(false);
+                        ProgramOptions.setChangesSaved(false);
                         if (checkIfNullOrEmpty(code)) {
                             System.out.println("Enter Spotify code:");
                             code = scanner.nextLine().trim();
@@ -52,7 +53,7 @@ public class UserRequestsMenu extends HelperFunctions {
                     break;
                 case "2":
                     while (checkIfNullOrEmpty(spotifySession.getRefresh_token()) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri()))) {
-                        programOptions.setChangesSaved(false);
+                        ProgramOptions.setChangesSaved(false);
                         if (checkIfNullOrEmpty(spotifySession.getRefresh_token())) {
                             System.out.println("Enter Refresh Token:");
                             String refresh_token = scanner.nextLine().trim();

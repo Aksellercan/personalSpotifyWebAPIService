@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class HelperFunctions {
 
     protected FileUtil fileUtil = Main.fileUtil;
-    protected final ProgramOptions programOptions = ProgramOptions.getInstance();
+//    protected final ProgramOptions programOptions = ProgramOptions.getInstance();
     protected final SpotifySession spotifySession = SpotifySession.getInstance();
     protected final Scanner scanner = new Scanner(System.in);
 
@@ -39,7 +39,7 @@ public class HelperFunctions {
                 String client_secret = scanner.nextLine().trim();
                 spotifySession.setClient_secret(client_secret);
             }
-            programOptions.setChangesSaved(false);
+            ProgramOptions.setChangesSaved(false);
         }
         Logger.INFO.LogSilently("Everything is set up correctly, client_id and client_secret are not null or empty.");
     }
@@ -81,14 +81,14 @@ public class HelperFunctions {
         while (checkIfNullOrEmpty(playlist_id)) {
             System.out.println("Enter Playlist ID:");
             playlist_id = scanner.nextLine().trim();
-            programOptions.setChangesSaved(false);
+            ProgramOptions.setChangesSaved(false);
         }
         System.out.println("Change playlist ID? (y/n)");
         if (scanner.nextLine().equals("y")) {
             System.out.println("Enter new Playlist ID:");
             playlist_id = scanner.nextLine();
             spotifySession.setPlaylist_id(playlist_id);
-            programOptions.setChangesSaved(false);
+            ProgramOptions.setChangesSaved(false);
         }
         System.out.println("Enter offset (default 0):");
         String offsetInput = scanner.nextLine().trim();
@@ -142,7 +142,7 @@ public class HelperFunctions {
                 System.out.println("Enter User ID:");
                 user_id = scanner.nextLine().trim();
                 spotifySession.setUser_id(user_id);
-                programOptions.setChangesSaved(false);
+                ProgramOptions.setChangesSaved(false);
                 continue;
             }
             if (checkIfNullOrEmpty(createName)) {
@@ -168,7 +168,7 @@ public class HelperFunctions {
             System.out.println("Enter Playlist ID:");
             playlist_id = scanner.nextLine().trim();
             spotifySession.setPlaylist_id(playlist_id);
-            programOptions.setChangesSaved(false);
+            ProgramOptions.setChangesSaved(false);
         }
         String newName = null;
         String newDescription = null;
@@ -204,7 +204,7 @@ public class HelperFunctions {
      * Walks user through setting up Auto Mode
      */
     protected void setupAutoMode() {
-        programOptions.setChangesSaved(false);
+        ProgramOptions.setChangesSaved(false);
         while (((checkIfNullOrEmpty(spotifySession.getRefresh_token())) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri())))
                 || ((checkIfNullOrEmpty(spotifySession.getClient_id())) ||
                 (checkIfNullOrEmpty(spotifySession.getClient_secret()))) || (checkIfNullOrEmpty(spotifySession.getPlaylist_id())) ||
