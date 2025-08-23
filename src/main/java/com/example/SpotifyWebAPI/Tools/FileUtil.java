@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Reads and writes configuration file in "Config/*"
@@ -21,7 +20,6 @@ public class FileUtil {
 
     /**
      * Checks if the directory exists if not creates it
-     *
      * @throws IOException if the file cannot be created
      */
     private void checkExist(File configPath, File configFile) throws IOException {
@@ -54,7 +52,6 @@ public class FileUtil {
 
     /**
      * Returns the mapped HashMap
-     *
      * @return Hashmap with read values
      */
     public HashMap<String, String> getConfigMap() {
@@ -62,22 +59,27 @@ public class FileUtil {
     }
 
     /**
-     * For Configs that are true by default
-     * @param str   configMap.get(key)
+     * Parses booleans from String. If not recognized will return "returnValue"
+     * @param value   configMap.get(key)
+     * @param returnValue Return value of parse
      * @return  True is value is null or invalid, otherwise sets value according to file
      */
-    private boolean returnTrueifNull(String str) {
-        if (str.equals("true") || str.equals("false")) {
-            return str.equals("true");
+    private boolean BooleanParse(String value, boolean returnValue) {
+        if (value.equals("true") || value.equals("false")) {
+            return value.equals("true");
         }
-        return true;
+        if (!value.isEmpty()) Logger.ERROR.LogSilently("Key value \"" + value +"\" is not valid. Expected \"true\" or \"false\".");
+        return returnValue;
     }
 
+    /**
+     * Migrates configuration from "config.txt" to "config.yaml"
+     */
     public void MigrateToYAML() {
-        Logger.DEBUG.Log("Reading config...");
+        Logger.INFO.Log("Reading config...", false);
         OldConfigReader();
         ProgramOptions.getInstance().setChangesSaved(false);
-        Logger.DEBUG.Log("Config read. Now writing it as YAML");
+        Logger.INFO.Log("Config read. Now writing it as YAML", false);
         WriteConfig();
     }
 
@@ -138,39 +140,42 @@ public class FileUtil {
                     configMap.put(key, String.valueOf(Logger.getDebugOutput()));
                     break;
                 }
-                Logger.setDebugOutput(Boolean.parseBoolean(configMap.get(key)));
+                Logger.setDebugOutput(BooleanParse(configMap.get(key), false));
                 break;
             case "verbose_log_file":
                 if (update) {
                     configMap.put(key, String.valueOf(Logger.getVerboseLogFile()));
                     break;
                 }
-                Logger.setVerboseLogFile(Boolean.parseBoolean(configMap.get(key)));
+                Logger.setVerboseLogFile(BooleanParse(configMap.get(key), false));
                 break;
             case "launch_gui":
                 if (update) {
                     configMap.put(key, String.valueOf(programOptions.LAUNCH_GUI()));
                     break;
                 }
-                programOptions.setLAUNCH_GUI(returnTrueifNull(configMap.get(key)));
+                programOptions.setLAUNCH_GUI(BooleanParse(configMap.get(key), true));
                 break;
             case "auto_mode":
                 if (update) {
                     configMap.put(key, String.valueOf(programOptions.isAutoMode()));
                     break;
                 }
-                programOptions.setAutoMode(Boolean.parseBoolean(configMap.get(key)));
+                programOptions.setAutoMode(BooleanParse(configMap.get(key), false));
                 break;
             case "coloured_output":
                 if (update) {
                     configMap.put(key, String.valueOf(Logger.getColouredOutput()));
                     break;
                 }
-                Logger.setColouredOutput(Boolean.parseBoolean(configMap.get(key)));
+                Logger.setColouredOutput(BooleanParse(configMap.get(key), false));
                 break;
         }
     }
 
+    /**
+     * Reads the old config
+     */
     private void OldConfigReader() {
         File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
         int lineNumber = 0;
@@ -180,25 +185,28 @@ public class FileUtil {
             String[] splitLine;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("#") || line.isEmpty()) {
-                    comments.add(line);
+                    if (comments.isEmpty()) {
+                        comments.add(line);
+                    }
+                    if (!comments.contains(line)) {
+                        comments.add(line);
+                    }
                     lineNumber++;
                     continue;
                 }
+                lineNumber++;
                 splitLine = line.split("=", 2);
                 if (splitLine.length == 2) {
-                    String key = splitLine[0].trim();
-                    String value = splitLine[1].trim();
-                    configMap.put(key, value);
+                    FormatLine(lineNumber, line, splitLine);
                 } else {
-                    Logger.ERROR.LogSilently("Invalid config line at " + lineNumber + ": " + line + ", expected format: \"key=value\". Continue reading the file.");
+                    Logger.ERROR.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", expected format: \"key=value\". Continue reading the file.");
                 }
             }
-            lineNumber++;
             for (String key : configMap.keySet()) {
                 UpdateConfig(key, false);
             }
         } catch (IOException e) {
-            Logger.ERROR.LogExceptionSilently(e, "readConfig() Line number: " + lineNumber);
+            Logger.ERROR.LogExceptionSilently(e, "OldConfigReader()");
         }
     }
 
@@ -206,6 +214,7 @@ public class FileUtil {
      * Reads the config file. Uses Hashmap to map values String with String and also uses Arraylist to preserve comments in config file with any line starting with '#' or "//"
      */
     public void readConfig() {
+        int lineNumber = 0;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(configFile))) {
             checkExist(configPath, configFile);
             String line;
@@ -213,15 +222,15 @@ public class FileUtil {
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("#") || line.isEmpty()) {
                     comments.add(line);
+                    lineNumber++;
                     continue;
                 }
+                lineNumber++;
                 splitLine = line.split(":", 2);
                 if (splitLine.length == 2) {
-                    String key = splitLine[0].trim();
-                    String value = splitLine[1].trim();
-                    configMap.put(key, value);
+                    FormatLine(lineNumber, line, splitLine);
                 } else {
-                    Logger.ERROR.LogSilently("Invalid config line: " + line + ", expected format: \"key: value\". Continue reading the file.");
+                    Logger.ERROR.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", expected format: \"key: value\". Continue reading the file.");
                 }
             }
             for (String key : configMap.keySet()) {
@@ -230,6 +239,17 @@ public class FileUtil {
         } catch (IOException e) {
             Logger.ERROR.LogExceptionSilently(e, "readConfig()");
         }
+    }
+
+    private void FormatLine(int lineNumber, String line, String[] splitLine) {
+        String key = splitLine[0].trim();
+        if (!configMap.containsKey(key)) {
+            Logger.ERROR.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", Key \"" + key + "\" not found. Continue reading the file.");
+            return;
+        }
+        String value = splitLine[1].trim();
+        if (value.isEmpty()) Logger.ERROR.LogSilently("Invalid line at " + lineNumber + ":" + " Value of key \"" + key +"\" cannot be empty.");
+        configMap.put(key, value);
     }
 
     /**
@@ -241,7 +261,7 @@ public class FileUtil {
      */
     public void writeConfig(String... option) {
         if (option.length % 2 != 0) {
-            Logger.ERROR.Log("Invalid number of arguments for writeConfig(String... option)", false);
+            Logger.ERROR.Log("[ DEPRECATED ] Invalid number of arguments for writeConfig(String... option)", false);
         }
         File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
         try {
@@ -254,7 +274,7 @@ public class FileUtil {
                 }
                 for (int i = 0; i < option.length; i += 2) {
                     if (option[i + 1] == null || option[i + 1].isEmpty()) {
-                        Logger.ERROR.LogSilently("Invalid value for key: " + option[i]);
+                        Logger.ERROR.LogSilently("[ DEPRECATED ] Invalid value for key: " + option[i]);
                     } else {
                         String key = option[i].trim();
                         String value = option[i + 1].trim();
@@ -263,7 +283,7 @@ public class FileUtil {
                 }
             }
         } catch (IOException e) {
-            Logger.ERROR.LogException(e, "writeConfig(String line)", false);
+            Logger.ERROR.LogException(e, "[ DEPRECATED ] writeConfig(String line)", false);
         }
     }
 
@@ -285,8 +305,8 @@ public class FileUtil {
                 }
                 for (String key : configMap.keySet()) {
                     UpdateConfig(key, true);
-                    Logger.DEBUG.Log("Key \"" + key + "\", Value \"" + configMap.get(key) + "\"");
                     if(configMap.get(key) == null || configMap.get(key).isEmpty()) continue;
+                    Logger.DEBUG.Log("Key \"" + key + "\", Value \"" + configMap.get(key) + "\"");
                     fileWriter.write(key + ": " + configMap.get(key) + "\n");
                 }
                 ProgramOptions.getInstance().setChangesSaved(true);

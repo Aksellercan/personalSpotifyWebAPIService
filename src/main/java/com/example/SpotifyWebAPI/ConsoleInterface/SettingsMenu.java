@@ -25,7 +25,8 @@ public class SettingsMenu extends HelperFunctions {
                     (programOptions.isAutoMode() ? ConsoleColours.GREEN + " - Auto Mode Enabled, Program won't launch to CLI on next run" + ConsoleColours.RESET: ""));
             System.out.println("5. Set GUI Mode" +
                     (programOptions.LAUNCH_GUI() ? ConsoleColours.GREEN + " - GUI Enabled" + ConsoleColours.RESET : ""));
-            System.out.println("6. Save Config" +
+            System.out.println("6. Migrate Config file to YAML");
+            System.out.println("7. Save Config" +
                     (programOptions.isChangesSaved() ? "" : ConsoleColours.RED + " - Changes not saved" + ConsoleColours.RESET));
             System.out.println("0. Go Back");
             switch (scanner.nextLine()) {
@@ -113,6 +114,9 @@ public class SettingsMenu extends HelperFunctions {
                     }
                     break;
                 case "6":
+                    fileUtil.MigrateToYAML();
+                    break;
+                case "7":
                     System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
                     getFileUtil().WriteConfig();
                     break;
