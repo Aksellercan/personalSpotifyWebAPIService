@@ -14,8 +14,8 @@ import java.util.ResourceBundle;
  * Second Page Controller
  */
 public class Controller implements Initializable {
-    private SavedScene savedScene = SavedScene.getInstance();
-    @FXML private WebView webviewBox;
+    @FXML
+    private WebView webviewBox;
 
     /**
      * Changes scene to the previous scene

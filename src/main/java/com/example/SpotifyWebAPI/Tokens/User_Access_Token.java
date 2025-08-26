@@ -27,8 +27,11 @@ public class User_Access_Token {
     /**
      * Posts request to get refresh token. Requires "code" from spotify to get refresh token with set privileges
      */
-    public void get_Refresh_Token() {
+    public boolean get_Refresh_Token() {
         try {
+            if (spotifySession.getCode() == null) {
+                throw new NullPointerException("Spotify Code is null");
+            }
             String encodeString = getEncodedString(); //Base64 encoding as required by Spotify
             String Basic = "Basic " + encodeString;
             HttpURLConnection http = HTTPConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
@@ -47,11 +50,13 @@ public class User_Access_Token {
             Logger.INFO.Log("Refreshed token: " + spotifySession.getAccess_token(), false);
         } catch (Exception e) {
             Logger.ERROR.LogException(e,"Failed to request refresh token", true);
-            return;
+            return false;
         }
         if (spotifySession.getRefresh_token() == null) {
             Logger.WARN.Log("Refresh token couldn't be acquired.");
+            return false;
         }
+        return true;
     }
 
     /**

@@ -24,7 +24,7 @@ public final class FileUtil {
      * Checks if the directory exists if not creates it
      * @throws IOException if the file cannot be created
      */
-    private static void checkExist(File configPath, File configFile) throws IOException {
+    private static void checkExist(File configFile) throws IOException {
         if (!configPath.exists()) {
             boolean createDir = configPath.mkdirs();
             if (!createDir) {
@@ -50,14 +50,6 @@ public final class FileUtil {
         for (String key : keys) {
             configMap.put(key, "");
         }
-    }
-
-    /**
-     * Returns the mapped HashMap
-     * @return Hashmap with read values
-     */
-    public static HashMap<String, String> getConfigMap() {
-        return configMap;
     }
 
     /**
@@ -181,7 +173,7 @@ public final class FileUtil {
         File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
         int lineNumber = 0;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(deprecatedConfigFile))) {
-            checkExist(configPath, deprecatedConfigFile);
+            checkExist(deprecatedConfigFile);
             String line;
             String[] splitLine;
             while ((line = reader.readLine()) != null) {
@@ -217,7 +209,7 @@ public final class FileUtil {
     public static void readConfig() {
         int lineNumber = 0;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader(configFile))) {
-            checkExist(configPath, configFile);
+            checkExist(configFile);
             String line;
             String[] splitLine;
             while ((line = reader.readLine()) != null) {
@@ -266,7 +258,7 @@ public final class FileUtil {
         }
         File deprecatedConfigFile = new File(configPath + File.separator + "config.txt");
         try {
-            checkExist(configPath, deprecatedConfigFile);
+            checkExist(deprecatedConfigFile);
             try (FileWriter writer = new FileWriter(deprecatedConfigFile, false)) {
                 if (!comments.isEmpty()) {
                     for (String comment : comments) {
@@ -293,7 +285,7 @@ public final class FileUtil {
      */
     public static void WriteConfig() {
         try {
-            checkExist(configPath, configFile);
+            checkExist(configFile);
             if (ProgramOptions.isChangesSaved()) {
                 Logger.INFO.Log("Nothing to save", false);
                 return;

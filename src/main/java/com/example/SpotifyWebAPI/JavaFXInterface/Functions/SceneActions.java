@@ -37,8 +37,8 @@ public final class SceneActions {
      * @param sceneName FXML filename
      */
     public static void ChangeScene(String sceneName) {
-        if (defaultStylesheet.isEmpty()){
-            Logger.WARN.Log("Default Stylesheet not set!");
+        if (defaultStylesheet == null){
+            Logger.ERROR.Log("Default Stylesheet not set!");
             return;
         }
         ChangeScene(sceneName, defaultStylesheet);
@@ -50,34 +50,35 @@ public final class SceneActions {
      * @param sceneStylesheet   Stylesheet filename
      */
     public static void ChangeScene(String sceneName, String sceneStylesheet) {
-        if (currentStage == null) {
-            Logger.CRITICAL.Log("Current scene is null");
-            return;
+        try {
+            if (currentStage == null) {
+                Logger.CRITICAL.Log("Current scene is null");
+                return;
+            }
+            Parent root = setFXMLFile(sceneName);
+            if (root == null) {
+                Logger.CRITICAL.Log("FXML root is null");
+                return;
+            }
+            Scene window = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
+            setStyleSheet(window, sceneStylesheet);
+            currentStage.setScene(window);
+        } catch (Exception e) {
+            Logger.ERROR.LogException(e, "Cannot change scene");
         }
-        Parent root = setFXMLFile(sceneName);
-        if (root == null) {
-            Logger.CRITICAL.Log("FXML root is null");
-            return;
-        }
-        Scene window = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
-        setStyleSheet(window, sceneStylesheet);
-        currentStage.setScene(window);
     }
+
     /**
      * Sets stylesheet for the scene
      * @param scene Scene to apply stylesheet for
      * @param styleSheetName    Name of the stylesheet
      */
-    public static void setStyleSheet(Scene scene, String styleSheetName) {
-        try {
-            URL getStyleSheet = Scene.class.getResource("/Styles/" + styleSheetName + ".css");
-            if (getStyleSheet == null) {
-                throw new NullPointerException("Style sheet resource " + styleSheetName + ".css not found");
-            }
-            scene.getStylesheets().add(getStyleSheet.toExternalForm());
-        } catch (Exception e) {
-            Logger.ERROR.LogException(e, "Cannot load stylesheet");
+    public static void setStyleSheet(Scene scene, String styleSheetName) throws NullPointerException {
+        URL getStyleSheet = Scene.class.getResource("/Styles/" + styleSheetName + ".css");
+        if (getStyleSheet == null) {
+            throw new NullPointerException("Style sheet resource " + styleSheetName + ".css not found");
         }
+        scene.getStylesheets().add(getStyleSheet.toExternalForm());
     }
 
     /**
@@ -85,16 +86,11 @@ public final class SceneActions {
      * @param fxmlFilename  FXML File name
      * @return  Loaded FXML file as Parent object, if it fails to find file returns null
      */
-    public static Parent setFXMLFile(String fxmlFilename) {
-        try {
-            URL getFXML = Scene.class.getResource("/Layouts/" + fxmlFilename + ".fxml");
-            if (getFXML == null) {
-                throw  new NullPointerException("FXML file " + fxmlFilename + ".fxml not found");
-            }
-            return FXMLLoader.load(getFXML);
-        } catch (Exception e) {
-            Logger.ERROR.LogException(e, "Cannot load FXML");
-            return null;
+    public static Parent setFXMLFile(String fxmlFilename) throws Exception {
+        URL getFXML = Scene.class.getResource("/Layouts/" + fxmlFilename + ".fxml");
+        if (getFXML == null) {
+            throw  new NullPointerException("FXML file " + fxmlFilename + ".fxml not found");
         }
+        return FXMLLoader.load(getFXML);
     }
 }

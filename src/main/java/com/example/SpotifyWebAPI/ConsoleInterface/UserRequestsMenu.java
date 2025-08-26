@@ -32,7 +32,6 @@ public class UserRequestsMenu extends HelperFunctions {
                 case "1":
                     String code = null;
                     while (checkIfNullOrEmpty(code) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri()))) {
-                        ProgramOptions.setChangesSaved(false);
                         if (checkIfNullOrEmpty(code)) {
                             System.out.println("Enter Spotify code:");
                             code = scanner.nextLine().trim();
@@ -45,12 +44,16 @@ public class UserRequestsMenu extends HelperFunctions {
                             spotifySession.setRedirect_uri(redirect_uri);
                         }
                     }
-                    userAccessToken.get_Refresh_Token();
-                    System.out.println("Save the refresh token to config?");
-                    if (scanner.nextLine().equals("y")) {
-                        FileUtil.WriteConfig();
-                        Logger.INFO.Log("Saved Config successfully!");
+                    if (userAccessToken.get_Refresh_Token()) {
+                        System.out.println("Save the refresh token to config?");
+                        if (scanner.nextLine().equals("y")) {
+                            ProgramOptions.setChangesSaved(false);
+                            FileUtil.WriteConfig();
+                            Logger.INFO.Log("Saved Config successfully!");
+                        }
+                        break;
                     }
+                    System.out.println("Invalid credentials");
                     break;
                 case "2":
                     while (checkIfNullOrEmpty(spotifySession.getRefresh_token()) || (checkIfNullOrEmpty(spotifySession.getRedirect_uri()))) {

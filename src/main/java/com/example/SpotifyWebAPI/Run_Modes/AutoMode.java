@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
  * Automation to change description of Playlist to the current size of playlist with limit of 120
  */
 public class AutoMode {
-
     /**
      * Executes automation methods in order and catches Exceptions
      */

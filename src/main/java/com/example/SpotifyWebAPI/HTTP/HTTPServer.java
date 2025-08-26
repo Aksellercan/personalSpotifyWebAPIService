@@ -20,7 +20,7 @@ public class HTTPServer implements Runnable {
         public volatile boolean isRunning = false;
     }
 
-    ServerStatus serverStatus = new ServerStatus();
+    private final ServerStatus serverStatus = new ServerStatus();
     public static Thread thread;
     private final int port;
     private final int backlog;
@@ -251,30 +251,32 @@ public class HTTPServer implements Runnable {
                     Logger.INFO.Log("Request Headers: " + clientInputLine);
                 }
 
-                if (requestedFile.toString().contains("css"))
-                    PostResponse(out, body, ContentType.StyleSheet.getContentType(), StatusCode.Accepted.getStatusCode());
-                if (requestedFile.toString().trim().isEmpty()) {
-                    File htmlFile = GetIndexPage();
-                    String htmlBody;
-                    String statusCode;
-                    String contentType;
-                    if (htmlFile != null) {
-                        contentType = ContentType.HTML.getContentType();
-                        statusCode = StatusCode.OK.getStatusCode();
-                        htmlBody = ResponseBody(htmlFile, StandardCharsets.UTF_8);
-                    } else {
-                        contentType = ContentType.TextPlain.getContentType();
-                        statusCode = StatusCode.NotFound.getStatusCode();
-                        htmlBody = "404 Not Found";
+                if (requestedFile != null) {
+                    if (requestedFile.contains("css"))
+                        PostResponse(out, body, ContentType.StyleSheet.getContentType(), StatusCode.Accepted.getStatusCode());
+                    if (requestedFile.trim().isEmpty()) {
+                        File htmlFile = GetIndexPage();
+                        String htmlBody;
+                        String statusCode;
+                        String contentType;
+                        if (htmlFile != null) {
+                            contentType = ContentType.HTML.getContentType();
+                            statusCode = StatusCode.OK.getStatusCode();
+                            htmlBody = ResponseBody(htmlFile, StandardCharsets.UTF_8);
+                        } else {
+                            contentType = ContentType.TextPlain.getContentType();
+                            statusCode = StatusCode.NotFound.getStatusCode();
+                            htmlBody = "404 Not Found";
+                        }
+                        PostResponse(out, htmlBody, contentType, statusCode);
                     }
-                    PostResponse(out, htmlBody, contentType, statusCode);
+                    if (requestedFile.contains("html"))
+                        PostResponse(out, body, ContentType.HTML.getContentType(), StatusCode.Accepted.getStatusCode());
+                    if (requestedFile.contains("js"))
+                        PostResponse(out, body, ContentType.JavaScript.getContentType(), StatusCode.Accepted.getStatusCode());
+                    if (requestedFile.contains("ico"))
+                        PostResponse(out, body, ContentType.ImageXIcon.getContentType(), StatusCode.Accepted.getStatusCode());
                 }
-                if (requestedFile.toString().contains("html"))
-                    PostResponse(out, body, ContentType.HTML.getContentType(), StatusCode.Accepted.getStatusCode());
-                if (requestedFile.toString().contains("js"))
-                    PostResponse(out, body, ContentType.JavaScript.getContentType(), StatusCode.Accepted.getStatusCode());
-                if (requestedFile.toString().contains("ico"))
-                    PostResponse(out, body, ContentType.ImageXIcon.getContentType(), StatusCode.Accepted.getStatusCode());
             }
         } catch (Exception ex) {
             Logger.CRITICAL.LogException(ex, "Port " + port + " backlog limit: " + 10);

@@ -108,9 +108,7 @@ public class Main {
             }
             return;
         }
-
-        if (args.length == 1) {
-            switch (args[0]) {
+        switch (args[0]) {
                 case "--gui":
                     GUI.launch(GUI.class, args);
                     return;
@@ -141,51 +139,60 @@ public class Main {
                 case "--migrate":
                     FileUtil.MigrateToYAML();
                     return;
-                default:
-                    System.out.println("Unknown argument: " + args[0]);
-                    return;
-            }
-        }
-        if (args.length == 3) {
-            if (args[0].equals("--set")) {
-                switch (args[1]) {
-                    case "--playlist-id":
-                        spotifySession.setPlaylist_id(args[2].trim());
-                    case "--userid":
-                        spotifySession.setUser_id(args[2].trim());
-                    case "--client-id":
-                        spotifySession.setClient_id(args[2].trim());
-                    case "--client-secret":
-                        spotifySession.setClient_secret(args[2].trim());
-                    case "--redirect-uri":
-                        spotifySession.setRedirect_uri(args[2].trim());
-                    case "--refresh-token":
-                        spotifySession.setRefresh_token(args[2].trim());
-                    default:
-                        HelpMenu();
-                }
-                FileUtil.WriteConfig();
-            }
-
-            if (args[0].equals("--get-refresh-token")) {
-                User_Access_Token userAccessToken = new User_Access_Token();
-                while (true) {
-                    if (spotifySession.getCode() == null || spotifySession.getCode().isEmpty()) {
-                        spotifySession.setCode(args[1].trim());
-                    }
-                    if (spotifySession.getRedirect_uri() == null || spotifySession.getRedirect_uri().isEmpty()) {
-                        spotifySession.setRedirect_uri(args[2].trim());
+                case "set":
+                    if (args.length < 14) {
+                        for (String str : args) {
+                            if (str == null || str.isEmpty()) {
+                                System.out.println("Empty value");
+                                return;
+                            }
+                        }
+                        for (int i = 0; i < args.length; i++) {
+                            if (args[i].equals("--playlist-id")) {
+                                spotifySession.setPlaylist_id(args[i+1].trim());
+                            }
+                            if (args[i].equals("--user-id")) {
+                                spotifySession.setUser_id(args[i+1].trim());
+                            }
+                            if (args[i].equals("--client-id")) {
+                                spotifySession.setClient_id(args[i+1].trim());
+                            }
+                            if (args[i].equals("--client-secret")) {
+                                spotifySession.setClient_secret(args[i+1].trim());
+                            }
+                            if (args[i].equals("--redirect-uri")) {
+                                spotifySession.setRedirect_uri(args[i+1].trim());
+                            }
+                            if (args[i].equals("--refresh-token")) {
+                                spotifySession.setRefresh_token(args[i+1].trim());
+                            }
+                        }
+                        ProgramOptions.setChangesSaved(false);
                         FileUtil.WriteConfig();
                     } else {
-                        break;
+                        HelpMenu();
                     }
-                }
-                userAccessToken.get_Refresh_Token();
-            } else {
-                HelpMenu();
+                    break;
+                case "--get-refresh-token":
+                    if (args.length == 3) {
+                        if (!args[1].trim().isEmpty() || !args[2].trim().isEmpty()) {
+                            User_Access_Token userAccessToken = new User_Access_Token();
+                            spotifySession.setCode(args[1].trim());
+                            spotifySession.setRedirect_uri(args[2].trim());
+                            if (userAccessToken.get_Refresh_Token()) {
+                                ProgramOptions.setChangesSaved(false);
+                                FileUtil.WriteConfig();
+                            } else {
+                                System.out.println("Invalid credentials");
+                            }
+                        }
+                    } else {
+                        System.out.println("Invalid Usage\n\t--get-refresh-token <code> <redirect uri>     get refresh token");
+                    }
+                    break;
+                default:
+                    System.out.println("Unknown argument: " + args[0]);
+                    HelpMenu();
             }
-        } else {
-            HelpMenu();
-        }
     }
 }

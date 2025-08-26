@@ -1,29 +1,29 @@
 const listContent = document.getElementById('scopeListShow');
 const mainContent = document.getElementById('buttonDiv');
 const scopesArray = []
-var redirect_uri = 'http://127.0.0.1:7277/Fallback/fallback.html';
+const redirect_uri = 'http://127.0.0.1:7277/Fallback/fallback.html';
 document.getElementById('setClient_id').value = '';
 addList()
 
 document.getElementById('redirectForm').addEventListener('submit',function(event) {
     event.preventDefault();
-    var client_id = document.getElementById('setClient_id').value;
-    var scope = '';
-    var state = generateRandomString(16);
+    const client_id = document.getElementById('setClient_id').value;
+    let scope = '';
+    let state = generateRandomString(16);
     console.log(`State: ${state}`);
     if (scopesArray.length === 0) {
         alert("No Scopes added");
         return;
-    }    
+    }
     for (let i = 0; i < scopesArray.length; i++) {
         if (i === 0) {
-        scope += scopesArray[i];    
+        scope += scopesArray[i];
         continue;
         }
         scope += " " +scopesArray[i];
     }
     console.log(`DEBUG ${scopesArray.length} ` + (scopesArray.length === 1 ? `Scope: ${scope}` :`Scopes: ${scope}`));
-    var url = 'https://accounts.spotify.com/authorize?' +
+    let url = 'https://accounts.spotify.com/authorize?' +
         new URLSearchParams({
             response_type: 'code',
             client_id: client_id,
@@ -43,7 +43,7 @@ function addList(){
         addListBtn.textContent = "Add Scope";
     addListBtn.addEventListener('click', function(event){
         event.preventDefault();
-        var setScope = document.getElementById('setScopes').value;
+        let setScope = document.getElementById('setScopes').value;
         if (typeof setScope === "string" && setScope.trim().length === 0) {
             return;
         }
