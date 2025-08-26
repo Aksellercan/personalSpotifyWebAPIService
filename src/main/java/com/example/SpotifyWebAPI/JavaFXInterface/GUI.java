@@ -24,7 +24,7 @@ public class GUI extends Application {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
     private final Client_Credentials_Token client_credentials_token = new Client_Credentials_Token();
     private final Client_Credentials_Request clientCredentials_Request = new Client_Credentials_Request();
-    private HTTPServer httpServer = new HTTPServer(8080, 10);
+    private HTTPServer httpServer = new HTTPServer(0, 10);
     private final Thread thread = new Thread(httpServer);
     @FXML
     private TextArea responseTextArea;
@@ -84,7 +84,8 @@ public class GUI extends Application {
             Logger.INFO.Log("Server already initialized");
             httpServer = SaveHTTPState.getServer("Fallback");
             if (httpServer.getSocket() != null)
-                responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() + "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
+                responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() +
+                        "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
             return;
         }
         if (httpServer == null) {
@@ -101,7 +102,8 @@ public class GUI extends Application {
             try {
                 for (int i = 0; i < 10; i++) {
                     if (httpServer.getSocket() != null) {
-                        responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() + "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
+                        responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() +
+                                "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
                         break;
                     }
                     Logger.DEBUG.Log("Refreshed " + (i + 1) + (i + 1 > 1 ? " times" : " time") + "...");
@@ -153,6 +155,7 @@ public class GUI extends Application {
         clientCredentials_Request.getPlaylist(spotifySession.getPlaylist_id());
         Logger.DEBUG.Log("Event: " + event.toString());
         responseTextArea.setText("Playlist:\n" + "Name: " + clientCredentials_Request.getplaylistName() +
-                "\nDescription: " + clientCredentials_Request.getplaylistDescription() + "\nSize: " + clientCredentials_Request.getplaylistSize());
+                "\nDescription: " + clientCredentials_Request.getplaylistDescription() +
+                "\nSize: " + clientCredentials_Request.getplaylistSize());
     }
 }
