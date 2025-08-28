@@ -2,7 +2,6 @@ package com.example.SpotifyWebAPI.HTTP;
 
 import com.example.SpotifyWebAPI.HTTP.Enumerators.ContentType;
 import com.example.SpotifyWebAPI.HTTP.Enumerators.StatusCode;
-import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import java.io.*;
 import java.net.ServerSocket;
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
  * Starts and manages the HTTP Server
  * Runs asynchronously
  */
-public class HTTPServer implements Runnable {
+public class HTTPServer extends Thread {
     protected static class ServerStatus {
         public volatile boolean isRunning = false;
     }
@@ -25,10 +24,9 @@ public class HTTPServer implements Runnable {
     public static Thread thread;
     private final int port;
     private final int backlog;
-    private Socket currentSocket;
-    private final File sourceFolder = new File("Pages"+ File.separator + "Fallback");
-    private final File indexFile = new File(sourceFolder + File.separator + "index.html");
-    private ServerSocket socket = null;
+    private File sourceFolder = new File("Pages"+ File.separator + "Fallback");
+    private File indexFile = new File(sourceFolder + File.separator + "index.html");
+    private ServerSocket socket;
     private final String serverName = "Spotify Web API HTTP Server";
 
     /**
@@ -47,6 +45,10 @@ public class HTTPServer implements Runnable {
      */
     public boolean getServerStatus() {
         return serverStatus.isRunning;
+    }
+
+    public ServerSocket GetServerSocket() {
+        return socket;
     }
 
     /**
@@ -85,34 +87,6 @@ public class HTTPServer implements Runnable {
     }
 
     /**
-     * Returns the socket object
-     * @return  Socket object
-     */
-    public Socket getSocket() {
-        return this.currentSocket;
-    }
-
-    /**
-     * Sets the socket object
-     * @param socket    Set socket object
-     */
-    private void setSocket(Socket socket) {
-        this.currentSocket = socket;
-    }
-
-    /**
-     * @deprecated
-     * Starts the server on a new thread.
-     * Switched to using Runnable interface instead
-     */
-    public void StartServer() {
-        thread = new Thread(this::StartListening);
-        thread.start();
-        thread.setName("HTTPServerProcess");
-        Logger.DEBUG.Log("Thread Info: " + thread.getName() + " | " + thread.getState() + " | " + thread.isAlive());
-    }
-
-    /**
      * Gets the file and encodes it with specified Charset encoding
      * @param file  File to be encoded
      * @param encoding  Encoding to use
@@ -125,23 +99,6 @@ public class HTTPServer implements Runnable {
         }
         byte[] encoded = Files.readAllBytes(file.toPath());
         return new String(encoded, encoding);
-    }
-
-    /**
-     * @deprecated
-     * Gets the requested file.
-     * Using new way to get Folder structure and files instead, GetFolders(String requestedFile)
-     * @param fileNameWithExtension Name of the requested file with extension
-     * @return  Return the requested file
-     */
-    private File GetRequestedFile(String fileNameWithExtension) {
-        File requestedFilePath = new File(sourceFolder + File.separator + fileNameWithExtension);
-        if (!requestedFilePath.exists()) {
-            Logger.WARN.Log("File " + fileNameWithExtension + " not found!");
-            return null;
-        }
-        Logger.INFO.Log("File " + fileNameWithExtension + " found.");
-        return requestedFilePath;
     }
 
     /**
@@ -210,9 +167,9 @@ public class HTTPServer implements Runnable {
      */
     private void StartListening() {
         try {
-            serverStatus.isRunning = true;
             Logger.INFO.Log("Starting Server on port " + port);
             socket = new ServerSocket(port, backlog);
+            serverStatus.isRunning = true;
             Logger.DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress() + " InetAddress: " + socket.getInetAddress());
             Logger.DEBUG.Log("Socket local port: " + socket.getLocalPort());
             while (serverStatus.isRunning) {
@@ -221,7 +178,6 @@ public class HTTPServer implements Runnable {
                     thread = null;
                     break;
                 }
-                setSocket(clientSocket);
                 Logger.INFO.Log("Waiting for requests... Listening on Port: " + clientSocket.getLocalPort() + " at address: " + clientSocket.getLocalSocketAddress());
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -304,8 +260,12 @@ public class HTTPServer implements Runnable {
      */
     private void PostResponse(BufferedWriter out, String body, String contentType, String statusCode) throws IOException {
         int bodyLength = body.length();
-        Logger.DEBUG.Log("Body Length: " + bodyLength);
         LocalDateTime now = LocalDateTime.now();
+        Logger.DEBUG.Log("HTTP/1.0 " + statusCode);
+        Logger.DEBUG.Log("Date: " + now);
+        Logger.DEBUG.Log("Server: " + serverName);
+        Logger.DEBUG.Log("Content-type: " + contentType);
+        Logger.DEBUG.Log("Content-Length: " + bodyLength);
         out.write("HTTP/1.0 "+ statusCode +"\r\n");
         out.write("Date: " + now + "\r\n");
         out.write("Server: " + serverName + "\r\n");

@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.JavaFXInterface;
 
+import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
 import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
@@ -11,11 +12,11 @@ import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.net.HttpURLConnection;
 
 /**
  * JavaFX GUI Class
@@ -24,8 +25,7 @@ public class GUI extends Application {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
     private final Client_Credentials_Token client_credentials_token = new Client_Credentials_Token();
     private final Client_Credentials_Request clientCredentials_Request = new Client_Credentials_Request();
-    private HTTPServer httpServer = new HTTPServer(0, 10);
-    private final Thread thread = new Thread(httpServer);
+    private HTTPServer httpServer;
     @FXML
     private TextArea responseTextArea;
 
@@ -53,13 +53,10 @@ public class GUI extends Application {
             Sets the icon of the program, commented out because icon is not available
              */
             primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
-            Parent root = SceneActions.setFXMLFile("PrimaryPage");
-            Scene window = new Scene(root, primaryStage.getWidth(), primaryStage.getHeight());
-            SceneActions.setStyleSheet(window, "PrimaryPage");
             SceneActions.SetDefaultStylesheet("PrimaryPage");
-            primaryStage.setScene(window);
-            primaryStage.show();
             SceneActions.SetCurrentStage(primaryStage);
+            SceneActions.ChangeScene("PrimaryPage");
+            primaryStage.show();
         } catch (Exception e) {
             Logger.ERROR.LogException(e, "Cannot start JavaFX GUI");
         }
@@ -68,7 +65,7 @@ public class GUI extends Application {
     @FXML
     protected void OnChangeSceneButton(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        SceneActions.ChangeScene("SecondPage");
+        SceneActions.ChangeScene("Webview");
     }
 
     @FXML
@@ -80,43 +77,30 @@ public class GUI extends Application {
     @FXML
     protected void OnStartServerButtonClick(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        if (SaveHTTPState.getHashMapSize() != 0) {
-            Logger.INFO.Log("Server already initialized");
-            httpServer = SaveHTTPState.getServer("Fallback");
-            if (httpServer.getSocket() != null)
-                responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() +
-                        "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
+        if(!SaveHTTPState.ContainsServer("Fallback")) {
+            httpServer = new HTTPServer(0, 10);
+            httpServer.start();
+            SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
+            Thread checkLoop = new Thread(() -> {
+                try {
+                    for (int i = 1; i <= 10; i++) {
+                        if (httpServer.GetServerSocket() != null) {
+                            responseTextArea.setText("Available at http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort());
+                            break;
+                        }
+                        Logger.DEBUG.Log("Checked " + i + (i > 1 ? " times" : " time"), false);
+                        Thread.sleep(2500);
+
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            checkLoop.start();
             return;
         }
-        if (httpServer == null) {
-            Logger.DEBUG.Log("httpServer is null");
-            httpServer = new HTTPServer(0, 10);
-            SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
-        }
-        if (!httpServer.getServerStatus()) {
-            thread.start();
-        }
-        SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
-        responseTextArea.setText("Server Status: Running");
-        Thread t = new Thread(() -> {
-            try {
-                for (int i = 0; i < 10; i++) {
-                    if (httpServer.getSocket() != null) {
-                        responseTextArea.setText("Waiting for requests... Listening on Port: " + httpServer.getSocket().getLocalPort() +
-                                "\non Address: " + httpServer.getSocket().getInetAddress().getHostAddress());
-                        break;
-                    }
-                    Logger.DEBUG.Log("Refreshed " + (i + 1) + (i + 1 > 1 ? " times" : " time") + "...");
-                    Thread.sleep(2500);
-                }
-                Logger.DEBUG.Log("Server Status: " + (httpServer.getServerStatus() ? "Running" : "Stopped"));
-                SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        t.start();
-
+        Logger.DEBUG.Log("Fallback page already started");
+        responseTextArea.setText("Available at http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort());
         Logger.DEBUG.Log("Active Thread Count: " + Thread.activeCount());
     }
 
@@ -128,8 +112,11 @@ public class GUI extends Application {
             responseTextArea.setText("HTTP Server is null");
         }
         try {
+            httpServer = SaveHTTPState.getServer("Fallback");
             if (httpServer.StopServer()) {
                 responseTextArea.setText("HTTP Server Stopped");
+                HttpURLConnection http = HTTPConnection.connectHTTP("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort(), "GET");
+                http.connect();
                 SaveHTTPState.removeServer("Fallback");
             } else {
                 responseTextArea.setText("Cannot stop the server");

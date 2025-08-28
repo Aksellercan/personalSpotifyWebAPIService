@@ -39,10 +39,12 @@ public class WebviewController implements Initializable {
             WebEngine e = webviewBox.getEngine();
             webviewBox.setContextMenuEnabled(true);
             Logger.DEBUG.Log("Webkit, is Javascript enabled? " + (e.isJavaScriptEnabled() ? "Yes": "No"));
-            Logger.DEBUG.Log("Server link assigned: " + SaveHTTPState.getServer("Fallback").getSocket().getLocalPort());
-            e.load("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").getSocket().getLocalPort()); //placeholder
+            if (SaveHTTPState.ContainsServer("Fallback")) {
+                Logger.DEBUG.Log("Server link assigned: " + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort());
+                e.load("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort());
+            }
         } catch (Exception ex) {
-            Logger.CRITICAL.LogException(ex, "Webkit Error!");
+            Logger.CRITICAL.LogException(ex, "Webview Error!");
         }
     }
 }

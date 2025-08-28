@@ -46,7 +46,8 @@ public class Main {
         System.out.println("  --gui                                         Launch GUI interface");
         System.out.println("  --cli                                         Launch CLI interface normal mode");
         System.out.println("  --cli-test                                    Launch CLI interface in test mode");
-        System.out.println("\nUsage: program --set [CONFIGURATION] <value>");
+        System.out.println("  --migrate                                     Migrates configuration from \"config.txt\" to \"config.yaml\"");
+        System.out.println("\nUsage: program set [CONFIGURATION] <value> [CONFIGURATION] <value>...");
         System.out.println("\nConfiguration Options:");
         System.out.println("  --playlist-id <id>                            Set default playlist ID");
         System.out.println("  --userid <id>                                 Set Spotify user ID");
@@ -67,6 +68,12 @@ public class Main {
      * @param args  Commandline arguments, allows maximum of 3 arguments and lowest no arguments.
      */
     public static void main(String[] args) {
+        if (args.length == 1) {
+            if (args[0].equals("--help")) {
+                HelpMenu();
+                return;
+            }
+        }
         /*
         Set what keys should be in config file
          */
@@ -132,9 +139,6 @@ public class Main {
                 case "--cli-test":
                     CLI_Interface cli = new CLI_Interface();
                     cli.initSession();
-                    return;
-                case "--help":
-                    HelpMenu();
                     return;
                 case "--migrate":
                     FileUtil.MigrateToYAML();

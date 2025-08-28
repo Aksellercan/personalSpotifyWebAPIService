@@ -16,6 +16,10 @@ public final class SceneActions {
 
     private SceneActions() {}
 
+    public static Stage GetCurrentStage() {
+        return currentStage;
+    }
+
     /**
      * Set Stage object
      * @param stage JavaFX Stage Object
