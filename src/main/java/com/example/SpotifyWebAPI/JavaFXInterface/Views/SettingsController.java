@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.JavaFXInterface.Views;
 import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.Configuration;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import javafx.event.ActionEvent;
@@ -100,6 +101,7 @@ public class SettingsController {
         Logger.DEBUG.Log("Event: " + event.toString());
         if (CheckSettingsInput()) {
             ProgramOptions.setChangesSaved(false);
+            FileUtil.WriteConfig();
         }
         SceneActions.ChangeScene("PrimaryPage");
     }

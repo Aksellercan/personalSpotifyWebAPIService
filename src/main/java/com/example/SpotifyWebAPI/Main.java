@@ -6,6 +6,7 @@ import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
 import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
+import com.example.SpotifyWebAPI.Tools.Configuration;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
