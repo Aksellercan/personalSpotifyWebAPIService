@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
+ * @deprecated
  * Reads and writes configuration file in "Config/*"
  */
 public final class FileUtil {

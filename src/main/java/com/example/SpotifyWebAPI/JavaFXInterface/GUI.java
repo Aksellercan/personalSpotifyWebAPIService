@@ -6,7 +6,7 @@ import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.FileUtil;
+import com.example.SpotifyWebAPI.Tools.Configuration;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import javafx.application.Application;
@@ -44,7 +44,7 @@ public class GUI extends Application {
         primaryStage.setMaxWidth(1200);
         primaryStage.setMaxHeight(816);
         primaryStage.setOnCloseRequest(event -> {
-            FileUtil.WriteConfig();
+            Configuration.MapAndWriteConfig();
             Logger.INFO.Log("Closed Session.");
             System.exit(0);
         });

@@ -1,6 +1,5 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;

@@ -8,7 +8,6 @@ import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
 import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
 import com.example.SpotifyWebAPI.Tools.Configuration;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
-import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
@@ -78,23 +77,9 @@ public class Main {
         /*
         Set what keys should be in config file
          */
-        String[] Credentials = {
-                "client_id",
-                "client_secret",
-                "redirect_uri",
-                "refresh_token",
-                "playlist_id",
-                "output_debug",
-                "auto_mode",
-                "user_id",
-                "launch_gui",
-                "verbose_log_file",
-                "coloured_output"
-        };
-        FileUtil.AddToConfigMap(Credentials);
         SpotifySession spotifySession = SpotifySession.getInstance();
-        FileUtil.readConfig();
-
+//        Configuration.ReadConfigAndMap();
+        Configuration.ReadConfigAndMapJSON();
         //Settings
         Logger.DEBUG.Log("launch_gui: " + ProgramOptions.LAUNCH_GUI(), false);
         Logger.DEBUG.Log("auto_mode: " + ProgramOptions.isAutoMode(), false);
@@ -142,7 +127,7 @@ public class Main {
                     cli.initSession();
                     return;
                 case "--migrate":
-                    FileUtil.MigrateToYAML();
+                    Configuration.MigrateToYAML();
                     return;
                 case "set":
                     if (args.length < 14) {
@@ -173,7 +158,7 @@ public class Main {
                             }
                         }
                         ProgramOptions.setChangesSaved(false);
-                        FileUtil.WriteConfig();
+                        Configuration.MapAndWriteConfig();
                     } else {
                         HelpMenu();
                     }
@@ -186,7 +171,7 @@ public class Main {
                             spotifySession.setRedirect_uri(args[2].trim());
                             if (userAccessToken.get_Refresh_Token()) {
                                 ProgramOptions.setChangesSaved(false);
-                                FileUtil.WriteConfig();
+                                Configuration.MapAndWriteConfig();
                             } else {
                                 System.out.println("Invalid credentials");
                             }

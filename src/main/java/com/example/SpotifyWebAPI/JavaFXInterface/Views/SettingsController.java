@@ -4,17 +4,20 @@ import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Configuration;
-import com.example.SpotifyWebAPI.Tools.FileUtil;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Settings GUI
  */
-public class SettingsController {
+public class SettingsController implements Initializable {
     @FXML
     private TextField inputUser_id;
     @FXML
@@ -30,11 +33,13 @@ public class SettingsController {
     @FXML
     private ProgressBar SaveConfigProgressBar;
 
+
+
     @FXML
     protected void MigrateToYAML(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         SaveConfigProgressBar.setProgress(0);
-        FileUtil.MigrateToYAML();
+        Configuration.MigrateToYAML();
         SaveConfigProgressBar.setProgress(100);
     }
 
@@ -86,7 +91,7 @@ public class SettingsController {
             ProgramOptions.setChangesSaved(false);
             SaveConfigProgressBar.setProgress(75);
         }
-        FileUtil.WriteConfig();
+        Configuration.MapAndWriteConfigJSON();
         SaveConfigProgressBar.setProgress(100);
         inputUser_id.setText("");
         inputClient_id.setText("");
@@ -101,7 +106,7 @@ public class SettingsController {
         Logger.DEBUG.Log("Event: " + event.toString());
         if (CheckSettingsInput()) {
             ProgramOptions.setChangesSaved(false);
-            FileUtil.WriteConfig();
+            Configuration.MapAndWriteConfig();
         }
         SceneActions.ChangeScene("PrimaryPage");
     }
@@ -133,5 +138,16 @@ public class SettingsController {
             change = true;
         }
         return change;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
+            if (CheckSettingsInput()) {
+                ProgramOptions.setChangesSaved(false);
+                Configuration.MapAndWriteConfig();
+            }
+            Logger.INFO.Log("Closing from settings page... Reason: " + e.getEventType());
+        });
     }
 }
