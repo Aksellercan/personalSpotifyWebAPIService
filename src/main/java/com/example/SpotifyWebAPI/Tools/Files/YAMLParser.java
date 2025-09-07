@@ -3,9 +3,7 @@ package com.example.SpotifyWebAPI.Tools.Files;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Token;
 import com.example.SpotifyWebAPI.Tools.Logger;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 
 /**
  * YAMLParser inherits Configuration abstract class
@@ -22,7 +20,7 @@ public final class YAMLParser extends Configuration implements ConfigReader {
      */
     public static void ReadConfigAndMap() {
         try {
-            tokenConfig = LoadKeys(getFileLength());
+            tokenConfig = LoadKeys(getFileLength("config.yaml"));
             ReadConfig();
             MapKeys(tokenConfig.length == 0);
         } catch (Exception e) {
@@ -43,11 +41,26 @@ public final class YAMLParser extends Configuration implements ConfigReader {
     }
 
     /**
-     * Reads the configuration file and counts lines. This is used to dynamically scale tokenConfig array
-     * @return  Line count
+     * Migrates configuration from "config.txt" to "config.yaml"
      */
-    private static int getFileLength() {
-        try (BufferedReader br = new BufferedReader(new FileReader(MkDirs("config.yaml")))) {
+    public static void MigrateToYAML() {
+        Logger.INFO.Log("Setting token array size...", false);
+        tokenConfig = LoadKeys(getFileLength("config.txt"));
+        Logger.INFO.Log("Reading config...", false);
+        OldConfigReader();
+        ProgramOptions.setChangesSaved(false);
+        Logger.INFO.Log("Config read. Now writing it as YAML", false);
+        WriteConfig();
+        Logger.INFO.Log("Wrote config as YAML", false);
+    }
+
+    /**
+     * Reads the configuration file and counts lines. This is used to dynamically scale tokenConfig array
+     * @param filename  Name of file to get length
+     * @return  Line count, if file is empty or not present then returns 0
+     */
+    private static int getFileLength(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(MkDirs(filename)))) {
             int fileLength = 0;
             while (br.readLine() != null) {
                 fileLength++;
@@ -101,6 +114,30 @@ public final class YAMLParser extends Configuration implements ConfigReader {
             }
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Failed to read configuration");
+        }
+    }
+
+    /**
+     * Reads the old config
+     */
+    private static void OldConfigReader() {
+        int lineNumber = 0;
+        int tokenNumber = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(MkDirs("config.txt")))) {
+            String line;
+            String[] splitLine;
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                splitLine = line.split("=", 2);
+                if (splitLine.length == 2) {
+                    tokenConfig[tokenNumber] = new Token(splitLine[0].trim(), splitLine[1].trim());
+                    tokenNumber++;
+                } else {
+                    Logger.ERROR.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", expected format: \"key=value\". Continue reading the file.");
+                }
+            }
+        } catch (IOException e) {
+            Logger.ERROR.LogExceptionSilently(e, "OldConfigReader()");
         }
     }
 }

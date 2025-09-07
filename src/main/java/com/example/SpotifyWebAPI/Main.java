@@ -9,6 +9,7 @@ import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
+import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
 /**
@@ -126,7 +127,7 @@ public class Main {
                     cli.initSession();
                     return;
                 case "--migrate":
-//                    Configuration.MigrateToYAML();
+                    YAMLParser.MigrateToYAML();
                     return;
                 case "set":
                     if (args.length < 14) {
