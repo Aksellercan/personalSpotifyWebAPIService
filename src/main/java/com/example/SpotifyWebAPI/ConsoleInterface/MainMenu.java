@@ -1,7 +1,7 @@
 package com.example.SpotifyWebAPI.ConsoleInterface;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
-import com.example.SpotifyWebAPI.Tools.Configuration;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 
 /**
  * CLI Interface Main Menu
@@ -35,7 +35,7 @@ public class MainMenu extends HelperFunctions {
                     break;
                 case "4":
                     System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
-                    Configuration.MapAndWriteConfig();
+                    JSONParser.MapAndWriteConfig();
                     break;
                 case "0":
                     System.out.println(ConsoleColours.GREEN + "Exiting the program..." + ConsoleColours.RESET);

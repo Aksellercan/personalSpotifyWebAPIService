@@ -3,14 +3,13 @@ package com.example.SpotifyWebAPI.JavaFXInterface.Views;
 import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Configuration;
+import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -39,7 +38,7 @@ public class SettingsController implements Initializable {
     protected void MigrateToYAML(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         SaveConfigProgressBar.setProgress(0);
-        Configuration.MigrateToYAML();
+//        Configuration.MigrateToYAML();
         SaveConfigProgressBar.setProgress(100);
     }
 
@@ -91,7 +90,7 @@ public class SettingsController implements Initializable {
             ProgramOptions.setChangesSaved(false);
             SaveConfigProgressBar.setProgress(75);
         }
-        Configuration.MapAndWriteConfigJSON();
+        JSONParser.MapAndWriteConfig();
         SaveConfigProgressBar.setProgress(100);
         inputUser_id.setText("");
         inputClient_id.setText("");
@@ -106,7 +105,7 @@ public class SettingsController implements Initializable {
         Logger.DEBUG.Log("Event: " + event.toString());
         if (CheckSettingsInput()) {
             ProgramOptions.setChangesSaved(false);
-            Configuration.MapAndWriteConfig();
+            JSONParser.MapAndWriteConfig();
         }
         SceneActions.ChangeScene("PrimaryPage");
     }
@@ -145,7 +144,7 @@ public class SettingsController implements Initializable {
         SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
             if (CheckSettingsInput()) {
                 ProgramOptions.setChangesSaved(false);
-                Configuration.MapAndWriteConfig();
+                JSONParser.MapAndWriteConfig();
             }
             Logger.INFO.Log("Closing from settings page... Reason: " + e.getEventType());
         });

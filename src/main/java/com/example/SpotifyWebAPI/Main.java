@@ -9,6 +9,7 @@ import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
 import com.example.SpotifyWebAPI.Tools.Configuration;
 import com.example.SpotifyWebAPI.Tools.ConsoleColours;
 import com.example.SpotifyWebAPI.ConsoleInterface.*;
+import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Logger;
 
 /**
@@ -78,8 +79,7 @@ public class Main {
         Set what keys should be in config file
          */
         SpotifySession spotifySession = SpotifySession.getInstance();
-//        Configuration.ReadConfigAndMap();
-        Configuration.ReadConfigAndMapJSON();
+        JSONParser.ReadConfigAndMap();
         //Settings
         Logger.DEBUG.Log("launch_gui: " + ProgramOptions.LAUNCH_GUI(), false);
         Logger.DEBUG.Log("auto_mode: " + ProgramOptions.isAutoMode(), false);
@@ -158,7 +158,7 @@ public class Main {
                             }
                         }
                         ProgramOptions.setChangesSaved(false);
-                        Configuration.MapAndWriteConfig();
+                        JSONParser.MapAndWriteConfig();
                     } else {
                         HelpMenu();
                     }
@@ -171,7 +171,7 @@ public class Main {
                             spotifySession.setRedirect_uri(args[2].trim());
                             if (userAccessToken.get_Refresh_Token()) {
                                 ProgramOptions.setChangesSaved(false);
-                                Configuration.MapAndWriteConfig();
+                                JSONParser.MapAndWriteConfig();
                             } else {
                                 System.out.println("Invalid credentials");
                             }
