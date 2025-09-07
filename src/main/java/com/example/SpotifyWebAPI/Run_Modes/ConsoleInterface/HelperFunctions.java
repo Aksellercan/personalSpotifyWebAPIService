@@ -2,7 +2,7 @@ package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
+import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.Scanner;
@@ -237,7 +237,7 @@ public class HelperFunctions {
                 spotifySession.setPlaylist_id(playlist_id);
             }
         }
-        JSONParser.MapAndWriteConfig();
+        YAMLParser.MapAndWriteConfig();
         System.out.println("Done");
     }
 }

@@ -2,8 +2,8 @@ package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
+import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
-import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 
@@ -48,7 +48,7 @@ public class UserRequestsMenu extends HelperFunctions {
                         System.out.println("Save the refresh token to config?");
                         if (scanner.nextLine().equals("y")) {
                             ProgramOptions.setChangesSaved(false);
-                            JSONParser.MapAndWriteConfig();
+                            YAMLParser.MapAndWriteConfig();
                             Logger.INFO.Log("Saved Config successfully!");
                         }
                         break;
