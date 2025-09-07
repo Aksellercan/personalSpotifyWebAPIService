@@ -7,8 +7,16 @@ import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class JSONParser extends Configuration {
+/**
+ * JSONParser inherits Configuration abstract class
+ */
+public final class JSONParser extends Configuration implements ConfigReader {
+
+    /**
+     * Private Constructor
+     */
     private JSONParser() {}
+
     /**
      * Reads configuration file and applies settings for runtime
      */
@@ -21,6 +29,7 @@ public final class JSONParser extends Configuration {
             Logger.CRITICAL.LogException(e, "Unable to read configuration");
         }
     }
+
     /**
      * Maps configuration in memory with the current values and writes them
      */
@@ -33,6 +42,7 @@ public final class JSONParser extends Configuration {
             Logger.CRITICAL.LogException(e, "Unable to write configuration to file");
         }
     }
+
     /**
      * Reads the configuration file and counts lines. This is used to dynamically scale tokenConfig array
      * @return  Line count
@@ -54,12 +64,20 @@ public final class JSONParser extends Configuration {
             return 0;
         }
     }
+
+    /**
+     * Set Token types boolean/number
+     */
     private static void SetTokenTypes() {
         for (int i = 0; i < tokenConfig.length; i++) {
             tokenConfig[i] = TokenTypeCheck(tokenConfig[i]);
             Logger.DEBUG.Log("After type check: " + tokenConfig[i].toString());
         }
     }
+
+    /**
+     * Writes configuration to file in JSON format (Arrays are not available currently)
+     */
     private static void WriteConfig() {
         Logger.INFO.Log("Changes are " + (ProgramOptions.isChangesSaved() ? "already saved." : "not saved yet."));
         if (!ProgramOptions.isChangesSaved()) {
@@ -88,6 +106,10 @@ public final class JSONParser extends Configuration {
             }
         }
     }
+
+    /**
+     * Reads JSON format configuration file
+     */
     private static void ReadConfig() {
         int lineCount = 0;
         int tokenCount = 0;
@@ -114,6 +136,12 @@ public final class JSONParser extends Configuration {
             Logger.ERROR.LogException(e);
         }
     }
+
+    /**
+     * Checks if current line is in Character Ignore List
+     * @param line  Current line
+     * @return  Whether to skip the line or not
+     */
     private static boolean CheckCharacterIgnoreList(String line) {
         String[] ignoreList = {"{", "}", "[", "]"};
         boolean skip = false;
@@ -125,6 +153,13 @@ public final class JSONParser extends Configuration {
         }
         return skip;
     }
+
+    /**
+     * Removes Quotes from Token's key and value
+     * @param key   Token key
+     * @param value Token Value
+     * @return  Key and value as array
+     */
     private static String[] RemoveQuotes(String key, String value) {
         StringBuilder valueMutable = new StringBuilder();
         for (int i = 0; i < key.length(); i++) {
@@ -142,6 +177,12 @@ public final class JSONParser extends Configuration {
         }
         return new String[] {valueMutable.toString(), keyMutable.toString()};
     }
+
+    /**
+     * Returns the correct line format
+     * @param current   Current line token
+     * @return  Correct print Format
+     */
     private static String PrintCorrectType(Token current) {
         if (current.getIsNumber() || current.getIsBoolean()) {
             // 2 spaces instead of tabs
@@ -150,6 +191,12 @@ public final class JSONParser extends Configuration {
         // 2 spaces instead of tabs
         return "  \"" + current.getKey() + "\"" + ": \"" + current.getValue() + "\"";
     }
+
+    /**
+     * Checks if Token's value is boolean or not
+     * @param value Token's value
+     * @return  True/False
+     */
     private static boolean CheckBoolean(String value) {
         return (
                 value.replace(" ", "").equalsIgnoreCase("true")
@@ -157,6 +204,12 @@ public final class JSONParser extends Configuration {
                         value.replace(" ", "").equalsIgnoreCase("false")
         );
     }
+
+    /**
+     * Checks Token's type Number/boolean
+     * @param current   Current Token
+     * @return  Token with type set
+     */
     private static Token TokenTypeCheck(Token current) {
         if (CheckBoolean(current.getValue())) {
             current.setBoolean(true);

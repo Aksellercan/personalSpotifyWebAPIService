@@ -7,13 +7,22 @@ import com.example.SpotifyWebAPI.Tools.Logger;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Abstract class to share same token array
+ */
 abstract class Configuration {
+    /**
+     * Saved Tokens array
+     */
     static Token[] tokenConfig;
+    /**
+     * Configuration folder path
+     */
     private static final File folderPath = new File("Config");
     /**
      * Specify keys to write when config file is not present (first time launch).
-     * <br></br>
      * Add Entries here to be loaded when config file is non-existent or empty
+     * @param arraySize Using getFileLength() method which returns the file line count or 0
      */
     protected static Token[] LoadKeys(int arraySize) {
         String[] keys = {
@@ -47,7 +56,6 @@ abstract class Configuration {
 
     /**
      * Map current values with token array to be written or set values using tokenConfig array
-     * <br></br>
      * Add new entries here, with update and normal behaviour
      */
     protected static void MapKeys(boolean update) {
@@ -138,6 +146,12 @@ abstract class Configuration {
         }
     }
 
+    /**
+     * Checks if directory exists if it doesn't it creates it and returns the file path
+     * @param fileNameWithExtension Name of file to check and create
+     * @return  Full path of the file
+     * @throws IOException  If creating folder fails throws IOException
+     */
     protected static File MkDirs(String fileNameWithExtension) throws IOException {
         if (!folderPath.exists()) {
             boolean status = folderPath.mkdir();

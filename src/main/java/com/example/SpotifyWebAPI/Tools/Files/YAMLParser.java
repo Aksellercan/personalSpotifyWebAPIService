@@ -7,8 +7,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-public final class YAMLParser extends Configuration {
+/**
+ * YAMLParser inherits Configuration abstract class
+ */
+public final class YAMLParser extends Configuration implements ConfigReader {
+
+    /**
+     * Private Constructor
+     */
     private YAMLParser() {}
+
     /**
      * Reads configuration file and applies settings for runtime
      */
@@ -21,6 +29,7 @@ public final class YAMLParser extends Configuration {
             Logger.CRITICAL.LogException(e, "Unable to read configuration");
         }
     }
+
     /**
      * Maps configuration in memory with the current values and writes them
      */
@@ -32,6 +41,7 @@ public final class YAMLParser extends Configuration {
             Logger.CRITICAL.LogException(e, "Unable to write configuration to file");
         }
     }
+
     /**
      * Reads the configuration file and counts lines. This is used to dynamically scale tokenConfig array
      * @return  Line count
@@ -49,6 +59,7 @@ public final class YAMLParser extends Configuration {
             return 0;
         }
     }
+
     /**
      * Writes settings to configuration file. Skips if changes are already saved.
      */
@@ -67,6 +78,7 @@ public final class YAMLParser extends Configuration {
             }
         }
     }
+
     /**
      * Reads configuration file and saves it to tokenConfig array
      */

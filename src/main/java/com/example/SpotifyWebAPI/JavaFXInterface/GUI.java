@@ -6,7 +6,6 @@ import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Configuration;
 import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
