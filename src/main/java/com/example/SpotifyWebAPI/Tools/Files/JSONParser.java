@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * JSONParser inherits Configuration abstract class
  */
-public final class JSONParser extends Configuration implements ConfigReader {
+public final class JSONParser extends Configuration {
 
     /**
      * Private Constructor

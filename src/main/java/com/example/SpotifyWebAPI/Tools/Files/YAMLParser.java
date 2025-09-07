@@ -8,7 +8,7 @@ import java.io.*;
 /**
  * YAMLParser inherits Configuration abstract class
  */
-public final class YAMLParser extends Configuration implements ConfigReader {
+public final class YAMLParser extends Configuration {
 
     /**
      * Private Constructor

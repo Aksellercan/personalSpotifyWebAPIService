@@ -14,7 +14,7 @@ abstract class Configuration {
     /**
      * Saved Tokens array
      */
-    static Token[] tokenConfig;
+    protected static Token[] tokenConfig;
     /**
      * Configuration folder path
      */
