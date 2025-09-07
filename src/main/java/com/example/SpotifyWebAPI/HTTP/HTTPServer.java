@@ -2,7 +2,7 @@ package com.example.SpotifyWebAPI.HTTP;
 
 import com.example.SpotifyWebAPI.HTTP.Enumerators.ContentType;
 import com.example.SpotifyWebAPI.HTTP.Enumerators.StatusCode;
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;

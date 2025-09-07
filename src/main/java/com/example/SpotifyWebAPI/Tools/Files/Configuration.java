@@ -3,7 +3,7 @@ package com.example.SpotifyWebAPI.Tools.Files;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Objects.Token;
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import java.io.File;
 import java.io.IOException;
 

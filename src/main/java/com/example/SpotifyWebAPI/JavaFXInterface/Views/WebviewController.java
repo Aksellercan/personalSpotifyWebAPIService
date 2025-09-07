@@ -2,7 +2,7 @@ package com.example.SpotifyWebAPI.JavaFXInterface.Views;
 
 import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
 import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

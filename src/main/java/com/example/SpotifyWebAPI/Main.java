@@ -1,16 +1,15 @@
 package com.example.SpotifyWebAPI;
 
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
-import com.example.SpotifyWebAPI.JavaFXInterface.GUI;
+import com.example.SpotifyWebAPI.JavaFXInterface.Views.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
-import com.example.SpotifyWebAPI.Run_Modes.CLI_Interface;
-import com.example.SpotifyWebAPI.Tools.ConsoleColours;
-import com.example.SpotifyWebAPI.ConsoleInterface.*;
+import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
+import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 
 /**
  * Main Class and starting point
@@ -46,7 +45,6 @@ public class Main {
         System.out.println("  --auto-mode                                   Run auto mode functions");
         System.out.println("  --gui                                         Launch GUI interface");
         System.out.println("  --cli                                         Launch CLI interface normal mode");
-        System.out.println("  --cli-test                                    Launch CLI interface in test mode");
         System.out.println("  --migrate                                     Migrates configuration from \"config.txt\" to \"config.yaml\"");
         System.out.println("\nUsage: program set [CONFIGURATION] <value> [CONFIGURATION] <value>...");
         System.out.println("\nConfiguration Options:");
@@ -121,10 +119,6 @@ public class Main {
                 case "--cli":
                     MainMenu mainMenu = new MainMenu();
                     mainMenu.userInterface();
-                    return;
-                case "--cli-test":
-                    CLI_Interface cli = new CLI_Interface();
-                    cli.initSession();
                     return;
                 case "--migrate":
                     YAMLParser.MigrateToYAML();

@@ -1,6 +1,6 @@
 package com.example.SpotifyWebAPI.HTTP;
 
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;

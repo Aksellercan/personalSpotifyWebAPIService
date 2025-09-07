@@ -1,6 +1,6 @@
 package com.example.SpotifyWebAPI.JavaFXInterface.Functions;
 
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

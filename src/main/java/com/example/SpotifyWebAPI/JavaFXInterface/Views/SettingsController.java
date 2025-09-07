@@ -4,7 +4,8 @@ import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,7 +39,7 @@ public class SettingsController implements Initializable {
     protected void MigrateToYAML(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         SaveConfigProgressBar.setProgress(0);
-//        Configuration.MigrateToYAML();
+        YAMLParser.MigrateToYAML();
         SaveConfigProgressBar.setProgress(100);
     }
 

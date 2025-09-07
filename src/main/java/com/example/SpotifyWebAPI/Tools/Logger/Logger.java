@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Tools;
+package com.example.SpotifyWebAPI.Tools.Logger;
 
 import java.io.File;
 import java.io.FileWriter;

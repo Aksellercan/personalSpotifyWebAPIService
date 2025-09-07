@@ -4,7 +4,7 @@ import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.regex.Matcher;

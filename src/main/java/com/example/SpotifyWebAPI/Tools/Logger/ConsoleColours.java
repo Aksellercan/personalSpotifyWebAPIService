@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Tools;
+package com.example.SpotifyWebAPI.Tools.Logger;
 
 /**
  * Sets ANSI Colours for console output

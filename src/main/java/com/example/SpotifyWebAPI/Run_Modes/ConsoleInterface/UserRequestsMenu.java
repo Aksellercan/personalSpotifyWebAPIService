@@ -1,10 +1,10 @@
-package com.example.SpotifyWebAPI.ConsoleInterface;
+package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
-import com.example.SpotifyWebAPI.Tools.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
-import com.example.SpotifyWebAPI.Tools.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 
 /**
