@@ -1,6 +1,6 @@
 # Spotify Web API Client
 
-A robust Java client library and CLI tool that interacts with Spotify’s Web API to manage playlists, retrieve user data, and automate playlist updates.
+A robust Java client library and CLI and GUI tool that interacts with Spotify’s Web API to manage playlists, retrieve user data, and automate playlist updates.
 
 ----------
 
@@ -81,9 +81,9 @@ Options:
   --auto-mode                                   Run auto mode functions
   --gui                                         Launch GUI interface
   --cli                                         Launch CLI interface normal mode
-  --cli-test                                    Launch CLI interface in test mode
+  --migrate                                     Migrates configuration from "config.txt" to "config.yaml"
 
-Usage: program --set [CONFIGURATION] <value>
+Usage: program set [CONFIGURATION] <value> [CONFIGURATION] <value>...
 
 Configuration Options:
   --playlist-id <id>                            Set default playlist ID
@@ -148,10 +148,7 @@ Logger Example Output:
 ```
 
 ## Issues
-1. HTTP Server won't truly shut down unless another GET request is sent
-2. HTTP Server Logs should be separate to avoid clutter in log files
-3. ```httpServer.getSocket()``` causes NullPointerException because ```socket.accept()``` blocks the process until it receives a request
-
+1. none
 ----------
 
 ## Why This Project?
