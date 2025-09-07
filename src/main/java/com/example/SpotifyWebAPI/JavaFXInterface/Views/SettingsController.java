@@ -91,7 +91,7 @@ public class SettingsController implements Initializable {
             ProgramOptions.setChangesSaved(false);
             SaveConfigProgressBar.setProgress(75);
         }
-        JSONParser.MapAndWriteConfig();
+        YAMLParser.MapAndWriteConfig();
         SaveConfigProgressBar.setProgress(100);
         inputUser_id.setText("");
         inputClient_id.setText("");
@@ -106,7 +106,7 @@ public class SettingsController implements Initializable {
         Logger.DEBUG.Log("Event: " + event.toString());
         if (CheckSettingsInput()) {
             ProgramOptions.setChangesSaved(false);
-            JSONParser.MapAndWriteConfig();
+            YAMLParser.MapAndWriteConfig();
         }
         SceneActions.ChangeScene("PrimaryPage");
     }
@@ -145,7 +145,7 @@ public class SettingsController implements Initializable {
         SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
             if (CheckSettingsInput()) {
                 ProgramOptions.setChangesSaved(false);
-                JSONParser.MapAndWriteConfig();
+                YAMLParser.MapAndWriteConfig();
             }
             Logger.INFO.Log("Closing from settings page... Reason: " + e.getEventType());
         });

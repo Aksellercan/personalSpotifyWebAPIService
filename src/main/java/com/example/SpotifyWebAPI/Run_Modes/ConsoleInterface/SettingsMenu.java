@@ -120,7 +120,7 @@ public class SettingsMenu extends HelperFunctions {
                     break;
                 case "7":
                     System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
-                    JSONParser.MapAndWriteConfig();
+                    YAMLParser.MapAndWriteConfig();
                     break;
                 case "0":
                     return;

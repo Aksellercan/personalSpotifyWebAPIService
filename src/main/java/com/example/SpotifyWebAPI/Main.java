@@ -77,7 +77,7 @@ public class Main {
         Set what keys should be in config file
          */
         SpotifySession spotifySession = SpotifySession.getInstance();
-        JSONParser.ReadConfigAndMap();
+        YAMLParser.ReadConfigAndMap();
         //Settings
         Logger.DEBUG.Log("launch_gui: " + ProgramOptions.LAUNCH_GUI(), false);
         Logger.DEBUG.Log("auto_mode: " + ProgramOptions.isAutoMode(), false);
