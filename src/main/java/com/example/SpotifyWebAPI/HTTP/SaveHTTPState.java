@@ -1,19 +1,10 @@
 package com.example.SpotifyWebAPI.HTTP;
 
-import java.util.HashMap;
+import com.example.SpotifyWebAPI.Objects.HTTPState;
+import java.util.ArrayList;
 
-/**
- * Saves the HTTP Server state in a Hashmap with its name to manage multiple servers at the same time on different ports
- * <p>
- * Saves HTTP Server state allowing creation of multiple instances of HTTP Servers
- * Adding a Hashmap with port/id binding, a hashset or a simple array to store all instances in one object
- * Allows to run multiple instances and have them shared between JavaFX scenes and controllers easily
- * <p>
- * Singleton HTTPServer = simple, one instance limitation
- * Saving state to an object with array = Maybe more complex, allows multiple instances
-*/
 public final class SaveHTTPState {
-    private static final HashMap<String,HTTPServer> stringHTTPServerHashSet = new HashMap<>();
+    private static final ArrayList<HTTPState> serverList = new ArrayList<>();
 
     private SaveHTTPState() {}
 
@@ -22,11 +13,16 @@ public final class SaveHTTPState {
      * @return  Amount of servers registered on the HashMap
      */
     public static int getHashMapSize() {
-        return stringHTTPServerHashSet.size();
+        return serverList.size();
     }
 
     public static boolean ContainsServer(String serverName) {
-        return stringHTTPServerHashSet.containsKey(serverName);
+        for (HTTPState httpState : serverList) {
+            if (httpState.getServerName().equals(serverName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -35,7 +31,12 @@ public final class SaveHTTPState {
      * @return  Found server
      */
     public static HTTPServer getServer(String serverName) {
-        return stringHTTPServerHashSet.get(serverName);
+        for (HTTPState httpState : serverList) {
+            if (httpState.getServerName().equals(serverName)) {
+                return httpState.getServer();
+            }
+        }
+        return null;
     }
 
     /**
@@ -43,7 +44,12 @@ public final class SaveHTTPState {
      * @param serverName    Name of the server to remove
      */
     public static void removeServer(String serverName) {
-        stringHTTPServerHashSet.remove(serverName);
+        for (int i = 0; i < serverList.size(); i++) {
+            if (serverList.get(i).getServerName().equals(serverName)) {
+                serverList.remove(i);
+                break;
+            }
+        }
     }
 
     /**
@@ -52,16 +58,7 @@ public final class SaveHTTPState {
      * @param httpServer    Server to save state of
      */
     public static void addHTTPServerToHashMap(String serverName, HTTPServer httpServer) {
-        SaveHTTPState.stringHTTPServerHashSet.put(serverName, httpServer);
-    }
-
-    /**
-     * @deprecated
-     * Returns the HashMap.
-     * Unused
-     * @return  HashMap of the running servers
-     */
-    public static HashMap<String, HTTPServer> getStringHTTPServerHashSet() {
-        return stringHTTPServerHashSet;
+        HTTPState state = new HTTPState(serverName, httpServer);
+        serverList.add(state);
     }
 }

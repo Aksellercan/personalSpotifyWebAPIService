@@ -93,7 +93,7 @@ public final class SceneActions {
     public static Parent setFXMLFile(String fxmlFilename) throws Exception {
         URL getFXML = Scene.class.getResource("/Layouts/" + fxmlFilename + ".fxml");
         if (getFXML == null) {
-            throw  new NullPointerException("FXML file " + fxmlFilename + ".fxml not found");
+            throw new NullPointerException("FXML file " + fxmlFilename + ".fxml not found");
         }
         return FXMLLoader.load(getFXML);
     }

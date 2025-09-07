@@ -153,6 +153,9 @@ public enum Logger {
                 case WARN:
                     System.out.println(ConsoleColours.YELLOW + fullMessage + ConsoleColours.RESET);
                     break;
+                case DEBUG:
+                    System.out.println(ConsoleColours.BLUE + fullMessage + ConsoleColours.RESET);
+                    break;
                 case ERROR:
                 case CRITICAL:
                     System.out.println(ConsoleColours.RED + fullMessage + ConsoleColours.RESET);

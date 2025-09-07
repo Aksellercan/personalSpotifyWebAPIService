@@ -147,7 +147,7 @@ abstract class Configuration {
     }
 
     /**
-     * Checks if directory exists if it doesn't it creates it and returns the file path
+     * Checks if directory exists, if it doesn't it creates it and returns the file path
      * @param fileNameWithExtension Name of file to check and create
      * @return  Full path of the file
      * @throws IOException  If creating folder fails throws IOException

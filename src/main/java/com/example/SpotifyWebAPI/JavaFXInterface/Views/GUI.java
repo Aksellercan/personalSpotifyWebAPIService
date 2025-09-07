@@ -15,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
 import java.net.HttpURLConnection;
 
 /**
