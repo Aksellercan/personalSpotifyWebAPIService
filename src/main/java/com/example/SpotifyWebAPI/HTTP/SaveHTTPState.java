@@ -4,8 +4,15 @@ import com.example.SpotifyWebAPI.Objects.HTTPState;
 import java.util.ArrayList;
 
 public final class SaveHTTPState {
+
+    /**
+     * Store states in ArrayList
+     */
     private static final ArrayList<HTTPState> serverList = new ArrayList<>();
 
+    /**
+     * Private Constructor
+     */
     private SaveHTTPState() {}
 
     /**

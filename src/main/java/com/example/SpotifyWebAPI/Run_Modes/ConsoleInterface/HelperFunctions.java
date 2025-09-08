@@ -10,7 +10,7 @@ import java.util.Scanner;
 /**
  * Shared Functions used by CLI Menus
  */
-public class HelperFunctions {
+abstract class HelperFunctions {
     protected final SpotifySession spotifySession = SpotifySession.getInstance();
     protected final Scanner scanner = new Scanner(System.in);
 
