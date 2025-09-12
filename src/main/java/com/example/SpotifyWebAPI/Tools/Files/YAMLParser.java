@@ -20,7 +20,7 @@ public final class YAMLParser extends Configuration {
      */
     public static void ReadConfigAndMap() {
         try {
-            tokenConfig = LoadKeys(getFileLength("config.yaml"));
+            tokenConfig = LoadKeys();
             ReadConfig();
             MapKeys(tokenConfig.length == 0);
             Logger.DEBUG.Log("Using YAML Reader, with no token type checker");
@@ -46,7 +46,7 @@ public final class YAMLParser extends Configuration {
      */
     public static void MigrateToYAML() {
         Logger.INFO.Log("Setting token array size...", false);
-        tokenConfig = LoadKeys(getFileLength("config.txt"));
+        tokenConfig = LoadKeys();
         Logger.INFO.Log("Reading config...", false);
         OldConfigReader();
         ProgramOptions.setChangesSaved(false);

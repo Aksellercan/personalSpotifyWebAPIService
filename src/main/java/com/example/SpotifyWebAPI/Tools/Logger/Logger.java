@@ -8,8 +8,8 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Logger Tool
+ * <br></br>
  * Logs in varying severity levels such as INFO, WARN, ERROR, DEBUG and CRITICAL
- * Has one variable called debugOutput set to false by default
  */
 
 public enum Logger {
@@ -213,7 +213,7 @@ public enum Logger {
      * @param writeToFile   Whether to write to logfile or not
      */
     private void WriteExceptions(Exception e, boolean writeToFile) {
-        String fullMessage = DateSeverityFormat()  + e.getMessage();
+        String fullMessage = DateSeverityFormat()  + e.getMessage() + "\n" + GetStackTraceAsString(e);
         if (writeToFile) {
             SaveLog(fullMessage);
         }
@@ -227,11 +227,28 @@ public enum Logger {
      * @param writeToFile   Whether to write to logfile or not
      */
     private void WriteExceptionMessageLogs(Exception e, String message, boolean writeToFile) {
-        String fullMessage = DateSeverityFormat()  + message + ". Exception: " + e.getMessage();
+        String fullMessage = DateSeverityFormat()  + message + ". Exception: " + e.getMessage() + "\n" + GetStackTraceAsString(e);
         if (writeToFile) {
             SaveLog(fullMessage);
         }
         ColourOutput(fullMessage);
+    }
+
+    /**
+     * Gets detailed stack trace and returns it as string with tab indentation
+     * @param e Exception stack trace to be returned
+     * @return  Stacktrace with tab indentation
+     */
+    private String GetStackTraceAsString(Exception e) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < e.getStackTrace().length; i++) {
+            if (i+1 == e.getStackTrace().length) {
+                sb.append("\t").append(e.getStackTrace()[i]);
+                continue;
+            }
+            sb.append("\t").append(e.getStackTrace()[i]).append("\n");
+        }
+        return sb.toString();
     }
 
     /**

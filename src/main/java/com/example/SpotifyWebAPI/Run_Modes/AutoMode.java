@@ -3,7 +3,7 @@ package com.example.SpotifyWebAPI.Run_Modes;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
+import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
@@ -50,7 +50,7 @@ public class AutoMode {
                 userRequest.createPlaylist(spotify_session.getUser_id(), "Favorites " + nextNumber, "0/120");
                 Logger.INFO.Log("New playlist created with playlist_id: " + spotify_session.getPlaylist_id() + " and Name: " + "Favorites " + nextNumber);
                 ProgramOptions.setAutoMode(false);
-                JSONParser.MapAndWriteConfig();
+                YAMLParser.MapAndWriteConfig();
                 return;
             } else if (playlistSize == readDescCount) {
                 Logger.INFO.Log("Playlist size is already set to " + playlistSize);

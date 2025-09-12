@@ -22,7 +22,7 @@ public final class JSONParser extends Configuration {
      */
     public static void ReadConfigAndMap() {
         try {
-            tokenConfig = LoadKeys(getFileLength());
+            tokenConfig = LoadKeys();
             ReadConfig();
             MapKeys(tokenConfig.length == 0);
             Logger.DEBUG.Log("Using JSON Reader, using token type checker");
@@ -41,28 +41,6 @@ public final class JSONParser extends Configuration {
             WriteConfig();
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Unable to write configuration to file");
-        }
-    }
-
-    /**
-     * Reads the configuration file and counts lines. This is used to dynamically scale tokenConfig array
-     * @return  Line count
-     */
-    private static int getFileLength() {
-        try (BufferedReader br = new BufferedReader(new FileReader(MkDirs("config.json")))) {
-            int fileLength = 0;
-            String line;
-            while ((line = br.readLine()) !=null ) {
-                if (CheckCharacterIgnoreList(line)) {
-                    continue;
-                }
-                fileLength++;
-            }
-            br.close();
-            return fileLength;
-        } catch (Exception e) {
-            Logger.CRITICAL.LogException(e, "Failed to estimate file length");
-            return 0;
         }
     }
 
@@ -170,9 +148,16 @@ public final class JSONParser extends Configuration {
             valueMutable.append(key.charAt(i));
         }
         StringBuilder keyMutable = new StringBuilder();
+        boolean openQuotes = false;
         for (int i = 0; i < value.length(); i++) {
-            if (value.charAt(i) == '"' || value.charAt(i) == ',') {
+            if (value.charAt(i) == '"') {
+                openQuotes = !openQuotes;
                 continue;
+            }
+            if (!openQuotes) {
+                if (value.charAt(i) == ',') {
+                    continue;
+                }
             }
             keyMutable.append(value.charAt(i));
         }

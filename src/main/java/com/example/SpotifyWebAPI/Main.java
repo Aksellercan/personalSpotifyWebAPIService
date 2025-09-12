@@ -7,7 +7,6 @@ import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
 import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
-import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 
@@ -152,7 +151,7 @@ public class Main {
                             }
                         }
                         ProgramOptions.setChangesSaved(false);
-                        JSONParser.MapAndWriteConfig();
+                        YAMLParser.MapAndWriteConfig();
                     } else {
                         HelpMenu();
                     }
@@ -165,7 +164,7 @@ public class Main {
                             spotifySession.setRedirect_uri(args[2].trim());
                             if (userAccessToken.get_Refresh_Token()) {
                                 ProgramOptions.setChangesSaved(false);
-                                JSONParser.MapAndWriteConfig();
+                                YAMLParser.MapAndWriteConfig();
                             } else {
                                 System.out.println("Invalid credentials");
                             }

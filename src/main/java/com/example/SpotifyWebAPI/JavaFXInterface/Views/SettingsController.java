@@ -104,10 +104,8 @@ public class SettingsController implements Initializable {
     @FXML
     protected void GoToMainMenu(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        if (CheckSettingsInput()) {
-            ProgramOptions.setChangesSaved(false);
-            YAMLParser.MapAndWriteConfig();
-        }
+        ProgramOptions.setChangesSaved(false);
+        YAMLParser.MapAndWriteConfig();
         SceneActions.ChangeScene("PrimaryPage");
     }
 

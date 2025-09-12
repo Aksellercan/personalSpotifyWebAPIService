@@ -22,9 +22,8 @@ abstract class Configuration {
     /**
      * Specify keys to write when config file is not present (first time launch).
      * Add Entries here to be loaded when config file is non-existent or empty
-     * @param arraySize Using getFileLength() method which returns the file line count or 0
      */
-    protected static Token[] LoadKeys(int arraySize) {
+    protected static Token[] LoadKeys() {
         String[] keys = {
                 "client_id",
                 "client_secret",
@@ -38,15 +37,7 @@ abstract class Configuration {
                 "verbose_log_file",
                 "coloured_output"
         };
-        if (arraySize == 0) {
-            tokenConfig = new Token[11];
-        } else {
-            if ((arraySize < keys.length)) {
-                tokenConfig = new Token[keys.length];
-            } else {
-                tokenConfig = new Token[arraySize];
-            }
-        }
+        tokenConfig = new Token[keys.length];
         for (int i = 0; i < tokenConfig.length; i++) {
             tokenConfig[i] = new Token(keys[i], "");
             Logger.DEBUG.Log(tokenConfig[i].toString());
