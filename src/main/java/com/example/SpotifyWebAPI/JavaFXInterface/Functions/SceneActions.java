@@ -68,7 +68,7 @@ public final class SceneActions {
             setStyleSheet(window, sceneStylesheet);
             currentStage.setScene(window);
         } catch (Exception e) {
-            Logger.ERROR.LogException(e, "Cannot change scene");
+            Logger.ERROR.LogException(e, "Failed to change scene");
         }
     }
 

@@ -142,7 +142,7 @@ public class User_Request {
                 rootNode.set("uris", addFromPreviousPlaylist(mapper));
             } else {
                 ArrayNode arrayNode = mapper.createArrayNode();
-                arrayNode.add(track_uri);
+                arrayNode.add("spotify:track:"+track_uri);
                 rootNode.set("uris", arrayNode);
             }
             rootNode.put("position", position);

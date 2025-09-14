@@ -22,10 +22,10 @@ public final class JSONParser extends Configuration {
      */
     public static void ReadConfigAndMap() {
         try {
+            Logger.INFO.Log("Using JSON Reader, using token type checker");
             tokenConfig = LoadKeys();
             ReadConfig();
             MapKeys(tokenConfig.length == 0);
-            Logger.DEBUG.Log("Using JSON Reader, using token type checker");
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Unable to read configuration");
         }

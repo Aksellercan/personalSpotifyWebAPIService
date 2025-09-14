@@ -42,7 +42,7 @@ public class GUI extends Application {
         primaryStage.setMinHeight(600);
         primaryStage.setOnCloseRequest(event -> {
             YAMLParser.MapAndWriteConfig();
-            Logger.INFO.Log("Closed Session.");
+            Logger.INFO.Log("Closed Session. Reason: " + event.getEventType());
             System.exit(0);
         });
         try {

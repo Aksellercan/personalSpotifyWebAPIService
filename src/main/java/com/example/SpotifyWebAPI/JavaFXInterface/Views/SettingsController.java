@@ -3,7 +3,6 @@ package com.example.SpotifyWebAPI.JavaFXInterface.Views;
 import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;
@@ -141,10 +140,8 @@ public class SettingsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
-            if (CheckSettingsInput()) {
-                ProgramOptions.setChangesSaved(false);
-                YAMLParser.MapAndWriteConfig();
-            }
+            ProgramOptions.setChangesSaved(false);
+            YAMLParser.MapAndWriteConfig();
             Logger.INFO.Log("Closing from settings page... Reason: " + e.getEventType());
         });
     }
