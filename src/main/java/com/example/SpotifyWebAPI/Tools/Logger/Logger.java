@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Logger Tool
- * <br></br>
  * Logs in varying severity levels such as INFO, WARN, ERROR, DEBUG and CRITICAL
  */
 

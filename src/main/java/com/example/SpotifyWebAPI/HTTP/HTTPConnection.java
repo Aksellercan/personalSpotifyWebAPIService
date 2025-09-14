@@ -56,18 +56,11 @@ public final class HTTPConnection {
      * Handles the response body in case of BadRequest
      * @param http  Takes the http object returned by connectHTTP()
      * @param responseCode  Response code returned by the server
-     * @param equalandGreater   I will come back to this, I genuinely don't know what this does
      * @throws Exception    readErrorStream() will throw Exception to be logged to notify the user
      */
-    public static void readErrorStream(HttpURLConnection http, int responseCode, boolean equalandGreater) throws Exception {
+    public static void readErrorStream(HttpURLConnection http, int responseCode) throws Exception {
         Logger.DEBUG.Log("Response Code: " + http.getResponseCode(), false);
-        if (equalandGreater) {
-            if (http.getResponseCode() >= responseCode) {
-                InputStream error = http.getErrorStream();
-                String errorBody = new BufferedReader(new InputStreamReader(error)).lines().collect(Collectors.joining("\n"));
-                throw new Exception("POST error response: " + errorBody);
-            }
-        } else if (http.getResponseCode() > responseCode) {
+        if (http.getResponseCode() >= responseCode) {
             InputStream error = http.getErrorStream();
             String errorBody = new BufferedReader(new InputStreamReader(error)).lines().collect(Collectors.joining("\n"));
             throw new Exception("POST error response: " + errorBody);

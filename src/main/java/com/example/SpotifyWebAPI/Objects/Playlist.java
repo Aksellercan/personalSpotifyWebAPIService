@@ -10,6 +10,7 @@ public class Playlist {
     private String playlist_id;
     private boolean publicPlaylist;
     private boolean collaborative;
+    private int totalItems;
 
     public Playlist(String name, String description) {
         this.name = name;
@@ -41,6 +42,10 @@ public class Playlist {
         return collaborative;
     }
 
+    public int getTotalItems() {
+        return this.totalItems;
+    }
+
     //setters
     public void setName(String name) {
         this.name = name;
@@ -66,9 +71,13 @@ public class Playlist {
         this.collaborative = collaborative;
     }
 
+    public void setTotalItems(int totalItems) {
+        this.totalItems = totalItems;
+    }
+
     //toString
     @Override
     public String toString() {
-        return "com.example.SpotifyWebAPI.Objects.Playlist Details: " + "Name: " + name + ", Description: " + description;
+        return "Playlist Details: " + "Name: " + name + ", Description: " + description + " and Total size: " + totalItems;
     }
 }

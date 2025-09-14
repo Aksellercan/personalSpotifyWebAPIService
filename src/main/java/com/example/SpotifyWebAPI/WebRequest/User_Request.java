@@ -148,7 +148,7 @@ public class User_Request {
             rootNode.put("position", position);
             String postBody = mapper.writeValueAsString(rootNode);
             HTTPConnection.postBody(http, postBody);
-            HTTPConnection.readErrorStream(http,400, true);
+            HTTPConnection.readErrorStream(http,400);
         } catch (Exception e) {
             Logger.ERROR.LogException(e);
         }

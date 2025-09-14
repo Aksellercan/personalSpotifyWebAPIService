@@ -49,6 +49,14 @@
                               <Insets bottom="5.0" top="5.0" />
                            </VBox.margin>
                         </Button>
+                        <Button fx:id="AddItemsBTN" mnemonicParsing="false" onAction="#GoToAddItemScene" prefHeight="24.0" prefWidth="99.0" text="Add Items">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </Button>
                         <Button fx:id="SettingsBTN" mnemonicParsing="false" onAction="#GoToSettingsScene" prefHeight="24.0" prefWidth="99.0" text="Settings">
                            <font>
                               <Font size="11.0" />
@@ -101,7 +109,7 @@
                   <Font size="11.0" />
                </font>
                <GridPane.margin>
-                  <Insets right="5.0" />
+                  <Insets right="15.0" />
                </GridPane.margin>
             </Button>
          </children>

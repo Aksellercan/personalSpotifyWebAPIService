@@ -40,8 +40,6 @@ public class GUI extends Application {
         primaryStage.setHeight(600);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
-        primaryStage.setMaxWidth(1200);
-        primaryStage.setMaxHeight(816);
         primaryStage.setOnCloseRequest(event -> {
             YAMLParser.MapAndWriteConfig();
             Logger.INFO.Log("Closed Session.");
@@ -106,13 +104,12 @@ public class GUI extends Application {
     @FXML
     protected void OnStopServerButtonClick(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        Logger.INFO.Log("Attempting to stop the server...");
         if (httpServer == null) {
             responseTextArea.setText("HTTP Server is null");
         }
         try {
             httpServer = SaveHTTPState.getServer("Fallback");
-            if (httpServer.StopServer()) {
+            if (httpServer != null && httpServer.StopServer()) {
                 responseTextArea.setText("HTTP Server Stopped");
                 HttpURLConnection http = HTTPConnection.connectHTTP("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort(), "GET");
                 http.connect();
@@ -133,6 +130,12 @@ public class GUI extends Application {
     }
 
     @FXML
+    protected void GoToAddItemScene(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        SceneActions.ChangeScene("AddItemPage");
+    }
+
+    @FXML
     protected void OnGetPlaylistDataButtonClick(ActionEvent event) {
         if (spotifySession.getAccess_token() == null) {
             responseTextArea.setText("Access token is null");
@@ -140,8 +143,8 @@ public class GUI extends Application {
         }
         clientCredentials_Request.getPlaylist(spotifySession.getPlaylist_id());
         Logger.DEBUG.Log("Event: " + event.toString());
-        responseTextArea.setText("Playlist:\n" + "Name: " + clientCredentials_Request.getplaylistName() +
-                "\nDescription: " + clientCredentials_Request.getplaylistDescription() +
-                "\nSize: " + clientCredentials_Request.getplaylistSize());
+        responseTextArea.setText("Playlist:\n" + "Name: " + clientCredentials_Request.getPlaylist().getName() +
+                "\nDescription: " + clientCredentials_Request.getPlaylist().getDescription() +
+                "\nSize: " + clientCredentials_Request.getPlaylist().getTotalItems());
     }
 }

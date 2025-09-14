@@ -22,7 +22,7 @@
                   <Font size="11.0" />
                </font>
                <GridPane.margin>
-                  <Insets right="5.0" />
+                  <Insets right="15.0" />
                </GridPane.margin>
             </Button>
             <Button mnemonicParsing="false" text="Search" textAlignment="CENTER" GridPane.columnIndex="2">

@@ -12,10 +12,12 @@ public class BasicAuthMenu extends HelperFunctions{
      * Menu entries
      */
     public void Basic_auth_Functions() {
+        Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
         while (true) {
             clearScreen();
             System.out.println("Basic Auth Functions");
             System.out.println("1. Get Playlist by ID");
+            System.out.println("2. Get Track by ID");
             System.out.println("0. Go Back");
             Client_Credentials_Token clientCredentialsToken = new Client_Credentials_Token();
             clientCredentialsToken.post_Access_Request();
@@ -26,8 +28,16 @@ public class BasicAuthMenu extends HelperFunctions{
                         spotifySession.setPlaylist_id(scanner.nextLine().trim());
                     }
                     System.out.println("API Response: ");
-                    Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
                     clientCredentialsRequest.getPlaylist(spotifySession.getPlaylist_id());
+                    break;
+                case "2":
+                    String track_uri = "";
+                    while (checkIfNullOrEmpty(track_uri)) {
+                        System.out.println("Enter Track ID:");
+                        track_uri = scanner.nextLine().trim();
+                    }
+                    System.out.println("API Response: ");
+                    clientCredentialsRequest.getTrackInformation(track_uri);
                     break;
                 case "0":
                     return;

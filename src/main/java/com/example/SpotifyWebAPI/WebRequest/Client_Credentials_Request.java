@@ -1,6 +1,8 @@
 package com.example.SpotifyWebAPI.WebRequest;
 
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
+import com.example.SpotifyWebAPI.Objects.Playlist;
+import com.example.SpotifyWebAPI.Objects.Track;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,18 +15,15 @@ import java.net.HttpURLConnection;
 
 public class Client_Credentials_Request {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
-    private String playlistDescription;
-    private String playlistName;
-    private int playlistSize;
+    private Track track;
+    private Playlist playlist;
 
-    public String getplaylistDescription() {
-        return playlistDescription;
+    public Playlist getPlaylist() {
+        return playlist;
     }
-    public String getplaylistName() {
-        return playlistName;
-    }
-    public int getplaylistSize() {
-        return playlistSize;
+
+    public Track getTrack() {
+        return track;
     }
 
     /**
@@ -38,10 +37,29 @@ public class Client_Credentials_Request {
             HttpURLConnection http = HTTPConnection.connectHTTP(playlistURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
-            playlistName = node.get("name").asText();
-            playlistDescription = node.get("description").asText();
-            playlistSize = node.get("tracks").get("total").asInt();
-            System.out.println("SpotifyWebAPI Playlist Details\nName: " + playlistName + "\nDescription: " + playlistDescription + "\nSize: " + playlistSize);
+            playlist = new Playlist(node.get("name").asText(), node.get("description").asText());
+            playlist.setTotalItems(node.get("tracks").get("total").asInt());
+            Logger.INFO.Log(playlist.toString(), false);
+        } catch (Exception e) {
+            Logger.ERROR.LogException(e);
+        }
+    }
+
+    public void getTrackInformation(String track_uri) {
+        try {
+            String postURL = "https://api.spotify.com/v1/tracks/" + track_uri;
+            String Bearer = "Bearer " + spotifySession.getAccess_token();
+            HttpURLConnection http = HTTPConnection.connectHTTP(postURL, "GET", "Authorization", Bearer);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(http.getInputStream());
+            track = new Track(node.get("name").asText(), node.get("id").asText());
+            track.setTrackNumber(node.get("track_number").asInt());
+            track.setType(node.get("type").asText());
+            track.setPopularity(node.get("popularity").asInt());
+            for (JsonNode key : node.get("artists")) {
+                track.setArtist(key.get("name").asText());
+            }
+            Logger.INFO.Log(track.toString(), false);
         } catch (Exception e) {
             Logger.ERROR.LogException(e);
         }

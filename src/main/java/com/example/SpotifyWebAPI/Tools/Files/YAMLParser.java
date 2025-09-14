@@ -45,7 +45,6 @@ public final class YAMLParser extends Configuration {
      * Migrates configuration from "config.txt" to "config.yaml"
      */
     public static void MigrateToYAML() {
-        Logger.INFO.Log("Setting token array size...", false);
         tokenConfig = LoadKeys();
         Logger.INFO.Log("Reading config...", false);
         OldConfigReader();
@@ -53,25 +52,6 @@ public final class YAMLParser extends Configuration {
         Logger.INFO.Log("Config read. Now writing it as YAML", false);
         WriteConfig();
         Logger.INFO.Log("Wrote config as YAML", false);
-    }
-
-    /**
-     * Reads the configuration file and counts lines. This is used to dynamically scale tokenConfig array
-     * @param filename  Name of file to get length
-     * @return  Line count, if file is empty or not present then returns 0
-     */
-    private static int getFileLength(String filename) {
-        try (BufferedReader br = new BufferedReader(new FileReader(MkDirs(filename)))) {
-            int fileLength = 0;
-            while (br.readLine() != null) {
-                fileLength++;
-            }
-            br.close();
-            return fileLength;
-        } catch (Exception e) {
-            Logger.CRITICAL.LogException(e, "Failed to estimate file length");
-            return 0;
-        }
     }
 
     /**
