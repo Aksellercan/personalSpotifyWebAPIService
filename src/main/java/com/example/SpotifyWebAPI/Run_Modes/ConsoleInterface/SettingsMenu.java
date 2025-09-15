@@ -23,12 +23,14 @@ public class SettingsMenu extends HelperFunctions {
                     (Logger.getVerboseLogFile() ? ConsoleColours.GREEN + " - Debugs will be included in log file" + ConsoleColours.RESET : ""));
             System.out.println("3. Set Coloured Logger Output" +
                     (Logger.getColouredOutput() ? ConsoleColours.GREEN + " - Logger will output ANSI Coloured lines" + ConsoleColours.RESET: ""));
-            System.out.println("4. Set Auto Mode" +
+            System.out.println("4. Enable Detailed Stack Traces" +
+                    (Logger.getEnableStackTraces() ? ConsoleColours.GREEN + " - Logger will include Detailed Stack Traces" + ConsoleColours.RESET: ""));
+            System.out.println("5. Set Auto Mode" +
                     (ProgramOptions.isAutoMode() ? ConsoleColours.GREEN + " - Auto Mode Enabled, Program won't launch to CLI on next run" + ConsoleColours.RESET: ""));
-            System.out.println("5. Set GUI Mode" +
+            System.out.println("6. Set GUI Mode" +
                     (ProgramOptions.LAUNCH_GUI() ? ConsoleColours.GREEN + " - GUI Enabled" + ConsoleColours.RESET : ""));
-            System.out.println("6. Migrate Config file to YAML");
-            System.out.println("7. Save Config" +
+            System.out.println("7. Migrate Config file to YAML");
+            System.out.println("8. Save Config" +
                     (ProgramOptions.isChangesSaved() ? "" : ConsoleColours.RED + " - Changes not saved" + ConsoleColours.RESET));
             System.out.println("0. Go Back");
             switch (scanner.nextLine()) {
@@ -84,6 +86,23 @@ public class SettingsMenu extends HelperFunctions {
                     }
                     break;
                 case "4":
+                    System.out.println((Logger.getEnableStackTraces() ? "Detailed Stack Traces will be included in log file" : "Detailed Stack Traces won't be included in log file") +
+                            "\nPress y to include them\nPress n to not include them");
+                    if (scanner.nextLine().equals("y")) {
+                        if (!Logger.getEnableStackTraces()) {
+                            ProgramOptions.setChangesSaved(false);
+                        }
+                        Logger.setEnableStackTraces(true);
+                        System.out.println("Detailed Stack Traces will be included in log file");
+                    } else {
+                        if (Logger.getEnableStackTraces()) {
+                            ProgramOptions.setChangesSaved(false);
+                        }
+                        Logger.setEnableStackTraces(false);
+                        System.out.println("Detailed Stack Traces won't included in log file");
+                    }
+                    break;
+                case "5":
                     System.out.println("Set Auto Mode:\nCurrent State is " + ProgramOptions.isAutoMode() +
                             "\nPress y to enable Auto Mode\nPress n to disable Auto Mode");
                     if (scanner.nextLine().equals("y")) {
@@ -98,7 +117,7 @@ public class SettingsMenu extends HelperFunctions {
                         System.out.println("Auto Mode set to false");
                     }
                     break;
-                case "5":
+                case "6":
                     System.out.println("Set GUI Mode:\nCurrent State is " + ProgramOptions.LAUNCH_GUI() +
                             "\nPress y to enable GUI\nPress n to disable GUI");
                     if (scanner.nextLine().equals("y")) {
@@ -115,10 +134,10 @@ public class SettingsMenu extends HelperFunctions {
                         System.out.println("GUI set to false");
                     }
                     break;
-                case "6":
+                case "7":
                     YAMLParser.MigrateToYAML();
                     break;
-                case "7":
+                case "8":
                     System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);
                     YAMLParser.MapAndWriteConfig();
                     break;

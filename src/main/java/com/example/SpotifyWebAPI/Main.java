@@ -5,6 +5,7 @@ import com.example.SpotifyWebAPI.JavaFXInterface.Views.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
+import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
@@ -72,9 +73,6 @@ public class Main {
                 return;
             }
         }
-        /*
-        Set what keys should be in config file
-         */
         SpotifySession spotifySession = SpotifySession.getInstance();
         YAMLParser.ReadConfigAndMap();
         //Settings

@@ -93,6 +93,11 @@
                         <Insets bottom="15.0" />
                      </VBox.margin>
                   </Button>
+                  <Button mnemonicParsing="false" onAction="#ToggleStackTraces" text="Toggle Stack Traces">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Button>
                </children>
             </VBox>
             <VBox layoutX="288.0" layoutY="14.0" prefHeight="264.0" prefWidth="303.0">

@@ -31,6 +31,10 @@ public enum Logger {
      * Default set to false for compatibility
      */
     private static boolean colouredOutput = false;
+    /**
+     * Default set to false
+     */
+    private static boolean enableStackTraces = false;
 
     /**
      * Constructor for logger takes severity level as input
@@ -65,6 +69,14 @@ public enum Logger {
     }
 
     /**
+     * Enable or disable detailed stack traces in log
+     * @param enableStackTraces    Takes a boolean to set
+     */
+    public static void setEnableStackTraces(boolean enableStackTraces) {
+        Logger.enableStackTraces = enableStackTraces;
+    }
+
+    /**
      * Returns debugOutput value
      * @return debugOutput value
      */
@@ -86,6 +98,14 @@ public enum Logger {
      */
     public static boolean getVerboseLogFile() {
         return verboseLogFile;
+    }
+
+    /**
+     * Returns enableStackTraces value
+     * @return  enableStackTraces value
+     */
+    public static boolean getEnableStackTraces() {
+        return enableStackTraces;
     }
 
     /**
@@ -212,7 +232,12 @@ public enum Logger {
      * @param writeToFile   Whether to write to logfile or not
      */
     private void WriteExceptions(Exception e, boolean writeToFile) {
-        String fullMessage = DateSeverityFormat()  + e.getMessage() + "\n" + GetStackTraceAsString(e);
+        String fullMessage;
+        if (enableStackTraces) {
+            fullMessage = DateSeverityFormat()  + e.getMessage() + "\n" + GetStackTraceAsString(e);
+        } else {
+            fullMessage = DateSeverityFormat()  + e.getMessage();
+        }
         if (writeToFile) {
             SaveLog(fullMessage);
         }
@@ -226,7 +251,12 @@ public enum Logger {
      * @param writeToFile   Whether to write to logfile or not
      */
     private void WriteExceptionMessageLogs(Exception e, String message, boolean writeToFile) {
-        String fullMessage = DateSeverityFormat()  + message + ". Exception: " + e.getMessage() + "\n" + GetStackTraceAsString(e);
+        String fullMessage;
+        if (enableStackTraces) {
+            fullMessage = DateSeverityFormat() + message + ". Exception: " + e.getMessage() + "\n" + GetStackTraceAsString(e);
+        } else {
+            fullMessage = DateSeverityFormat() + message + ". Exception: " + e.getMessage();
+        }
         if (writeToFile) {
             SaveLog(fullMessage);
         }

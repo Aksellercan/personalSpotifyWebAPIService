@@ -27,20 +27,21 @@ abstract class Configuration {
         String[] keys = {
                 "client_id",
                 "client_secret",
+                "user_id",
+                "playlist_id",
                 "redirect_uri",
                 "refresh_token",
-                "playlist_id",
-                "output_debug",
                 "auto_mode",
-                "user_id",
                 "launch_gui",
-                "verbose_log_file",
-                "coloured_output"
+                "output_debug",
+                "coloured_output",
+                "enable_stack_traces",
+                "verbose_log_file"
         };
         tokenConfig = new Token[keys.length];
         for (int i = 0; i < tokenConfig.length; i++) {
             tokenConfig[i] = new Token(keys[i], "");
-            Logger.DEBUG.Log(tokenConfig[i].toString());
+            Logger.DEBUG.Log(tokenConfig[i].toString(), true);
         }
         return tokenConfig;
     }
@@ -57,6 +58,7 @@ abstract class Configuration {
                 case "client_id":
                     if (update) {
                         token.setValue(spotifySession.getClient_id());
+                        token.setCategoryType("User Details");
                         break;
                     }
                     spotifySession.setClient_id(token.getValue());
@@ -64,6 +66,7 @@ abstract class Configuration {
                 case "client_secret":
                     if (update) {
                         token.setValue(spotifySession.getClient_secret());
+                        token.setCategoryType("User Details");
                         break;
                     }
                     spotifySession.setClient_secret(token.getValue());
@@ -71,6 +74,7 @@ abstract class Configuration {
                 case "refresh_token":
                     if (update) {
                         token.setValue(spotifySession.getRefresh_token());
+                        token.setCategoryType("User Details");
                         break;
                     }
                     spotifySession.setRefresh_token(token.getValue());
@@ -78,6 +82,7 @@ abstract class Configuration {
                 case "user_id":
                     if (update) {
                         token.setValue(spotifySession.getUser_id());
+                        token.setCategoryType("User Details");
                         break;
                     }
                     spotifySession.setUser_id(token.getValue());
@@ -85,6 +90,7 @@ abstract class Configuration {
                 case "redirect_uri":
                     if (update) {
                         token.setValue(spotifySession.getRedirect_uri());
+                        token.setCategoryType("User Details");
                         break;
                     }
                     spotifySession.setRedirect_uri(token.getValue());
@@ -92,6 +98,7 @@ abstract class Configuration {
                 case "playlist_id":
                     if (update) {
                         token.setValue(spotifySession.getPlaylist_id());
+                        token.setCategoryType("User Details");
                         break;
                     }
                     spotifySession.setPlaylist_id(token.getValue());
@@ -99,6 +106,7 @@ abstract class Configuration {
                 case "output_debug":
                     if (update) {
                         token.setValue(String.valueOf(Logger.getDebugOutput()));
+                        token.setCategoryType("Logger Options");
                         break;
                     }
                     Logger.setDebugOutput(BooleanParse(token.getValue(), false));
@@ -106,13 +114,23 @@ abstract class Configuration {
                 case "verbose_log_file":
                     if (update) {
                         token.setValue(String.valueOf(Logger.getVerboseLogFile()));
+                        token.setCategoryType("Logger Options");
                         break;
                     }
                     Logger.setVerboseLogFile(BooleanParse(token.getValue(), false));
                     break;
+                case "enable_stack_traces":
+                    if (update) {
+                        token.setValue(String.valueOf(Logger.getEnableStackTraces()));
+                        token.setCategoryType("Logger Options");
+                        break;
+                    }
+                    Logger.setEnableStackTraces(BooleanParse(token.getValue(), false));
+                    break;
                 case "launch_gui":
                     if (update) {
                         token.setValue(String.valueOf(ProgramOptions.LAUNCH_GUI()));
+                        token.setCategoryType("Program Options");
                         break;
                     }
                     ProgramOptions.setLAUNCH_GUI(BooleanParse(token.getValue(), true));
@@ -120,6 +138,7 @@ abstract class Configuration {
                 case "auto_mode":
                     if (update) {
                         token.setValue(String.valueOf(ProgramOptions.isAutoMode()));
+                        token.setCategoryType("Program Options");
                         break;
                     }
                     ProgramOptions.setAutoMode(BooleanParse(token.getValue(), false));
@@ -127,12 +146,28 @@ abstract class Configuration {
                 case "coloured_output":
                     if (update) {
                         token.setValue(String.valueOf(Logger.getColouredOutput()));
+                        token.setCategoryType("Logger Options");
                         break;
                     }
                     Logger.setColouredOutput(BooleanParse(token.getValue(), false));
                     break;
                 default:
                     Logger.ERROR.LogSilently("Key \"" + token.getKey() + "\" is invalid");
+            }
+        }
+    }
+
+    /**
+     * Find and set Token value, additionally mark it as seen to avoid duplicates
+     * @param key   Key to modify
+     * @param value Token value
+     */
+    protected static void FindAndSetToken(String key, String value) {
+        for (Token token : tokenConfig) {
+            if (!token.isSeen() && token.getKey().equals(key)) {
+                token.setValue(value);
+                token.markAsSeen();
+                break;
             }
         }
     }

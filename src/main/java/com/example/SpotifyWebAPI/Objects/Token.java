@@ -5,6 +5,8 @@ public class Token {
     private String value;
     private boolean isNumber;
     private boolean isBoolean;
+    private boolean seen = false;
+    private String categoryType = "";
 
     public Token(String key, String value) {
         this.key = key;
@@ -34,6 +36,14 @@ public class Token {
         return this.isBoolean;
     }
 
+    public boolean isSeen() {
+        return this.seen;
+    }
+
+    public String getCategoryType() {
+        return this.categoryType;
+    }
+
     //setters
     public void setKey(String key) {
         this.key = key;
@@ -51,8 +61,16 @@ public class Token {
         this.isNumber = isNumber;
     }
 
+    public void markAsSeen() {
+        this.seen = true;
+    }
+
+    public void setCategoryType(String categoryType) {
+        this.categoryType = categoryType;
+    }
+
     @Override
     public String toString() {
-        return "Key: " + this.key + ", Value: " + this.value + ". States: isBoolean: " + this.isBoolean + ", isNumber: " + this.isNumber;
+        return "Key: " + this.key + ", Value: " + this.value + ". States: isBoolean: " + this.isBoolean + ", isNumber: " + this.isNumber + ". Seen: " + (seen ? "yes" : "no" + (categoryType.isEmpty() ? "." : ", Category: " + categoryType));
     }
 }

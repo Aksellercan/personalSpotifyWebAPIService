@@ -60,8 +60,15 @@ public final class YAMLParser extends Configuration {
     private static void WriteConfig() {
         Logger.INFO.Log("Changes are " + (ProgramOptions.isChangesSaved() ? "already saved." : "not saved yet."));
         if (!ProgramOptions.isChangesSaved()) {
+            String lastCategory = "";
             try (FileWriter fw = new FileWriter(MkDirs("config.yaml"), false)) {
                 for (Token current : tokenConfig) {
+                    if (!current.getCategoryType().isEmpty()) {
+                        if (!lastCategory.equals(current.getCategoryType())) {
+                            lastCategory = current.getCategoryType();
+                            fw.write("# " + current.getCategoryType() + "\n");
+                        }
+                    }
                     Logger.DEBUG.Log("Writing key: value " + current.getKey() + ": " + current.getValue());
                     fw.write(current.getKey() + ": " + current.getValue() + "\n");
                 }
@@ -78,17 +85,17 @@ public final class YAMLParser extends Configuration {
      */
     private static void ReadConfig() {
         int lineCount = 0;
-        int tokenCount = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(MkDirs("config.yaml")))) {
             String line;
             String[] splitLine;
             while ((line = br.readLine()) != null) {
                 lineCount++;
+                if (line.startsWith("#")) {
+                    continue;
+                }
                 splitLine = line.split(":", 2);
                 if (splitLine.length == 2) {
-                    tokenConfig[tokenCount] = new Token(splitLine[0].trim(), splitLine[1].trim());
-                    Logger.DEBUG.Log(tokenConfig[tokenCount].toString());
-                    tokenCount++;
+                    FindAndSetToken(splitLine[0].trim(), splitLine[1].trim());
                 } else {
                     Logger.ERROR.LogSilently("Invalid line at " + lineCount + ": \"" + line + "\", expected format: \"key: value\". Continue reading the file.");
                 }

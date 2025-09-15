@@ -75,6 +75,14 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
+    protected void ToggleStackTraces(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        Logger.setEnableStackTraces(!Logger.getEnableStackTraces());
+        Logger.INFO.Log("Logger: enable_stack_traces=" + Logger.getEnableStackTraces(), false);
+        ProgramOptions.setChangesSaved(false);
+    }
+
+    @FXML
     protected void ToggleDebugOutput(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         Logger.setDebugOutput(!Logger.getDebugOutput());
