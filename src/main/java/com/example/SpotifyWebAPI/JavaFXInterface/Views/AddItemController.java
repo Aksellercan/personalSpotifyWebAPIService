@@ -44,6 +44,29 @@ public class AddItemController implements Initializable {
         showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() + "\nSize: " + clientCredentialsRequest.getPlaylist().getDescription() + "\n" + clientCredentialsRequest.getPlaylist().getTotalItems());
     }
 
+    private String DecodeURL(String track_uri) {
+        if (track_uri.isEmpty()) return "";
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean copy = false;
+        for (int i = track_uri.length()-1; i >= 0; i--) {
+            if (track_uri.charAt(i) == '/') {
+                copy = false;
+            }
+            if (copy) {
+                stringBuilder.append(track_uri.charAt(i));
+                continue;
+            }
+            if (track_uri.charAt(i) == '?') {
+                copy = true;
+            }
+        }
+        StringBuilder reverse = new StringBuilder();
+        for (int i = stringBuilder.length()-1; i >= 0; i--) {
+            reverse.append(stringBuilder.charAt(i));
+        }
+        return reverse.toString();
+    }
+
     @FXML
     protected void SearchItem(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
@@ -51,7 +74,13 @@ public class AddItemController implements Initializable {
             foundTrackArea.setText("Track not found!");
             return;
         }
-        clientCredentialsRequest.getTrackInformation(searchTrackField.getText());
+        if (searchTrackField.getText().contains("https://")) {
+            String decodedString = DecodeURL(searchTrackField.getText());
+            Logger.INFO.Log("Decoded String: " + decodedString, false);
+            clientCredentialsRequest.getTrackInformation(decodedString);
+        } else {
+            clientCredentialsRequest.getTrackInformation(searchTrackField.getText());
+        }
         foundTrackArea.setText("Found\n" + clientCredentialsRequest.getTrack().getName() + "\nby " + clientCredentialsRequest.getTrack().getArtist());
     }
 
