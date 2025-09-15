@@ -35,6 +35,14 @@ public class WebviewController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
+            if (SceneActions.StopBackgroundHTTPThread()) {
+                Logger.INFO.Log("Closing from webview page... Reason: " + e.getEventType());
+                System.exit(0);
+            }
+            Logger.ERROR.Log("Failed to close session.");
+            System.exit(1);
+        });
         try {
             WebEngine e = webviewBox.getEngine();
             webviewBox.setContextMenuEnabled(true);

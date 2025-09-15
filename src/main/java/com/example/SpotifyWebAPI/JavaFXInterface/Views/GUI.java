@@ -40,10 +40,15 @@ public class GUI extends Application {
         primaryStage.setHeight(600);
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
+        primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(event -> {
             YAMLParser.MapAndWriteConfig();
-            Logger.INFO.Log("Closed Session. Reason: " + event.getEventType());
-            System.exit(0);
+            if (SceneActions.StopBackgroundHTTPThread()) {
+                Logger.INFO.Log("Closed Session. Reason: " + event.getEventType());
+                System.exit(0);
+            }
+            Logger.ERROR.Log("Failed to close session.");
+            System.exit(1);
         });
         try {
             /*

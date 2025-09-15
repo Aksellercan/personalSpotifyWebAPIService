@@ -58,8 +58,8 @@ public final class YAMLParser extends Configuration {
      * Writes settings to configuration file. Skips if changes are already saved.
      */
     private static void WriteConfig() {
-        Logger.INFO.Log("Changes are " + (ProgramOptions.isChangesSaved() ? "already saved." : "not saved yet."));
         if (!ProgramOptions.isChangesSaved()) {
+            Logger.WARN.Log("Changes are not saved yet.");
             String lastCategory = "";
             try (FileWriter fw = new FileWriter(MkDirs("config.yaml"), false)) {
                 for (Token current : tokenConfig) {
@@ -77,6 +77,8 @@ public final class YAMLParser extends Configuration {
             } catch (Exception e) {
                 Logger.CRITICAL.LogException(e, "Failed to write configuration");
             }
+        } else {
+            Logger.INFO.Log("Changes are already saved.");
         }
     }
 
@@ -121,7 +123,7 @@ public final class YAMLParser extends Configuration {
                     tokenConfig[tokenNumber] = new Token(splitLine[0].trim(), splitLine[1].trim());
                     tokenNumber++;
                 } else {
-                    Logger.ERROR.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", expected format: \"key=value\". Continue reading the file.");
+                    Logger.WARN.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", expected format: \"key=value\". Continue reading the file.");
                 }
             }
         } catch (IOException e) {

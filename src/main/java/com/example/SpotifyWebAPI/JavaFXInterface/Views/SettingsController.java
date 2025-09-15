@@ -150,7 +150,12 @@ public class SettingsController implements Initializable {
         SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
             ProgramOptions.setChangesSaved(false);
             YAMLParser.MapAndWriteConfig();
-            Logger.INFO.Log("Closing from settings page... Reason: " + e.getEventType());
+            if (SceneActions.StopBackgroundHTTPThread()) {
+                Logger.INFO.Log("Closing from settings page... Reason: " + e.getEventType());
+                System.exit(0);
+            }
+            Logger.ERROR.Log("Failed to close session.");
+            System.exit(1);
         });
     }
 }

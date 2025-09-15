@@ -1,10 +1,15 @@
 package com.example.SpotifyWebAPI.JavaFXInterface.Functions;
 
+import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
+import com.example.SpotifyWebAPI.HTTP.HTTPServer;
+import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
@@ -96,5 +101,19 @@ public final class SceneActions {
             throw new NullPointerException("FXML file " + fxmlFilename + ".fxml not found");
         }
         return FXMLLoader.load(getFXML);
+    }
+
+    public static boolean StopBackgroundHTTPThread() {
+        try {
+            HTTPServer httpServer = SaveHTTPState.getServer("Fallback");
+            if (httpServer != null && httpServer.StopServer()) {
+                HttpURLConnection http = HTTPConnection.connectHTTP("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort(), "GET");
+                http.connect();
+            }
+            return true;
+        } catch (Exception e) {
+            Logger.ERROR.LogException(e, "Failed to stop HTTP thread");
+            return false;
+        }
     }
 }

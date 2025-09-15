@@ -152,7 +152,7 @@ abstract class Configuration {
                     Logger.setColouredOutput(BooleanParse(token.getValue(), false));
                     break;
                 default:
-                    Logger.ERROR.LogSilently("Key \"" + token.getKey() + "\" is invalid");
+                    Logger.WARN.LogSilently("Key \"" + token.getKey() + "\" is invalid");
             }
         }
     }

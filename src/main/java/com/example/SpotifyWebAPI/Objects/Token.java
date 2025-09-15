@@ -71,6 +71,6 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Key: " + this.key + ", Value: " + this.value + ". States: isBoolean: " + this.isBoolean + ", isNumber: " + this.isNumber + ". Seen: " + (seen ? "yes" : "no" + (categoryType.isEmpty() ? "." : ", Category: " + categoryType));
+        return "Key: " + this.key + ", Value: " + this.value + ". States: isBoolean: " + this.isBoolean + ", isNumber: " + this.isNumber + ". Seen: " + (seen ? "yes" : "no") + (categoryType.isEmpty() ? "." : ", Category: " + categoryType);
     }
 }

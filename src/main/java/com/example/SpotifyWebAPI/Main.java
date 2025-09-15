@@ -81,6 +81,7 @@ public class Main {
         Logger.DEBUG.Log("verbose_log_file: " + Logger.getVerboseLogFile(), false);
         Logger.DEBUG.Log("debug_output: " + Logger.getDebugOutput(), false);
         Logger.DEBUG.Log("coloured_output: " + Logger.getColouredOutput(), false);
+        Logger.DEBUG.Log("enable_stack_traces: " + Logger.getEnableStackTraces(), false);
 
         if (args.length == 0) {
             if (ProgramOptions.LAUNCH_GUI()) {

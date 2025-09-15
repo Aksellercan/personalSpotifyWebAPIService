@@ -88,7 +88,12 @@ public class AddItemController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Logger.INFO.Log("Init");
         SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
-            Logger.INFO.Log("Closing from add item page... Reason: " + e.getEventType());
+            if (SceneActions.StopBackgroundHTTPThread()) {
+                Logger.INFO.Log("Closing from add item page... Reason: " + e.getEventType());
+                System.exit(0);
+            }
+            Logger.ERROR.Log("Failed to close session.");
+            System.exit(1);
         });
         if (SpotifySession.getInstance().getAccess_token() == null) {
             Logger.INFO.Log((SpotifySession.getInstance().getRefresh_token() == null ? "Refresh token is null" : "All ok") + ".");
