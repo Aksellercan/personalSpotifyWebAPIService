@@ -1,14 +1,8 @@
 # Spotify Web API Client
 
-A robust Java client library and CLI and GUI tool that interacts with Spotify’s Web API to manage playlists, retrieve user data, and automate playlist updates.
-
-----------
-
 ## Overview
 
 This project provides a modular and extendable interface to Spotify’s Web API using Java. It supports authorization, playlist creation, modification, and track management with clear logging and error handling.
-
-Designed for both automated background execution and interactive command-line use, it’s perfect for music lovers, developers building Spotify integrations, or anyone looking to automate playlist curation.
 
 ----------
 
@@ -28,28 +22,9 @@ Running JavaFX GUI requires JDK 24! Fortunately rest of the program can run usin
     
 -   **Config-driven:** all secrets and options are configurable via external config files.
     
--   **Flexible Modes:** supports automated batch operations (AutoMode) and manual CLI interaction.
+-   **Flexible Modes:** supports automated batch operations (AutoMode) and manual CLI or GUI interaction.
     
 -   **Comprehensive Logging:** file-based and console logs with multiple severity levels and debug mode.
-    
-
-----------
-
-## Architecture & Design
-
--   **Java 17+** with clean separation of concerns.
-    
--   `HTTPConnection` handles HTTP setup and requests.
-    
--   `SpotifySession` encapsulates authentication tokens and user details.
-    
--   `User_Request` and `Client_Credentials_Request` encapsulate Spotify API calls with Jackson JSON parsing.
-    
--   `Logger` implemented as an enum for lightweight centralized logging.
-    
--   Modular run modes with `AutoMode` and `CLI_Interface` allow flexible user experience.
-    
--   Configuration management via `ConfigMaps` backed by external file I/O (`FileUtil`).
     
 
 ----------
@@ -58,21 +33,14 @@ Running JavaFX GUI requires JDK 24! Fortunately rest of the program can run usin
 
 ### Prerequisites
 
--   Java Development Kit (JDK) 17 or higher
+-   Java Development Kit (JDK) 24 or higher
     
 -   Maven or Gradle for dependency management (if applicable)
     
 -   Spotify Developer account with registered app for `client_id`, `client_secret`, and necessary scopes
     
 ## Usage
-
--   Use the CLI interface to explore and manage playlists interactively.
-    
--   Automate playlist updates and syncing with the AutoMode.
-    
--   Customize logging output and debugging via config.
-
--   All Commands and their use
+All Commands and their use
 ```bash
 Usage: program [OPTION]
 
@@ -98,8 +66,6 @@ Other:
   --get-refresh-token <code> <redirect uri>     get refresh token
 ```
 
-    
-
 ## How to Automate
 
 1.  Get your playlist ID from the URL, for example:  
@@ -118,51 +84,37 @@ Other:
 
 ## Error Handling & Logging
 
-This project features a **custom lightweight logger** with multiple log levels: `INFO`, `WARN`, `ERROR`, and `DEBUG`. Logs are timestamped and stored daily in `/Logs` directory with clear, human-readable messages.
+This project features a **custom logger** with multiple log levels: `INFO`, `WARN`, `ERROR`, `CRITICAL`, and `DEBUG`. Logs are timestamped and stored daily in `/Logs` directory with clear, human-readable messages.
 
 The logger helps track all critical operations, API responses, and error cases — invaluable for debugging and monitoring automated playlist updates.
 
 Logger Example Output:
 ```pgsql
-18/05/2025 00:26:27 [ INFO ] Updated playlist description to 26/120. HTTP Response Code 200
-18/05/2025 00:53:51 [ INFO ] No refresh Token returned
-18/05/2025 00:54:16 [ ERROR ] Cannot write output after reading input.
-18/05/2025 00:54:16 [ INFO ] Playlist created with ID: 2d6BnX6iSNTWPlf6ZDgpmE
-18/05/2025 00:54:16 [ INFO ] Playlist snapshot ID: AAAbreKTfDxtxugzq1+XoeE1TWvSbNpb
-18/05/2025 00:54:16 [ INFO ] Playlist external URL: https://open.spotify.com/playlist/2d6BnXTiSNTWPlf6ZDgpmE
-18/05/2025 00:54:16 [ INFO ] Playlist href: https://api.spotify.com/v1/playlists/2d6BnXuiSNTWPlf6ZDgpmE
-18/05/2025 00:54:16 [ INFO ] Playlist name: testname
-18/05/2025 00:54:16 [ INFO ] Playlist description: testdesc
-18/05/2025 00:54:16 [ INFO ] Playlist public: true
-18/05/2025 00:54:16 [ INFO ] Playlist collaborative: false
-18/05/2025 01:05:41 [ INFO ] Auto Mode set to true
-18/05/2025 01:07:50 [ INFO ] Starting AutoMode.runFunctions()
-18/05/2025 01:07:50 [ INFO ] No refresh Token returned
-18/05/2025 01:07:50 [ INFO ] Received the access token
-18/05/2025 01:07:51 [ INFO ] Playlist size is already set to 26
-18/05/2025 01:07:51 [ INFO ] Completed the automated run, no changes made
-18/05/2025 01:08:06 [ INFO ] Auto Mode set to true
-18/05/2025 01:08:10 [ INFO ] Saved Config successfully!
-18/05/2025 01:08:13 [ INFO ] Saved Config successfully!
-18/05/2025 01:09:00 [ WARN ] Credential auto_mode not found in config map
+14/09/2025 16:46:13 [ DEBUG ] Current: Key: coloured_output, Value: true. States: isBoolean: false, isNumber: false
+14/09/2025 16:46:13 [ DEBUG ] value=true
+14/09/2025 16:46:13 [ DEBUG ] Using YAML Reader, with no token type checker
+14/09/2025 16:46:13 [ INFO ] Everything is set up correctly, client_id and client_secret are not null or empty.
+14/09/2025 16:46:21 [ INFO ] Returned Track: com.example.SpotifyWebAPI.Objects.Track@5e7cd6cc
+14/09/2025 16:48:10 [ DEBUG ] Current: Key: coloured_output, Value: true. States: isBoolean: false, isNumber: false
+14/09/2025 16:48:10 [ DEBUG ] value=true
+14/09/2025 16:48:10 [ DEBUG ] Using YAML Reader, with no token type checker
+14/09/2025 16:48:10 [ INFO ] Everything is set up correctly, client_id and client_secret are not null or empty.
+14/09/2025 16:48:19 [ INFO ] Returned Track: Track name: Distortion!!, Track number: 3, Id: 3l8rIBKJUDQFqQfKvcpQ1w and Type: track
+14/09/2025 16:50:11 [ DEBUG ] Current: Key: coloured_output, Value: true. States: isBoolean: false, isNumber: false
+14/09/2025 16:50:11 [ DEBUG ] value=true
+14/09/2025 16:50:11 [ DEBUG ] Using YAML Reader, with no token type checker
+14/09/2025 16:50:11 [ INFO ] Everything is set up correctly, client_id and client_secret are not null or empty.
+14/09/2025 16:50:20 [ ERROR ] Cannot invoke "com.fasterxml.jackson.databind.JsonNode.get(String)" because the return value of "com.fasterxml.jackson.databind.JsonNode.get(String)" is null
+	com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request.getTrackInformation(Client_Credentials_Request.java:64)
+	com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.BasicAuthMenu.Basic_auth_Functions(BasicAuthMenu.java:40)
+	com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.MainMenu.userInterface(MainMenu.java:26)
+	com.example.SpotifyWebAPI.Main.main(Main.java:97)
+14/09/2025 16:50:40 [ DEBUG ] Current: Key: coloured_output, Value: true. States: isBoolean: false, isNumber: false
+14/09/2025 16:50:40 [ DEBUG ] value=true
+14/09/2025 16:50:40 [ DEBUG ] Using YAML Reader, with no token type checker
+14/09/2025 16:50:40 [ INFO ] Everything is set up correctly, client_id and client_secret are not null or empty.
 ```
-
 ## Issues
-1. none
-----------
-
-## Why This Project?
-
-This project showcases the ability to design clean, maintainable Java code that interacts with real-world APIs. It demonstrates practical skills in:
-
--   Network programming with HTTP and REST
-    
--   JSON processing with Jackson
-    
--   Dependency injection and modular design
-    
--   Error handling and logging best practices
-    
--   Building CLI and automated tooling
-
-- Spotify playlists have a maximum practical size where shuffling works well. Going beyond 120 songs leads to frustrating shuffle behavior, so this tool keeps you informed by updating the playlist description dynamically.
+1. HTTP requests are single threaded and hold the program when switching scenes
+2. When changing scenes window is maximized window resolution will go back to 800x600
+3. UI cleanup
