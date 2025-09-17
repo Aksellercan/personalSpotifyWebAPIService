@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Objects;
+package com.example.SpotifyWebAPI.Objects.Spotify;
 
 /**
  * Return object for playlist

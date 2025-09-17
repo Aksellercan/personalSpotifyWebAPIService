@@ -1,11 +1,12 @@
-package com.example.SpotifyWebAPI.JavaFXInterface.Views;
+package com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views;
 
 import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
-import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
+import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import java.net.URL;
@@ -17,6 +18,8 @@ import java.util.ResourceBundle;
 public class WebviewController implements Initializable {
     @FXML
     private WebView webviewBox;
+    @FXML
+    protected TextField pageSearchField;
 
     /**
      * Changes scene to the previous scene
@@ -26,6 +29,12 @@ public class WebviewController implements Initializable {
     private void HandleButtonPress(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         SceneActions.ChangeScene("PrimaryPage");
+    }
+
+    @FXML
+    protected void OnPageSearchButton(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        SceneActions.SearchPage(pageSearchField.getText());
     }
 
     /**

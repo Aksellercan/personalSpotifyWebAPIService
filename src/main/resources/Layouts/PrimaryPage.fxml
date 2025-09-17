@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.JavaFXInterface.Views.GUI">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.GUI">
    <left>
       <VBox prefHeight="320.0" prefWidth="105.0" BorderPane.alignment="CENTER">
          <children>
@@ -91,12 +91,12 @@
                   <Insets left="15.0" />
                </padding>
             </Label>
-            <TextField promptText="search" GridPane.columnIndex="1">
+            <TextField fx:id="pageSearchField" onAction="#OnPageSearchButton" promptText="search" GridPane.columnIndex="1">
                <font>
                   <Font size="11.0" />
                </font>
             </TextField>
-            <Button mnemonicParsing="false" text="Search" GridPane.columnIndex="2">
+            <Button mnemonicParsing="false" onAction="#OnPageSearchButton" text="Search" GridPane.columnIndex="2">
                <font>
                   <Font size="11.0" />
                </font>

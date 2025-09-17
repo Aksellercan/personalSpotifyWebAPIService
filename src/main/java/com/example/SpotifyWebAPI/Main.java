@@ -1,14 +1,13 @@
 package com.example.SpotifyWebAPI;
 
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
-import com.example.SpotifyWebAPI.JavaFXInterface.Views.GUI;
+import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
-import com.example.SpotifyWebAPI.Tools.Files.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
-import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 
 /**

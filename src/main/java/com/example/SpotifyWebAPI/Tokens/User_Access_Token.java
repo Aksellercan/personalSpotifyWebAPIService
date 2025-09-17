@@ -2,7 +2,7 @@ package com.example.SpotifyWebAPI.Tokens;
 
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

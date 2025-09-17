@@ -1,8 +1,8 @@
 package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import java.util.Scanner;

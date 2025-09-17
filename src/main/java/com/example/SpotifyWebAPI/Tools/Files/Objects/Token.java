@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Objects;
+package com.example.SpotifyWebAPI.Tools.Files.Objects;
 
 public class Token {
     private String key;

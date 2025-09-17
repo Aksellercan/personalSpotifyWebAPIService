@@ -65,7 +65,6 @@ public final class SaveHTTPState {
      * @param httpServer    Server to save state of
      */
     public static void addHTTPServerToHashMap(String serverName, HTTPServer httpServer) {
-        HTTPState state = new HTTPState(serverName, httpServer);
-        serverList.add(state);
+        serverList.add(new HTTPState(serverName, httpServer));
     }
 }

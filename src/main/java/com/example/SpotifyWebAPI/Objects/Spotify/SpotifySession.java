@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Objects;
+package com.example.SpotifyWebAPI.Objects.Spotify;
 
 /**
  * Object to hold session data which will be used to construct requests

@@ -1,18 +1,19 @@
-package com.example.SpotifyWebAPI.JavaFXInterface.Views;
+package com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views;
 
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
-import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
+import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.net.HttpURLConnection;
@@ -27,6 +28,8 @@ public class GUI extends Application {
     private HTTPServer httpServer;
     @FXML
     private TextArea responseTextArea;
+    @FXML
+    protected TextField pageSearchField;
 
     /**
      * Sets up the primary stage
@@ -34,6 +37,7 @@ public class GUI extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
+        SceneActions.LoadPagesToArray();
         primaryStage.setTitle("Spotify Web API GUI alpha");
         primaryStage.setResizable(true);
         primaryStage.setWidth(800);
@@ -68,6 +72,12 @@ public class GUI extends Application {
     protected void OnChangeSceneButton(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         SceneActions.ChangeScene("Webview");
+    }
+
+    @FXML
+    protected void OnPageSearchButton(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        SceneActions.SearchPage(pageSearchField.getText());
     }
 
     @FXML

@@ -2,8 +2,8 @@ package com.example.SpotifyWebAPI.Run_Modes;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;

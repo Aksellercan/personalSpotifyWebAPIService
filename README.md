@@ -94,7 +94,7 @@ Logger Example Output:
 14/09/2025 16:46:13 [ DEBUG ] value=true
 14/09/2025 16:46:13 [ DEBUG ] Using YAML Reader, with no token type checker
 14/09/2025 16:46:13 [ INFO ] Everything is set up correctly, client_id and client_secret are not null or empty.
-14/09/2025 16:46:21 [ INFO ] Returned Track: com.example.SpotifyWebAPI.Objects.Track@5e7cd6cc
+14/09/2025 16:46:21 [ INFO ] Returned Track: com.example.SpotifyWebAPI.Objects.Spotify.Track@5e7cd6cc
 14/09/2025 16:48:10 [ DEBUG ] Current: Key: coloured_output, Value: true. States: isBoolean: false, isNumber: false
 14/09/2025 16:48:10 [ DEBUG ] value=true
 14/09/2025 16:48:10 [ DEBUG ] Using YAML Reader, with no token type checker

@@ -1,9 +1,9 @@
-package com.example.SpotifyWebAPI.JavaFXInterface.Views;
+package com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views;
 
-import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
+import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.YAMLParser;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,8 +31,8 @@ public class SettingsController implements Initializable {
     private TextField inputRedirect_uri;
     @FXML
     private ProgressBar SaveConfigProgressBar;
-
-
+    @FXML
+    private TextField pageSearchField;
 
     @FXML
     protected void MigrateToYAML(ActionEvent event) {
@@ -143,6 +143,12 @@ public class SettingsController implements Initializable {
             change = true;
         }
         return change;
+    }
+
+    @FXML
+    protected void OnPageSearchButton(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        SceneActions.SearchPage(pageSearchField.getText());
     }
 
     @Override

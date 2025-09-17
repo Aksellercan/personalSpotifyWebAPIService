@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.JavaFXInterface.Views.AddItemController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.AddItemController">
    <top>
        <GridPane minHeight="33.0" prefWidth="600.0" BorderPane.alignment="CENTER">
            <columnConstraints>
@@ -16,7 +16,7 @@
            <rowConstraints>
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
-           <Button mnemonicParsing="false" text="Search" textAlignment="CENTER" GridPane.columnIndex="2">
+           <Button mnemonicParsing="false" onAction="#OnPageSearchButton" text="Search" textAlignment="CENTER" GridPane.columnIndex="2">
               <font>
                   <Font size="11.0" />
               </font>
@@ -24,7 +24,7 @@
                   <Insets left="5.0" />
               </GridPane.margin>
            </Button>
-           <TextField promptText="Search" GridPane.columnIndex="1">
+           <TextField fx:id="pageSearchField" onAction="#OnPageSearchButton" promptText="Search" GridPane.columnIndex="1">
               <font>
                   <Font size="11.0" />
               </font>

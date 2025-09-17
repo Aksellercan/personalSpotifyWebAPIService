@@ -1,11 +1,11 @@
-package com.example.SpotifyWebAPI.JavaFXInterface.Views;
+package com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views;
 
-import com.example.SpotifyWebAPI.JavaFXInterface.Functions.SceneActions;
+import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -23,6 +23,8 @@ public class AddItemController implements Initializable {
     private TextArea foundTrackArea;
     @FXML
     private Label showPlaylistDetails;
+    @FXML
+    private TextField pageSearchField;
     private final Client_Credentials_Request clientCredentialsRequest = new Client_Credentials_Request();
 
     @FXML
@@ -41,7 +43,13 @@ public class AddItemController implements Initializable {
         User_Request userRequest = new User_Request();
         userRequest.addPlaylistItems(SpotifySession.getInstance().getPlaylist_id(), clientCredentialsRequest.getPlaylist().getTotalItems(), clientCredentialsRequest.getTrack().getId(), false);
         clientCredentialsRequest.getPlaylist(SpotifySession.getInstance().getPlaylist_id());
-        showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() + "\nSize: " + clientCredentialsRequest.getPlaylist().getDescription() + "\n" + clientCredentialsRequest.getPlaylist().getTotalItems());
+        showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() + "\n" + clientCredentialsRequest.getPlaylist().getDescription() + "\nSize: " + clientCredentialsRequest.getPlaylist().getTotalItems());
+    }
+
+    @FXML
+    protected void OnPageSearchButton(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        SceneActions.SearchPage(pageSearchField.getText());
     }
 
     private String DecodeURL(String track_uri) {

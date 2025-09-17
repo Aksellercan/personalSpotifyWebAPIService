@@ -1,10 +1,10 @@
 package com.example.SpotifyWebAPI.WebRequest;
 
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
-import com.example.SpotifyWebAPI.Objects.Playlist;
-import com.example.SpotifyWebAPI.Objects.Track;
+import com.example.SpotifyWebAPI.Objects.Spotify.Playlist;
+import com.example.SpotifyWebAPI.Objects.Spotify.Track;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
-import com.example.SpotifyWebAPI.Objects.SpotifySession;
+import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
