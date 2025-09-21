@@ -22,7 +22,7 @@ public final class HTTPConnection {
      * @return  Returns the established http object
      * @throws IOException  Exception IOException will be thrown by url.openConnection() if there is an error when connecting
      */
-    public static HttpURLConnection connectHTTP(String requestURL, String postType, String... Headers) throws IOException{
+    public static HttpURLConnection connectHTTP(String requestURL, String postType, String... Headers) throws IOException {
         Logger.DEBUG.Log("requestURL: " + requestURL + "\n" + "postType: " + postType, false);
         Logger.DEBUG.Log("Headers: ", false);
         URL url = new URL(requestURL);

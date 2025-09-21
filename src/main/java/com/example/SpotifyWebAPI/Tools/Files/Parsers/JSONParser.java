@@ -173,10 +173,10 @@ public final class JSONParser extends Configuration {
     private static String PrintCorrectType(Token current) {
         if (current.getIsNumber() || current.getIsBoolean()) {
             // 2 spaces instead of tabs
-            return "  \"" + current.getKey() + "\"" + ": " + current.getValue();
+            return "\t\"" + current.getKey() + "\"" + ": " + current.getValue();
         }
         // 2 spaces instead of tabs
-        return "  \"" + current.getKey() + "\"" + ": \"" + current.getValue() + "\"";
+        return "\t\"" + current.getKey() + "\"" + ": \"" + current.getValue() + "\"";
     }
 
     /**

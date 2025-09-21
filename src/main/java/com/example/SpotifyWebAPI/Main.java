@@ -10,6 +10,8 @@ import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 
+import java.util.Arrays;
+
 /**
  * Main Class and starting point
  */

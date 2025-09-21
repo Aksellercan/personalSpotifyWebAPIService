@@ -43,16 +43,18 @@ public class AddItemController implements Initializable {
         User_Request userRequest = new User_Request();
         userRequest.addPlaylistItems(SpotifySession.getInstance().getPlaylist_id(), clientCredentialsRequest.getPlaylist().getTotalItems(), clientCredentialsRequest.getTrack().getId(), false);
         clientCredentialsRequest.getPlaylist(SpotifySession.getInstance().getPlaylist_id());
-        showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() + "\n" + clientCredentialsRequest.getPlaylist().getDescription() + "\nSize: " + clientCredentialsRequest.getPlaylist().getTotalItems());
+        showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() +
+                "\n" + clientCredentialsRequest.getPlaylist().getDescription() +
+                "\nSize: " + clientCredentialsRequest.getPlaylist().getTotalItems());
     }
 
     @FXML
     protected void OnPageSearchButton(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        SceneActions.SearchPage(pageSearchField.getText());
+        SceneActions.SearchTermSelector(pageSearchField, pageSearchField.getText());
     }
 
-    private String DecodeURL(String track_uri) {
+    private String ExtractURL(String track_uri) {
         if (track_uri.isEmpty()) return "";
         StringBuilder stringBuilder = new StringBuilder();
         boolean copy = false;
@@ -83,13 +85,14 @@ public class AddItemController implements Initializable {
             return;
         }
         if (searchTrackField.getText().contains("https://")) {
-            String decodedString = DecodeURL(searchTrackField.getText());
+            String decodedString = ExtractURL(searchTrackField.getText());
             Logger.INFO.Log("Decoded String: " + decodedString, false);
             clientCredentialsRequest.getTrackInformation(decodedString);
         } else {
             clientCredentialsRequest.getTrackInformation(searchTrackField.getText());
         }
-        foundTrackArea.setText("Found\n" + clientCredentialsRequest.getTrack().getName() + "\nby " + clientCredentialsRequest.getTrack().getArtist());
+        foundTrackArea.setText("Found\n" + clientCredentialsRequest.getTrack().getName() +
+                "\nby " + clientCredentialsRequest.getTrack().getArtist());
     }
 
     @Override
@@ -112,7 +115,9 @@ public class AddItemController implements Initializable {
         }
         if (SpotifySession.getInstance().getPlaylist_id() != null) {
             clientCredentialsRequest.getPlaylist(SpotifySession.getInstance().getPlaylist_id());
-            showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() + "\n" + clientCredentialsRequest.getPlaylist().getDescription() + "\nSize: " + clientCredentialsRequest.getPlaylist().getTotalItems());
+            showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() +
+                    "\n" + clientCredentialsRequest.getPlaylist().getDescription() +
+                    "\nSize: " + clientCredentialsRequest.getPlaylist().getTotalItems());
         }
     }
 }

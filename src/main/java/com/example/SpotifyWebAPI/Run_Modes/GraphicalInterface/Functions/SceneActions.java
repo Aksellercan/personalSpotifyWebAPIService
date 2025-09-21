@@ -8,12 +8,16 @@ import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import java.io.File;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Shared functions used by JavaFX Controllers
@@ -21,17 +25,25 @@ import java.util.Arrays;
 public final class SceneActions {
     private static Stage currentStage;
     private static String defaultStylesheet;
-    private static ArrayList<FileSearch> FXMLPages = new ArrayList<>();
+    private static final ArrayList<FileSearch> FXMLPages = new ArrayList<>();
 
     private SceneActions() {}
 
     public static void LoadPagesToArray() {
-        File getStyleSheet = new File(Scene.class.getResource("/Layouts/").getPath());
-        for (File addToArray : getStyleSheet.listFiles()) {
-            FXMLPages.add(new FileSearch(addToArray.getName(), addToArray.getPath()));
+        try {
+            URL getFolder = Scene.class.getResource("/Layouts/");
+            if (getFolder == null) throw new NullPointerException("Folder can't be read");
+            BufferedReader br = new BufferedReader(new InputStreamReader(getFolder.openStream()));
+            File getFilesInLayouts = new File(getFolder.getPath());
+            Logger.INFO.Log("Reading file contents...");
+            for (File addToArray : Objects.requireNonNull(getFilesInLayouts.listFiles())) {
+                FXMLPages.add(new FileSearch(addToArray.getName(), addToArray.getPath()));
+            }
+            removeExtension();
+            Logger.DEBUG.Log("File: " + FXMLPages.toString());
+        } catch (Exception e) {
+            Logger.ERROR.LogException(e, "Can't read pages");
         }
-        removeExtension();
-        Logger.DEBUG.Log("File: " + FXMLPages.toString());
     }
 
     private static void removeExtension() {
@@ -145,16 +157,52 @@ public final class SceneActions {
         }
     }
 
-    public static void SearchPage(String searchTerm) {
-        if (searchTerm.isEmpty()) return;
-        ChangeScene(SearchAlgorithm(searchTerm)[0]);
+    public static void SearchTermSelector(TextField pageSearchField, String searchTerm) {
+        List<String> returnedList = SearchAlgorithm(searchTerm);
+        AtomicInteger index = new AtomicInteger();
+        index.set(0);
+        if (returnedList.size() > 1) {
+            pageSearchField.setText(returnedList.size() + " results");
+        }
+        if (!returnedList.isEmpty()) {
+            pageSearchField.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+                switch (e.getCode()) {
+                    case UP:
+                        if (index.get() == returnedList.size()) index.set(0);
+                        if (index.get() == 0) break;
+                        index.set(index.get() - 1);
+                        break;
+                    case DOWN:
+                        if (index.get() == returnedList.size() - 1) break;
+                        index.set(index.get() + 1);
+                        break;
+                    case TAB:
+                        if (returnedList.size() == 1) {
+                            ChangeScene(returnedList.get(0));
+                            break;
+                        }
+                        ChangeScene(returnedList.get(index.get()));
+                        break;
+                }
+                pageSearchField.setText(returnedList.get(index.get()));
+                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList.get(index.get()));
+            });
+            pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, e -> {
+                Logger.INFO.Log("Closed event handler");
+            });
+            ClearSearch();
+        }
+    }
+
+    private static void ClearSearch() {
         for (FileSearch fileSearch : FXMLPages) {
             fileSearch.setCorrectChars(0);
         }
     }
 
-    private static String[] SearchAlgorithm(String searchTerm) {
+    private static List<String> SearchAlgorithm(String searchTerm) {
         searchTerm = searchTerm.toLowerCase();
+        List<String> results = new ArrayList<>();
         for (FileSearch files : FXMLPages) {
             String pages =  files.getFileName().toLowerCase();
             for (int i = 0; i < pages.length(); i++) {
@@ -165,16 +213,15 @@ public final class SceneActions {
                     break;
                 }
             }
-            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + "\nstring = " + files.toString());
+            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + ", File name: " + files.getFileName());
         }
-        int highestCorrectCount = 0;
         for (FileSearch file : FXMLPages) {
-            if (highestCorrectCount < file.getCorrectChars()) {
-                Logger.DEBUG.Log("Most likely contestant: " + file.getFileName());
-                return new String[] {file.getFileName()};
+            if (file.getCorrectChars() != 0) {
+                Logger.DEBUG.Log("found " + file.getFileName());
+                results.add(file.getFileName());
             }
-            highestCorrectCount = file.getCorrectChars();
         }
-        return new String[] {};
+        Logger.DEBUG.Log("Found " + results.size() + (results.size() > 1 ? " items" : " item"));
+        return results;
     }
 }

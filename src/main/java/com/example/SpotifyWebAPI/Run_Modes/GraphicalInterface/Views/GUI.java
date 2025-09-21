@@ -58,7 +58,7 @@ public class GUI extends Application {
             /*
             Sets the icon of the program, commented out because icon is not available
              */
-            primaryStage.getIcons().add(new Image("/Icons/appicon1.jpg"));
+            primaryStage.getIcons().add(new Image("/Icons/appicon.jpg"));
             SceneActions.SetDefaultStylesheet("PrimaryPage");
             SceneActions.SetCurrentStage(primaryStage);
             SceneActions.ChangeScene("PrimaryPage");
@@ -77,7 +77,7 @@ public class GUI extends Application {
     @FXML
     protected void OnPageSearchButton(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        SceneActions.SearchPage(pageSearchField.getText());
+        SceneActions.SearchTermSelector(pageSearchField, pageSearchField.getText());
     }
 
     @FXML

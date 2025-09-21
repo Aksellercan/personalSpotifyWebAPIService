@@ -34,7 +34,7 @@ public class WebviewController implements Initializable {
     @FXML
     protected void OnPageSearchButton(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        SceneActions.SearchPage(pageSearchField.getText());
+        SceneActions.SearchTermSelector(pageSearchField, pageSearchField.getText());
     }
 
     /**

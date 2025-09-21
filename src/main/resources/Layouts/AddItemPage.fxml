@@ -16,7 +16,7 @@
            <rowConstraints>
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
-           <Button mnemonicParsing="false" onAction="#OnPageSearchButton" text="Search" textAlignment="CENTER" GridPane.columnIndex="2">
+           <Button mnemonicParsing="false" text="Search" textAlignment="CENTER" GridPane.columnIndex="2">
               <font>
                   <Font size="11.0" />
               </font>
@@ -57,7 +57,7 @@
                <RowConstraints maxHeight="178.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES" />
                <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="283.0" vgrow="SOMETIMES" />
            </rowConstraints>
-           <TextField fx:id="searchTrackField" maxWidth="-Infinity" prefHeight="26.0" prefWidth="188.0" promptText="Search using Track_Uri">
+           <TextField fx:id="searchTrackField" maxWidth="-Infinity" onAction="#SearchItem" prefHeight="26.0" prefWidth="188.0" promptText="Search using Track_Uri">
               <font>
                   <Font size="11.0" />
               </font>
