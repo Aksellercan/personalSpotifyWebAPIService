@@ -186,7 +186,7 @@ public final class SceneActions {
     }
 
     /**
-     * Search handler, if there are more than 1 result it creates a event handler to choose one of the results. Up to go up the array, down to go down the array, Enter key to choose then change scene and Backspace key to clear search field then stop the event handler to start a new search
+     * Search handler, if there are more than 1 result it creates an event handler to choose one of the results. Up key to go up the array, Down key to go down the array, Enter key to choose and change scene and Backspace key to clear search field and stop the event handler
      * @param pageSearchField   JavaFX TextField object
      * @param searchTerm    Search term
      */
@@ -223,17 +223,18 @@ public final class SceneActions {
                                 Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList.get(index.get()));
                                 break;
                             case BACK_SPACE:
-                                Logger.DEBUG.Log("Backspace pressed, leaving handler...", false);
+                                Logger.DEBUG.Log("Backspace pressed, leaving handler...");
                                 pageSearchField.setText("");
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 return;
                             case ENTER:
                                 if (!ignoreFirstEnter.get()) {
-                                    Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList.get(index.get()));
+                                    Logger.DEBUG.Log("Chosen " + returnedList.get(index.get()));
                                     ChangeScene(returnedList.get(index.get()));
                                     pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 }
                                 if (returnedList.size() == 1) {
+                                    Logger.DEBUG.Log("Changing to " + returnedList.get(index.get()));
                                     ChangeScene(returnedList.get(0));
                                     pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 }
@@ -275,11 +276,9 @@ public final class SceneActions {
                 }
             }
             Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + ", File name: " + files.getFileName());
-        }
-        for (FileSearch file : FXMLPages) {
-            if (file.getCorrectChars() != 0) {
-                Logger.DEBUG.Log("found " + file.getFileName());
-                results.add(file.getFileName());
+            if (files.getCorrectChars() != 0) {
+                Logger.DEBUG.Log("found " + files.getFileName());
+                results.add(files.getFileName());
             }
         }
         Logger.DEBUG.Log("Found " + results.size() + (results.size() > 1 ? " items" : " item"));
