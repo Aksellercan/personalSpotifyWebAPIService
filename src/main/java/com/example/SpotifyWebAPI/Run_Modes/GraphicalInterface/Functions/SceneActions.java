@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -158,8 +159,14 @@ public final class SceneActions {
     }
 
     public static void SearchTermSelector(TextField pageSearchField, String searchTerm) {
+        if (searchTerm.isEmpty()) {
+            Logger.DEBUG.Log("Search field is empty", false);
+            return;
+        }
         List<String> returnedList = SearchAlgorithm(searchTerm);
         AtomicInteger index = new AtomicInteger();
+        AtomicBoolean ignoreFirstEnter = new AtomicBoolean();
+        ignoreFirstEnter.set(true);
         index.set(0);
         if (returnedList.size() > 1) {
             pageSearchField.setText(returnedList.size() + " results");
@@ -176,12 +183,11 @@ public final class SceneActions {
                         if (index.get() == returnedList.size() - 1) break;
                         index.set(index.get() + 1);
                         break;
-                    case TAB:
-                        if (returnedList.size() == 1) {
-                            ChangeScene(returnedList.get(0));
-                            break;
+                    case ENTER:
+                        if (!ignoreFirstEnter.get()) {
+                            ChangeScene(returnedList.get(index.get()));
                         }
-                        ChangeScene(returnedList.get(index.get()));
+                        ignoreFirstEnter.set(!ignoreFirstEnter.get());
                         break;
                 }
                 pageSearchField.setText(returnedList.get(index.get()));
