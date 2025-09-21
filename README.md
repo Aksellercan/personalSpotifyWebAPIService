@@ -8,24 +8,7 @@ This project provides a modular and extendable interface to Spotify’s Web API 
 
 ## Note
 
-Running JavaFX GUI requires JDK 24! Fortunately rest of the program can run using JDK 21.
-
-----------
-
-## Features
-
--   **OAuth2 Client Credentials and Refresh Token flow** for secure Spotify API access.
-    
--   **Playlist Management:** create, update, retrieve playlists.
-    
--   **Track Handling:** add songs, detect duplicates, and fetch playlist tracks with pagination support.
-    
--   **Config-driven:** all secrets and options are configurable via external config files.
-    
--   **Flexible Modes:** supports automated batch operations (AutoMode) and manual CLI or GUI interaction.
-    
--   **Comprehensive Logging:** file-based and console logs with multiple severity levels and debug mode.
-    
+Running JavaFX GUI requires JDK 24! Fortunately rest of the program can run using JDK 21. Will be downgraded to JDK 17 later for wider compatibility.
 
 ----------
 
@@ -38,6 +21,8 @@ Running JavaFX GUI requires JDK 24! Fortunately rest of the program can run usin
 -   Maven or Gradle for dependency management (if applicable)
     
 -   Spotify Developer account with registered app for `client_id`, `client_secret`, and necessary scopes
+
+-  Get your playlist_id and user_id like here: `https://open.spotify.com/playlist/**playlist_id**?si=user_id`
     
 ## Usage
 All Commands and their use
@@ -66,27 +51,9 @@ Other:
   --get-refresh-token <code> <redirect uri>     get refresh token
 ```
 
-## How to Automate
-
-1.  Get your playlist ID from the URL, for example:  
-    `https://open.spotify.com/playlist/**playlist_id**?si=user_id`
-    
-2.  Configure your service or cron job to run the program at set intervals:  
-    Recommended schedule — three times per day:
-    
-    -   12:00 PM
-        
-    -   6:00 PM
-        
-    -   12:00 AM
-        
-3.  Each run checks the playlist size and updates the description if needed. Six-hour gaps help avoid hitting Spotify API rate limits.
-
 ## Error Handling & Logging
 
 This project features a **custom logger** with multiple log levels: `INFO`, `WARN`, `ERROR`, `CRITICAL`, and `DEBUG`. Logs are timestamped and stored daily in `/Logs` directory with clear, human-readable messages.
-
-The logger helps track all critical operations, API responses, and error cases — invaluable for debugging and monitoring automated playlist updates.
 
 Logger Example Output:
 ```pgsql
@@ -116,5 +83,4 @@ Logger Example Output:
 ```
 ## Issues
 1. HTTP requests are single threaded and hold the program when switching scenes
-2. When changing scenes window is maximized window resolution will go back to 800x600
-3. UI cleanup
+2. UI cleanup
