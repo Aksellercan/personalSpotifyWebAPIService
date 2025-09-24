@@ -18,7 +18,7 @@ Running JavaFX GUI requires JDK 24! Fortunately rest of the program can run usin
 
 -   Java Development Kit (JDK) 24 or higher
     
--   Maven or Gradle for dependency management (if applicable)
+-   Maven
     
 -   Spotify Developer account with registered app for `client_id`, `client_secret`, and necessary scopes
 
@@ -83,4 +83,5 @@ Logger Example Output:
 ```
 ## Issues
 1. HTTP requests are single threaded and hold the program when switching scenes
+
 2. UI cleanup
