@@ -202,7 +202,7 @@ public final class SceneActions {
         ignoreFirstEnter.set(true);
         index.set(0);
         if (returnedList.size() > 1) {
-            pageSearchField.setText(returnedList.size() + " results");
+            pageSearchField.setText(returnedList.size() + " results - " + returnedList.get(0));
         }
         if (!returnedList.isEmpty()) {
             EventHandler<KeyEvent> handler = new EventHandler<KeyEvent>() {

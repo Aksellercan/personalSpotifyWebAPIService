@@ -18,6 +18,9 @@ public enum Logger {
     DEBUG(" [ DEBUG ] "),
     CRITICAL(" [ CRITICAL ] "),;
 
+    /**
+     * Severity level of log
+     */
     private final String severity;
     /**
      * Default set to false
@@ -304,21 +307,25 @@ public enum Logger {
      * @param fullMessage   Full formatted message that will be written to logfile
      */
     private void SaveLog(String fullMessage) {
-        try {
-            LocalDateTime today = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            String fileName = "log_" + today.format(formatter);
-            File logFile = getLogFile(fileName);
-            try (FileWriter writer = new FileWriter(logFile, true)) {
-                writer.write(fullMessage + "\n");
-            }
+        try (FileWriter writer = new FileWriter(getLogFile(generateFilename()), true)) {
+            writer.write(fullMessage + "\n");
         } catch (IOException e) {
-            LogException(e, "SaveLog(String fullMessage)");
+            CRITICAL.LogException(e, "Error while writing logs", false);
         }
     }
 
     /**
-     * Returns the logfile
+     * Generate filename in format: log_day-month-year.log
+     * @return  Generated filename
+     */
+    private String generateFilename() {
+        LocalDateTime today = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        return  "log_" + today.format(formatter);
+    }
+
+    /**
+     * Checks if log path is valid and if parameter filename exists. If the file does not exist then creates and returns it
      * @param fileName  logfile name
      * @return  return the found logfile
      * @throws IOException  If the file doesn't exist
