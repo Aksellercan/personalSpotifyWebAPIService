@@ -196,31 +196,31 @@ public final class SceneActions {
             Logger.DEBUG.Log("Search field is empty", false);
             return;
         }
-        List<String> returnedList = SearchAlgorithm(searchTerm);
+        String[] returnedList = SearchAlgorithm(searchTerm);
         AtomicInteger index = new AtomicInteger();
         AtomicBoolean ignoreFirstEnter = new AtomicBoolean();
         ignoreFirstEnter.set(true);
         index.set(0);
-        if (returnedList.size() > 1) {
-            pageSearchField.setText(returnedList.size() + " results - " + returnedList.get(0));
+        if (returnedList.length > 1) {
+            pageSearchField.setText(returnedList.length + " results - " + returnedList[0]);
         }
-        if (!returnedList.isEmpty()) {
+        if (returnedList.length != 0) {
             EventHandler<KeyEvent> handler = new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent keyEvent) {
                     switch (keyEvent.getCode()) {
                             case UP:
-                                if (index.get() == returnedList.size()) index.set(0);
+                                if (index.get() == returnedList.length) index.set(0);
                                 if (index.get() == 0) break;
                                 index.set(index.get() - 1);
-                                pageSearchField.setText(returnedList.get(index.get()));
-                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList.get(index.get()));
+                                pageSearchField.setText(returnedList[index.get()]);
+                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
                                 break;
                             case DOWN:
-                                if (index.get() == returnedList.size() - 1) break;
+                                if (index.get() == returnedList.length - 1) break;
                                 index.set(index.get() + 1);
-                                pageSearchField.setText(returnedList.get(index.get()));
-                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList.get(index.get()));
+                                pageSearchField.setText(returnedList[index.get()]);
+                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
                                 break;
                             case BACK_SPACE:
                                 Logger.DEBUG.Log("Backspace pressed, leaving handler...");
@@ -229,13 +229,13 @@ public final class SceneActions {
                                 return;
                             case ENTER:
                                 if (!ignoreFirstEnter.get()) {
-                                    Logger.DEBUG.Log("Chosen " + returnedList.get(index.get()));
-                                    ChangeScene(returnedList.get(index.get()));
+                                    Logger.DEBUG.Log("Chosen " + returnedList[index.get()]);
+                                    ChangeScene(returnedList[index.get()]);
                                     pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 }
-                                if (returnedList.size() == 1) {
-                                    Logger.DEBUG.Log("Changing to " + returnedList.get(index.get()));
-                                    ChangeScene(returnedList.get(0));
+                                if (returnedList.length == 1) {
+                                    Logger.DEBUG.Log("Changing to " + returnedList[index.get()]);
+                                    ChangeScene(returnedList[0]);
                                     pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 }
                                 ignoreFirstEnter.set(!ignoreFirstEnter.get());
@@ -260,11 +260,11 @@ public final class SceneActions {
     /**
      * Searches entered term in FileSearch type array by incrementing "correctChars" attribute for Strings that match the characters in search term
      * @param searchTerm    Search term
-     * @return  List of matching Files as Strings
+     * @return  String array of matching Files as Strings
      */
-    private static List<String> SearchAlgorithm(String searchTerm) {
+    private static String[] SearchAlgorithm(String searchTerm) {
         searchTerm = searchTerm.toLowerCase();
-        List<String> results = new ArrayList<>();
+        List<FileSearch> results = new ArrayList<>();
         for (FileSearch files : FXMLPages) {
             String pages =  files.getFileName().toLowerCase();
             for (int i = 0; i < pages.length(); i++) {
@@ -278,10 +278,38 @@ public final class SceneActions {
             Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + ", File name: " + files.getFileName());
             if (files.getCorrectChars() != 0) {
                 Logger.DEBUG.Log("found " + files.getFileName());
-                results.add(files.getFileName());
+                results.add(files);
             }
         }
+        if (results.size() == 2) {
+            FileSearch previous = null;
+            for (FileSearch found : results) {
+                if (previous != null) {
+                    if (previous.getCorrectChars() > found.getCorrectChars()) {
+                        Logger.DEBUG.Log("Most likely result: " + previous.getFileName());
+                        return new String[] { previous.getFileName() };
+                    } else if (previous.getCorrectChars() < found.getCorrectChars()){
+                        Logger.DEBUG.Log("Most likely result: " + found.getFileName());
+                        return new String[] { found.getFileName() };
+                    } else if (previous.getCorrectChars() == found.getCorrectChars()) {
+                        Logger.DEBUG.Log("Two most likely results: " + previous.getFileName() + " and " + found.getFileName());
+                        return new String[] { previous.getFileName(), found.getFileName() };
+                    }
+                } else {
+                    previous = found;
+                }
+            }
+        }
+        if (results.size() > 2) {
+            String[] returnArray = new String[results.size()];
+            int index = 0;
+            for (FileSearch file : results) {
+                returnArray[index] = file.getFileName();
+                index++;
+            }
+            return returnArray;
+        }
         Logger.DEBUG.Log("Found " + results.size() + (results.size() > 1 ? " items" : " item"));
-        return results;
+        return new String[] { results.get(0).getFileName() };
     }
 }
