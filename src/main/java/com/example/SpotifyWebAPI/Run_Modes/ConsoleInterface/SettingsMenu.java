@@ -1,6 +1,7 @@
 package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
+import com.example.SpotifyWebAPI.Tools.Files.Configuration;
 import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
@@ -134,7 +135,7 @@ public class SettingsMenu extends HelperFunctions {
                     }
                     break;
                 case "7":
-                    YAMLParser.MigrateToYAML();
+                    Configuration.MigrateToYAML();
                     break;
                 case "8":
                     System.out.println(ConsoleColours.YELLOW + "Saving Config..." + ConsoleColours.RESET);

@@ -5,6 +5,7 @@ import com.example.SpotifyWebAPI.Tools.Files.Objects.Token;
 import com.example.SpotifyWebAPI.Tools.Files.Configuration;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import java.io.*;
+import java.util.Objects;
 
 /**
  * YAMLParser inherits Configuration abstract class
@@ -39,21 +40,6 @@ public class YAMLParser extends Configuration implements Parsers {
     }
 
     /**
-     * Migrates configuration from "config.txt" to "config.yaml"
-     */
-    public static void MigrateToYAML() {
-        YAMLParser yamlParser = new YAMLParser();
-        tokenConfig = yamlParser.LoadKeys();
-        Logger.INFO.Log("Reading config...", false);
-        BasicParser basicParser = new BasicParser();
-        basicParser.ReadConfig();
-        ProgramOptions.setChangesSaved(false);
-        Logger.INFO.Log("Config read. Now writing it as YAML", false);
-        yamlParser.WriteConfig();
-        Logger.INFO.Log("Wrote config as YAML", false);
-    }
-
-    /**
      * Writes settings to configuration file. Skips if changes are already saved.
      */
     public void WriteConfig() {
@@ -65,10 +51,10 @@ public class YAMLParser extends Configuration implements Parsers {
                     if (!current.getCategoryType().isEmpty()) {
                         if (!lastCategory.equals(current.getCategoryType())) {
                             lastCategory = current.getCategoryType();
-                            fw.write("# " + current.getCategoryType() + "\n");
+                            fw.write( "# " + current.getCategoryType() + "\n");
                         }
                     }
-                    Logger.DEBUG.Log("Writing key: value " + current.getKey() + ": " + current.getValue());
+                    Logger.DEBUG.Log("Writing key: value " + current.getKey() + ": " + (current.isSensitiveInfo() ? "<SensitiveInfo>" : current.getValue()));
                     fw.write(current.getKey() + ": " + current.getValue() + "\n");
                 }
                 ProgramOptions.setChangesSaved(true);

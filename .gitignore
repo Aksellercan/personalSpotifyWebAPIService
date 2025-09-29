@@ -40,10 +40,10 @@ build/
 ### Mine ###
 .idea/
 .idea/*
-Config/
-Config/*
-Logs/
-Logs/*
+config/
+config/*
+logs/
+logs/*
 JavaDocs/
 JavaDocs/*
 

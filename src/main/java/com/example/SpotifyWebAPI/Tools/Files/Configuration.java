@@ -3,7 +3,9 @@ package com.example.SpotifyWebAPI.Tools.Files;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Files.Objects.Token;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.BasicParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +21,7 @@ public abstract class Configuration {
     /**
      * Configuration folder path
      */
-    private final File folderPath = new File("Config");
+    private final File folderPath = new File("config");
 
     /**
      * Specify keys to write when config file is not present (first time launch).
@@ -44,7 +46,6 @@ public abstract class Configuration {
         tokenConfig = new Token[keys.length];
         for (int i = 0; i < tokenConfig.length; i++) {
             tokenConfig[i] = new Token(keys[i]);
-            Logger.DEBUG.Log(tokenConfig[i].toString(), true);
         }
         return tokenConfig;
     }
@@ -56,12 +57,12 @@ public abstract class Configuration {
     protected void MapKeys(boolean update) {
         SpotifySession spotifySession = SpotifySession.getInstance();
         for (Token token : tokenConfig) {
-            Logger.DEBUG.Log("Current: " + token.toString());
             switch (token.getKey().replace("\t", "")) {
                 case "client_id":
                     if (update) {
                         token.setValue(spotifySession.getClient_id());
                         token.setCategoryType("User Details");
+                        token.setSensitiveInfo(true);
                         break;
                     }
                     spotifySession.setClient_id(token.getValue());
@@ -70,6 +71,7 @@ public abstract class Configuration {
                     if (update) {
                         token.setValue(spotifySession.getClient_secret());
                         token.setCategoryType("User Details");
+                        token.setSensitiveInfo(true);
                         break;
                     }
                     spotifySession.setClient_secret(token.getValue());
@@ -78,6 +80,7 @@ public abstract class Configuration {
                     if (update) {
                         token.setValue(spotifySession.getRefresh_token());
                         token.setCategoryType("User Details");
+                        token.setSensitiveInfo(true);
                         break;
                     }
                     spotifySession.setRefresh_token(token.getValue());
@@ -86,6 +89,7 @@ public abstract class Configuration {
                     if (update) {
                         token.setValue(spotifySession.getUser_id());
                         token.setCategoryType("User Details");
+                        token.setSensitiveInfo(true);
                         break;
                     }
                     spotifySession.setUser_id(token.getValue());
@@ -94,6 +98,7 @@ public abstract class Configuration {
                     if (update) {
                         token.setValue(spotifySession.getRedirect_uri());
                         token.setCategoryType("User Details");
+                        token.setSensitiveInfo(true);
                         break;
                     }
                     spotifySession.setRedirect_uri(token.getValue());
@@ -102,6 +107,7 @@ public abstract class Configuration {
                     if (update) {
                         token.setValue(spotifySession.getPlaylist_id());
                         token.setCategoryType("User Details");
+                        token.setSensitiveInfo(true);
                         break;
                     }
                     spotifySession.setPlaylist_id(token.getValue());
@@ -169,6 +175,21 @@ public abstract class Configuration {
     }
 
     /**
+     * Migrates configuration from "config.txt" to "config.yaml"
+     */
+    public static void MigrateToYAML() {
+        YAMLParser yamlParser = new YAMLParser();
+        tokenConfig = yamlParser.LoadKeys();
+        Logger.INFO.Log("Reading config...", false);
+        BasicParser basicParser = new BasicParser();
+        basicParser.ReadConfig();
+        ProgramOptions.setChangesSaved(false);
+        Logger.INFO.Log("Config read. Now writing it as YAML", false);
+        yamlParser.WriteConfig();
+        Logger.INFO.Log("Wrote config as YAML", false);
+    }
+
+    /**
      * Find and set Token value, additionally mark it as seen to avoid duplicates
      * @param key   Key to modify
      * @param value Token value
@@ -216,7 +237,6 @@ public abstract class Configuration {
      */
     private boolean BooleanParse(String value, boolean returnValue) {
         value = value.replace(" ", "");
-        Logger.DEBUG.Log("value=" + value);
         if (value.equals("true") || value.equals("false")) {
             return value.equals("true");
         }

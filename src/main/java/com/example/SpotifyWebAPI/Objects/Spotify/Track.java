@@ -70,9 +70,25 @@ public class Track {
         this.id = id;
     }
 
+    public String PopularitytoString() {
+        if (this.popularity < 25) {
+            return "Unpopular";
+        }
+        if (this.popularity < 50) {
+            return "Somewhat Popular";
+        }
+        if (this.popularity < 75) {
+            return "Quite Popular";
+        }
+        if (this.popularity < 100) {
+            return "Extremely Popular";
+        }
+        return "No Data";
+    }
+
     @Override
     public String toString() {
-        return "Track name: " + name + " by: " + artist + ". Ranking: " + (popularity > 50 ? "Popular" : "Fairly Popular") +
+        return "Track name: " + name + " by: " + artist + ". Ranking: " + PopularitytoString() + " (" + this.popularity + ")" +
                 ", Track number: " + trackNumber + ", Id: " + id + " and Type: " + type;
     }
 }

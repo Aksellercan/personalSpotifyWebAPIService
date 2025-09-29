@@ -331,7 +331,7 @@ public enum Logger {
      * @throws IOException  If the file doesn't exist
      */
     private File getLogFile(String fileName) throws IOException {
-        File logPath = new File("Logs");
+        File logPath = new File("logs");
         if (!logPath.exists()) {
             boolean createDir = logPath.mkdirs();
             if (!createDir) {

@@ -6,6 +6,7 @@ public class Token {
     private boolean isNumber;
     private boolean isBoolean;
     private boolean seen = false;
+    private boolean sensitiveInfo = false;
     private String categoryType = "";
 
     public Token(String key, String value) {
@@ -45,6 +46,10 @@ public class Token {
         return this.seen;
     }
 
+    public boolean isSensitiveInfo() {
+        return this.sensitiveInfo;
+    }
+
     public String getCategoryType() {
         return this.categoryType;
     }
@@ -70,12 +75,18 @@ public class Token {
         this.seen = true;
     }
 
+    public void setSensitiveInfo(boolean sensitiveInfo) {
+        this.sensitiveInfo = sensitiveInfo;
+    }
+
     public void setCategoryType(String categoryType) {
         this.categoryType = categoryType;
     }
 
     @Override
     public String toString() {
-        return "Key: " + this.key + ", Value: " + this.value + ". States: isBoolean: " + this.isBoolean + ", isNumber: " + this.isNumber + ". Seen: " + (seen ? "yes" : "no") + (categoryType.isEmpty() ? "." : ", Category: " + categoryType);
+        return "Key: " + this.key + ", Value: " + this.value + ". States: isBoolean: " +
+                this.isBoolean + ", isNumber: " + this.isNumber + ". Seen: " + (this.seen ? "yes" : "no") + ", " +
+                "Sensitive Info: " + (this.isSensitiveInfo() ? "yes" : "no") + (categoryType.isEmpty() ? "." : ", Category: " + categoryType);
     }
 }
