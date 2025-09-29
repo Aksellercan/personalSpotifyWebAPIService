@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.Tools.Files;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Files.Objects.Token;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import java.io.File;
 import java.io.IOException;
@@ -18,12 +19,13 @@ public abstract class Configuration {
     /**
      * Configuration folder path
      */
-    private static final File folderPath = new File("Config");
+    private final File folderPath = new File("Config");
+
     /**
      * Specify keys to write when config file is not present (first time launch).
      * Add Entries here to be loaded when config file is non-existent or empty
      */
-    protected static Token[] LoadKeys() {
+    protected Token[] LoadKeys() {
         String[] keys = {
                 "client_id",
                 "client_secret",
@@ -36,11 +38,12 @@ public abstract class Configuration {
                 "output_debug",
                 "coloured_output",
                 "enable_stack_traces",
-                "verbose_log_file"
+                "verbose_log_file",
+                "use_formatting"
         };
         tokenConfig = new Token[keys.length];
         for (int i = 0; i < tokenConfig.length; i++) {
-            tokenConfig[i] = new Token(keys[i], "");
+            tokenConfig[i] = new Token(keys[i]);
             Logger.DEBUG.Log(tokenConfig[i].toString(), true);
         }
         return tokenConfig;
@@ -50,7 +53,7 @@ public abstract class Configuration {
      * Map current values with token array to be written or set values using tokenConfig array
      * Add new entries here, with update and normal behaviour
      */
-    protected static void MapKeys(boolean update) {
+    protected void MapKeys(boolean update) {
         SpotifySession spotifySession = SpotifySession.getInstance();
         for (Token token : tokenConfig) {
             Logger.DEBUG.Log("Current: " + token.toString());
@@ -151,6 +154,14 @@ public abstract class Configuration {
                     }
                     Logger.setColouredOutput(BooleanParse(token.getValue(), false));
                     break;
+                case "use_formatting":
+                    if (update) {
+                        token.setValue(String.valueOf(JSONParser.getUseFormatting()));
+                        token.setCategoryType("JSON Options");
+                        break;
+                    }
+                    JSONParser.setUseFormatting(BooleanParse(token.getValue(), true));
+                    break;
                 default:
                     Logger.WARN.LogSilently("Key \"" + token.getKey() + "\" is invalid");
             }
@@ -162,7 +173,7 @@ public abstract class Configuration {
      * @param key   Key to modify
      * @param value Token value
      */
-    protected static void FindAndSetToken(String key, String value) {
+    protected void FindAndSetToken(String key, String value) {
         for (Token token : tokenConfig) {
             if (!token.isSeen() && token.getKey().equals(key)) {
                 token.setValue(value);
@@ -178,7 +189,7 @@ public abstract class Configuration {
      * @return  Full path of the file
      * @throws IOException  If creating folder fails throws IOException
      */
-    protected static File MkDirs(String fileNameWithExtension) throws IOException {
+    protected File MkDirs(String fileNameWithExtension) throws IOException {
         if (!folderPath.exists()) {
             boolean status = folderPath.mkdir();
             if (status) {
@@ -203,7 +214,7 @@ public abstract class Configuration {
      * @param returnValue   Default return value if string is invalid
      * @return  default value or boolean parsed
      */
-    private static boolean BooleanParse(String value, boolean returnValue) {
+    private boolean BooleanParse(String value, boolean returnValue) {
         value = value.replace(" ", "");
         Logger.DEBUG.Log("value=" + value);
         if (value.equals("true") || value.equals("false")) {

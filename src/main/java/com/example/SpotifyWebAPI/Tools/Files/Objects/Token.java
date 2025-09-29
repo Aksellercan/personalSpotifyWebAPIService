@@ -13,6 +13,11 @@ public class Token {
         this.value = value;
     }
 
+    public Token(String key) {
+        this.key = key;
+        this.value = "";
+    }
+
     //getters
     public String getKey() {
         return this.key;

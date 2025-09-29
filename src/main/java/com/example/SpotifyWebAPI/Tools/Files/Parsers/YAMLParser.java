@@ -9,22 +9,17 @@ import java.io.*;
 /**
  * YAMLParser inherits Configuration abstract class
  */
-public final class YAMLParser extends Configuration {
-
-    /**
-     * Private Constructor
-     */
-    private YAMLParser() {}
-
+public class YAMLParser extends Configuration implements Parsers {
     /**
      * Reads configuration file and applies settings for runtime
      */
     public static void ReadConfigAndMap() {
         try {
+            YAMLParser yamlParser = new YAMLParser();
             Logger.INFO.Log("Using YAML Reader, with no token type checker");
-            tokenConfig = LoadKeys();
-            ReadConfig();
-            MapKeys(tokenConfig.length == 0);
+            tokenConfig = yamlParser.LoadKeys();
+            yamlParser.ReadConfig();
+            yamlParser.MapKeys(tokenConfig.length == 0);
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Unable to read configuration");
         }
@@ -35,8 +30,9 @@ public final class YAMLParser extends Configuration {
      */
     public static void MapAndWriteConfig() {
         try {
-            MapKeys(true);
-            WriteConfig();
+            YAMLParser yamlParser = new YAMLParser();
+            yamlParser.MapKeys(true);
+            yamlParser.WriteConfig();
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Unable to write configuration to file");
         }
@@ -46,19 +42,21 @@ public final class YAMLParser extends Configuration {
      * Migrates configuration from "config.txt" to "config.yaml"
      */
     public static void MigrateToYAML() {
-        tokenConfig = LoadKeys();
+        YAMLParser yamlParser = new YAMLParser();
+        tokenConfig = yamlParser.LoadKeys();
         Logger.INFO.Log("Reading config...", false);
-        OldConfigReader();
+        BasicParser basicParser = new BasicParser();
+        basicParser.ReadConfig();
         ProgramOptions.setChangesSaved(false);
         Logger.INFO.Log("Config read. Now writing it as YAML", false);
-        WriteConfig();
+        yamlParser.WriteConfig();
         Logger.INFO.Log("Wrote config as YAML", false);
     }
 
     /**
      * Writes settings to configuration file. Skips if changes are already saved.
      */
-    private static void WriteConfig() {
+    public void WriteConfig() {
         if (!ProgramOptions.isChangesSaved()) {
             Logger.WARN.Log("Changes are not saved yet.");
             String lastCategory = "";
@@ -86,7 +84,7 @@ public final class YAMLParser extends Configuration {
     /**
      * Reads configuration file and saves it to tokenConfig array
      */
-    private static void ReadConfig() {
+    public void ReadConfig() {
         int lineCount = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(MkDirs("config.yaml")))) {
             String line;
@@ -105,30 +103,6 @@ public final class YAMLParser extends Configuration {
             }
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Failed to read configuration");
-        }
-    }
-
-    /**
-     * Reads the old config
-     */
-    private static void OldConfigReader() {
-        int lineNumber = 0;
-        int tokenNumber = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(MkDirs("config.txt")))) {
-            String line;
-            String[] splitLine;
-            while ((line = reader.readLine()) != null) {
-                lineNumber++;
-                splitLine = line.split("=", 2);
-                if (splitLine.length == 2) {
-                    tokenConfig[tokenNumber] = new Token(splitLine[0].trim(), splitLine[1].trim());
-                    tokenNumber++;
-                } else {
-                    Logger.WARN.LogSilently("Invalid line at " + lineNumber + ": \"" + line + "\", expected format: \"key=value\". Continue reading the file.");
-                }
-            }
-        } catch (IOException e) {
-            Logger.ERROR.LogExceptionSilently(e, "OldConfigReader()");
         }
     }
 }
