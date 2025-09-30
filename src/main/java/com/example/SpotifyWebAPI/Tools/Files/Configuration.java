@@ -41,7 +41,8 @@ public abstract class Configuration {
                 "coloured_output",
                 "enable_stack_traces",
                 "verbose_log_file",
-                "use_formatting"
+                "use_formatting",
+                "playlist_limit"
         };
         tokenConfig = new Token[keys.length];
         for (int i = 0; i < tokenConfig.length; i++) {
@@ -135,6 +136,14 @@ public abstract class Configuration {
                         break;
                     }
                     Logger.setEnableStackTraces(BooleanParse(token.getValue(), false));
+                    break;
+                case "playlist_limit":
+                    if (update) {
+                        token.setValue(String.valueOf(ProgramOptions.getPlaylist_limit()));
+                        token.setCategoryType("Program Options");
+                        break;
+                    }
+                    ProgramOptions.setPlaylist_limit(Integer.parseInt(token.getValue()));
                     break;
                 case "launch_gui":
                     if (update) {

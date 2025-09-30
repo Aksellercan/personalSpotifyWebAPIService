@@ -197,6 +197,7 @@ public final class SceneActions {
             return;
         }
         String[] returnedList = SearchAlgorithm(searchTerm);
+        Logger.DEBUG.Log("Return array size: " + returnedList.length, true);
         AtomicInteger index = new AtomicInteger();
         AtomicBoolean ignoreFirstEnter = new AtomicBoolean();
         ignoreFirstEnter.set(true);

@@ -44,10 +44,10 @@ public class AutoMode {
             } else {
                 readDescCount = Integer.parseInt(stringDescCount);
             }
-            if (playlistSize == 120) {
+            if (playlistSize == ProgramOptions.getPlaylist_limit()) {
                 String prevPlaylistName = clientCredentialsRequest.getPlaylist().getName();
                 int nextNumber = nextNumber(prevPlaylistName);
-                userRequest.createPlaylist(spotify_session.getUser_id(), "Favorites " + nextNumber, "0/120");
+                userRequest.createPlaylist(spotify_session.getUser_id(), "Favorites " + nextNumber, "0/" + ProgramOptions.getPlaylist_limit());
                 Logger.INFO.Log("New playlist created with playlist_id: " + spotify_session.getPlaylist_id() + " and Name: " + "Favorites " + nextNumber);
                 ProgramOptions.setAutoMode(false);
                 YAMLParser.MapAndWriteConfig();
@@ -59,7 +59,7 @@ public class AutoMode {
             }
             Logger.INFO.Log("Playlist size: " + playlistSize);
             // Set the playlist description
-            userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getPlaylist().getName(),playlistSize + "/120",true,false);
+            userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getPlaylist().getName(),playlistSize + "/" + ProgramOptions.getPlaylist_limit(),true,false);
             Logger.INFO.Log("Completed the automated run");
         } catch (Exception e) {
             Logger.ERROR.LogException(e,"Auto Mode");
