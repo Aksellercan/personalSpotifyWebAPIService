@@ -101,6 +101,7 @@ public class Main {
                 Logger.DEBUG.Log("debug_output: " + Logger.getDebugOutput(), false);
                 Logger.DEBUG.Log("coloured_output: " + Logger.getColouredOutput(), false);
                 Logger.DEBUG.Log("enable_stack_traces: " + Logger.getEnableStackTraces(), false);
+                Logger.DEBUG.Log("playlist_limit: " + ProgramOptions.getPlaylist_limit(), false);
                 return;
             case "--gui":
                 GUI.launch(GUI.class, args);

@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,7 +39,8 @@ public final class SceneActions {
      */
     private static final ArrayList<FileSearch> FXMLPages = new ArrayList<>();
 
-    private SceneActions() {}
+    private SceneActions() {
+    }
 
     /**
      * Searches inside Resources/Layouts for fxml files and puts it in List
@@ -83,7 +85,8 @@ public final class SceneActions {
 
     /**
      * Gets current stage
-     * @return  current stage
+     *
+     * @return current stage
      */
     public static Stage GetCurrentStage() {
         return currentStage;
@@ -91,6 +94,7 @@ public final class SceneActions {
 
     /**
      * Set Stage object
+     *
      * @param stage JavaFX Stage Object
      */
     public static void SetCurrentStage(Stage stage) {
@@ -99,7 +103,8 @@ public final class SceneActions {
 
     /**
      * Set stylesheet to use for every Scene
-     * @param stylesheet    Stylesheet filename
+     *
+     * @param stylesheet Stylesheet filename
      */
     public static void SetDefaultStylesheet(String stylesheet) {
         defaultStylesheet = stylesheet;
@@ -107,10 +112,11 @@ public final class SceneActions {
 
     /**
      * Change Scene with just FXML filename. Uses default stylesheet.
+     *
      * @param sceneName FXML filename
      */
     public static void ChangeScene(String sceneName) {
-        if (defaultStylesheet == null){
+        if (defaultStylesheet == null) {
             Logger.ERROR.Log("Default Stylesheet not set!");
             return;
         }
@@ -119,8 +125,9 @@ public final class SceneActions {
 
     /**
      * Change Scene
-     * @param sceneName FXML filename
-     * @param sceneStylesheet   Stylesheet filename
+     *
+     * @param sceneName       FXML filename
+     * @param sceneStylesheet Stylesheet filename
      */
     public static void ChangeScene(String sceneName, String sceneStylesheet) {
         try {
@@ -143,8 +150,9 @@ public final class SceneActions {
 
     /**
      * Sets stylesheet for the scene
-     * @param scene Scene to apply stylesheet for
-     * @param styleSheetName    Name of the stylesheet
+     *
+     * @param scene          Scene to apply stylesheet for
+     * @param styleSheetName Name of the stylesheet
      */
     public static void setStyleSheet(Scene scene, String styleSheetName) throws NullPointerException {
         URL getStyleSheet = Scene.class.getResource("/Styles/" + styleSheetName + ".css");
@@ -156,8 +164,9 @@ public final class SceneActions {
 
     /**
      * Sets FXML file for a scene
-     * @param fxmlFilename  FXML File name
-     * @return  Loaded FXML file as Parent object, if it fails to find file returns null
+     *
+     * @param fxmlFilename FXML File name
+     * @return Loaded FXML file as Parent object, if it fails to find file returns null
      */
     public static Parent setFXMLFile(String fxmlFilename) throws Exception {
         URL getFXML = Scene.class.getResource("/Layouts/" + fxmlFilename + ".fxml");
@@ -169,7 +178,8 @@ public final class SceneActions {
 
     /**
      * Stops the background HTTP server thread by changing volatile boolean and interrupting thread
-     * @return  success as boolean
+     *
+     * @return success as boolean
      */
     public static boolean StopBackgroundHTTPThread() {
         try {
@@ -187,8 +197,9 @@ public final class SceneActions {
 
     /**
      * Search handler, if there are more than 1 result it creates an event handler to choose one of the results. Up key to go up the array, Down key to go down the array, Enter key to choose and change scene and Backspace key to clear search field and stop the event handler
-     * @param pageSearchField   JavaFX TextField object
-     * @param searchTerm    Search term
+     *
+     * @param pageSearchField JavaFX TextField object
+     * @param searchTerm      Search term
      */
     public static void SearchTermSelector(TextField pageSearchField, String searchTerm) {
         Logger.DEBUG.Log("Enter search handler");
@@ -210,41 +221,43 @@ public final class SceneActions {
                 @Override
                 public void handle(KeyEvent keyEvent) {
                     switch (keyEvent.getCode()) {
-                            case UP:
-                                if (index.get() == returnedList.length) index.set(0);
-                                if (index.get() == 0) break;
-                                index.set(index.get() - 1);
-                                pageSearchField.setText(returnedList[index.get()]);
-                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
-                                break;
-                            case DOWN:
-                                if (index.get() == returnedList.length - 1) break;
-                                index.set(index.get() + 1);
-                                pageSearchField.setText(returnedList[index.get()]);
-                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
-                                break;
-                            case BACK_SPACE:
-                                Logger.DEBUG.Log("Backspace pressed, leaving handler...");
-                                pageSearchField.setText("");
+                        case UP:
+                            if (index.get() == returnedList.length) index.set(0);
+                            if (index.get() == 0) break;
+                            index.set(index.get() - 1);
+                            pageSearchField.setText(returnedList[index.get()]);
+                            Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
+                            break;
+                        case DOWN:
+                            if (index.get() == returnedList.length - 1) break;
+                            index.set(index.get() + 1);
+                            pageSearchField.setText(returnedList[index.get()]);
+                            Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
+                            break;
+                        case BACK_SPACE:
+                            Logger.DEBUG.Log("Backspace pressed, leaving handler...");
+                            pageSearchField.setText("");
+                            pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                            return;
+                        case ENTER:
+                            Logger.DEBUG.Log("Enter pressed, leaving handler...");
+                            if (!ignoreFirstEnter.get()) {
+                                Logger.DEBUG.Log("Chosen " + returnedList[index.get()]);
+                                ChangeScene(returnedList[index.get()]);
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                                return;
-                            case ENTER:
-                                if (!ignoreFirstEnter.get()) {
-                                    Logger.DEBUG.Log("Chosen " + returnedList[index.get()]);
-                                    ChangeScene(returnedList[index.get()]);
-                                    pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                                }
-                                if (returnedList.length == 1) {
-                                    Logger.DEBUG.Log("Changing to " + returnedList[index.get()]);
-                                    ChangeScene(returnedList[0]);
-                                    pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                                }
-                                ignoreFirstEnter.set(!ignoreFirstEnter.get());
+                            }
+                            if (returnedList.length == 1) {
+                                Logger.DEBUG.Log("Changing to " + returnedList[index.get()]);
+                                ChangeScene(returnedList[0]);
+                                pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                            }
+                            ignoreFirstEnter.set(!ignoreFirstEnter.get());
                     }
+                    ClearSearch();
                 }
             };
             pageSearchField.addEventHandler(KeyEvent.KEY_PRESSED, handler);
-            ClearSearch();
+//            ClearSearch();
         }
     }
 
@@ -260,18 +273,19 @@ public final class SceneActions {
 
     /**
      * Searches entered term in FileSearch type array by incrementing "correctChars" attribute for Strings that match the characters in search term
-     * @param searchTerm    Search term
-     * @return  String array of matching Files as Strings
+     *
+     * @param searchTerm Search term
+     * @return String array of matching Files as Strings
      */
     private static String[] SearchAlgorithm(String searchTerm) {
         searchTerm = searchTerm.toLowerCase();
         List<FileSearch> results = new ArrayList<>();
         for (FileSearch files : FXMLPages) {
-            String pages =  files.getFileName().toLowerCase();
+            String pages = files.getFileName().toLowerCase();
             for (int i = 0; i < pages.length(); i++) {
                 if (i == searchTerm.length()) break;
                 if (searchTerm.charAt(i) == pages.charAt(i)) {
-                    files.setCorrectChars(files.getCorrectChars()+1);
+                    files.setCorrectChars(files.getCorrectChars() + 1);
                 } else {
                     break;
                 }
@@ -288,13 +302,13 @@ public final class SceneActions {
                 if (previous != null) {
                     if (previous.getCorrectChars() > found.getCorrectChars()) {
                         Logger.DEBUG.Log("Most likely result: " + previous.getFileName());
-                        return new String[] { previous.getFileName() };
-                    } else if (previous.getCorrectChars() < found.getCorrectChars()){
+                        return new String[]{previous.getFileName()};
+                    } else if (previous.getCorrectChars() < found.getCorrectChars()) {
                         Logger.DEBUG.Log("Most likely result: " + found.getFileName());
-                        return new String[] { found.getFileName() };
+                        return new String[]{found.getFileName()};
                     } else if (previous.getCorrectChars() == found.getCorrectChars()) {
                         Logger.DEBUG.Log("Two most likely results: " + previous.getFileName() + " and " + found.getFileName());
-                        return new String[] { previous.getFileName(), found.getFileName() };
+                        return new String[]{previous.getFileName(), found.getFileName()};
                     }
                 } else {
                     previous = found;
@@ -311,6 +325,6 @@ public final class SceneActions {
             return returnArray;
         }
         Logger.DEBUG.Log("Found " + results.size() + (results.size() > 1 ? " items" : " item"));
-        return new String[] { results.get(0).getFileName() };
+        return new String[]{results.get(0).getFileName()};
     }
 }

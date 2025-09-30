@@ -37,12 +37,12 @@ public abstract class Configuration {
                 "refresh_token",
                 "auto_mode",
                 "launch_gui",
+                "playlist_limit",
                 "output_debug",
                 "coloured_output",
                 "enable_stack_traces",
                 "verbose_log_file",
-                "use_formatting",
-                "playlist_limit"
+                "use_formatting"
         };
         tokenConfig = new Token[keys.length];
         for (int i = 0; i < tokenConfig.length; i++) {
@@ -143,6 +143,7 @@ public abstract class Configuration {
                         token.setCategoryType("Program Options");
                         break;
                     }
+                    if (token.getValue().isEmpty()) token.setValue(String.valueOf(ProgramOptions.getPlaylist_limit()));
                     ProgramOptions.setPlaylist_limit(Integer.parseInt(token.getValue()));
                     break;
                 case "launch_gui":

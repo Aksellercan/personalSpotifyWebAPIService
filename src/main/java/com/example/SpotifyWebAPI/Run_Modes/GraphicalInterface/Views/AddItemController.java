@@ -107,7 +107,7 @@ public class AddItemController implements Initializable {
             System.exit(1);
         });
         if (SpotifySession.getInstance().getAccess_token() == null) {
-            Logger.INFO.Log((SpotifySession.getInstance().getRefresh_token() == null ? "Refresh token is null" : "All ok") + ".");
+            Logger.INFO.Log((SpotifySession.getInstance().getRefresh_token() == null ? "Refresh token is null." : "All OK!"));
             if (SpotifySession.getInstance().getRefresh_token() != null) {
                 User_Access_Token userAccessToken = new User_Access_Token();
                 userAccessToken.refresh_token_with_User_Token();

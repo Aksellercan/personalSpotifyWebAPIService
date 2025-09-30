@@ -46,12 +46,14 @@ public class YAMLParser extends Configuration implements Parsers {
         if (!ProgramOptions.isChangesSaved()) {
             Logger.WARN.Log("Changes are not saved yet.");
             String lastCategory = "";
+            int count = 0;
             try (FileWriter fw = new FileWriter(MkDirs("config.yaml"), false)) {
                 for (Token current : tokenConfig) {
                     if (!current.getCategoryType().isEmpty()) {
                         if (!lastCategory.equals(current.getCategoryType())) {
                             lastCategory = current.getCategoryType();
-                            fw.write( "# " + current.getCategoryType() + "\n");
+                            fw.write((count > 0 ? "\n" : "") + "# " + current.getCategoryType() + "\n");
+                            count++;
                         }
                     }
                     Logger.DEBUG.Log("Writing key: value " + current.getKey() + ": " + (current.isSensitiveInfo() ? "<SensitiveInfo>" : current.getValue()));
@@ -77,7 +79,7 @@ public class YAMLParser extends Configuration implements Parsers {
             String[] splitLine;
             while ((line = br.readLine()) != null) {
                 lineCount++;
-                if (line.startsWith("#")) {
+                if (line.startsWith("#") || line.isEmpty()) {
                     continue;
                 }
                 splitLine = line.split(":", 2);
