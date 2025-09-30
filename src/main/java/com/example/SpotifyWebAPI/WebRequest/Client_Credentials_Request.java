@@ -51,6 +51,8 @@ public class Client_Credentials_Request {
             String Bearer = "Bearer " + spotifySession.getAccess_token();
             HttpURLConnection http = HTTPConnection.connectHTTP(postURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
+            //TODO *Improve* status code 400 error handling
+            if (http.getResponseCode() == 400) throw new NullPointerException("Request returned 400 for track_uri: " + track_uri);
             JsonNode node = mapper.readTree(http.getInputStream());
             track = new Track(node.get("name").asText(), node.get("id").asText());
             track.setTrackNumber(node.get("track_number").asInt());
