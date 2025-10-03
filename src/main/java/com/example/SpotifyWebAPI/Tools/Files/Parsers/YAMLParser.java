@@ -5,7 +5,6 @@ import com.example.SpotifyWebAPI.Tools.Files.Objects.Token;
 import com.example.SpotifyWebAPI.Tools.Files.Configuration;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import java.io.*;
-import java.util.Objects;
 
 /**
  * YAMLParser inherits Configuration abstract class

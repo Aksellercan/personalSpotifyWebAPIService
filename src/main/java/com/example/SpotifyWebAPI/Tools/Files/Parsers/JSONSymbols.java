@@ -22,7 +22,7 @@ public enum JSONSymbols {
 
     public boolean equals(char symbol) {
         if (this.symbol == symbol)
-        Logger.DEBUG.Log(this.symbol + " vs " + symbol + " = " + true);
+            Logger.DEBUG.Log(this.symbol + " vs " + symbol + " = " + true);
         return this.symbol == symbol;
     }
 }

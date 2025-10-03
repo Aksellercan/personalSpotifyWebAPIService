@@ -96,7 +96,7 @@ public class JSONParser extends Configuration implements Parsers {
             }
             fw.write("}");
         } catch (IOException e) {
-            Logger.ERROR.LogException(e, "IO error");
+            Logger.ERROR.LogException(e, "I/O error");
         }
     }
 

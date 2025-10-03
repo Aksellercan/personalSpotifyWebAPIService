@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -208,7 +207,7 @@ public final class SceneActions {
             return;
         }
         String[] returnedList = SearchAlgorithm(searchTerm);
-        Logger.DEBUG.Log("Return array size: " + returnedList.length, true);
+        Logger.DEBUG.Log("Found " + returnedList.length + (returnedList.length > 1 ? " items" : " item"));
         AtomicInteger index = new AtomicInteger();
         AtomicBoolean ignoreFirstEnter = new AtomicBoolean();
         ignoreFirstEnter.set(true);
@@ -238,6 +237,7 @@ public final class SceneActions {
                             Logger.DEBUG.Log("Backspace pressed, leaving handler...");
                             pageSearchField.setText("");
                             pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                            ClearSearch();
                             return;
                         case ENTER:
                             Logger.DEBUG.Log("Enter pressed, leaving handler...");
@@ -245,19 +245,19 @@ public final class SceneActions {
                                 Logger.DEBUG.Log("Chosen " + returnedList[index.get()]);
                                 ChangeScene(returnedList[index.get()]);
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                                ClearSearch();
                             }
                             if (returnedList.length == 1) {
                                 Logger.DEBUG.Log("Changing to " + returnedList[index.get()]);
                                 ChangeScene(returnedList[0]);
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                                ClearSearch();
                             }
                             ignoreFirstEnter.set(!ignoreFirstEnter.get());
                     }
-                    ClearSearch();
                 }
             };
             pageSearchField.addEventHandler(KeyEvent.KEY_PRESSED, handler);
-//            ClearSearch();
         }
     }
 
@@ -300,16 +300,13 @@ public final class SceneActions {
             FileSearch previous = null;
             for (FileSearch found : results) {
                 if (previous != null) {
-                    if (previous.getCorrectChars() > found.getCorrectChars()) {
-                        Logger.DEBUG.Log("Most likely result: " + previous.getFileName());
-                        return new String[]{previous.getFileName()};
-                    } else if (previous.getCorrectChars() < found.getCorrectChars()) {
-                        Logger.DEBUG.Log("Most likely result: " + found.getFileName());
-                        return new String[]{found.getFileName()};
-                    } else if (previous.getCorrectChars() == found.getCorrectChars()) {
+                    if (previous.getCorrectChars() == found.getCorrectChars()) {
                         Logger.DEBUG.Log("Two most likely results: " + previous.getFileName() + " and " + found.getFileName());
                         return new String[]{previous.getFileName(), found.getFileName()};
                     }
+                    FileSearch mostLikely = (previous.getCorrectChars() > found.getCorrectChars()) ? previous : found;
+                    Logger.DEBUG.Log("Most likely result: " + mostLikely.getFileName());
+                    return new String[]{mostLikely.getFileName()};
                 } else {
                     previous = found;
                 }
@@ -324,7 +321,6 @@ public final class SceneActions {
             }
             return returnArray;
         }
-        Logger.DEBUG.Log("Found " + results.size() + (results.size() > 1 ? " items" : " item"));
         return new String[]{results.get(0).getFileName()};
     }
 }
