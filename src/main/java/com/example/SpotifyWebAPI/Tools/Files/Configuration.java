@@ -42,6 +42,7 @@ public abstract class Configuration {
                 "coloured_output",
                 "enable_stack_traces",
                 "verbose_log_file",
+                "quiet",
                 "use_formatting"
         };
         tokenConfig = new Token[keys.length];
@@ -137,10 +138,18 @@ public abstract class Configuration {
                     }
                     Logger.setEnableStackTraces(BooleanParse(token.getValue(), false));
                     break;
+                case "quiet":
+                    if (update) {
+                        token.setValue(String.valueOf(Logger.getQuiet()));
+                        token.setCategoryType("Logger Options");
+                        break;
+                    }
+                    Logger.setQuiet(BooleanParse(token.getValue(), false));
+                    break;
                 case "playlist_limit":
                     if (update) {
                         token.setValue(String.valueOf(ProgramOptions.getPlaylist_limit()));
-                        token.setCategoryType("Program Options");
+                        token.setCategoryType("User Settings");
                         break;
                     }
                     if (token.getValue().isEmpty()) token.setValue(String.valueOf(ProgramOptions.getPlaylist_limit()));

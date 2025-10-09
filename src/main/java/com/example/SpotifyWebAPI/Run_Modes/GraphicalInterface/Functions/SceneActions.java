@@ -201,7 +201,7 @@ public final class SceneActions {
      * @param searchTerm      Search term
      */
     public static void SearchTermSelector(TextField pageSearchField, String searchTerm) {
-        Logger.DEBUG.Log("Enter search handler");
+        Logger.DEBUG.Log("Enter search handler", false, true);
         if (searchTerm.isEmpty()) {
             Logger.DEBUG.Log("Search field is empty", false);
             return;
