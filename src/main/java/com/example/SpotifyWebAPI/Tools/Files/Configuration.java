@@ -145,8 +145,7 @@ public abstract class Configuration {
                         break;
                     }
                     Logger.setQuiet(BooleanParse(token.getValue(), false));
-                    Logger.INFO.LogIfTrue(Logger.getQuiet());
-                    Logger.INFO.Log("Logger: quiet is " + (Logger.getQuiet() ? "enabled" : "disabled"), false, true);
+                    Logger.INFO.LogIfTrue("Logger quiet", Logger.getQuiet(), true, true);
                     break;
                 case "playlist_limit":
                     if (update) {
