@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI;
 
+import com.example.SpotifyWebAPI.System.TimerThread;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
@@ -106,6 +107,8 @@ public class Main {
                 Logger.DEBUG.Log("playlist_limit: " + ProgramOptions.getPlaylist_limit(), false);
                 return;
             case "--gui":
+                Thread t = new Thread(new TimerThread());
+                t.start();
                 GUI.launch(GUI.class, args);
                 return;
             case "--req":
