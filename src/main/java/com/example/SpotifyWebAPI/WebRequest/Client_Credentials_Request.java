@@ -7,6 +7,7 @@ import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.net.HttpURLConnection;
 
 /**
@@ -28,7 +29,8 @@ public class Client_Credentials_Request {
 
     /**
      * Sends a request to get Playlist details such as: Name, Description and Size
-     * @param playlist_id   ID of Playlist to get details from
+     *
+     * @param playlist_id ID of Playlist to get details from
      */
     public void getPlaylist(String playlist_id) {
         try {
@@ -52,7 +54,8 @@ public class Client_Credentials_Request {
             HttpURLConnection http = HTTPConnection.connectHTTP(postURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
             //TODO *Improve* status code 400 error handling
-            if (http.getResponseCode() == 400) throw new NullPointerException("Request returned 400 for track_uri: " + track_uri);
+            if (http.getResponseCode() == 400)
+                throw new NullPointerException("Request returned 400 for track_uri: " + track_uri);
             JsonNode node = mapper.readTree(http.getInputStream());
             track = new Track(node.get("name").asText(), node.get("id").asText());
             track.setTrackNumber(node.get("track_number").asInt());

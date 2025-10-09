@@ -7,6 +7,7 @@ import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,12 +34,12 @@ public class AutoMode {
             int playlistSize = clientCredentialsRequest.getPlaylist().getTotalItems();
             String stringDescCount = readString(clientCredentialsRequest.getPlaylist().getDescription());
             int readDescCount;
-            Pattern pattern= Pattern.compile("[a-zA-Z/]");
+            Pattern pattern = Pattern.compile("[a-zA-Z/]");
             Matcher matcher = pattern.matcher(stringDescCount);
             if (matcher.find()) {
                 Logger.INFO.Log("Playlist size: " + playlistSize);
                 // Set the playlist description
-                userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getPlaylist().getName(),playlistSize + "/120",true,false);
+                userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getPlaylist().getName(), playlistSize + "/120", true, false);
                 Logger.INFO.Log("Completed the automated run");
                 return;
             } else {
@@ -59,17 +60,18 @@ public class AutoMode {
             }
             Logger.INFO.Log("Playlist size: " + playlistSize);
             // Set the playlist description
-            userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getPlaylist().getName(),playlistSize + "/" + ProgramOptions.getPlaylist_limit(),true,false);
+            userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getPlaylist().getName(), playlistSize + "/" + ProgramOptions.getPlaylist_limit(), true, false);
             Logger.INFO.Log("Completed the automated run");
         } catch (Exception e) {
-            Logger.ERROR.LogException(e,"Auto Mode");
+            Logger.ERROR.LogException(e, "Auto Mode");
         }
     }
 
     /**
      * Finds what number should the next playlist be
-     * @param str   Name of current playlist name
-     * @return  Number for the next playlist
+     *
+     * @param str Name of current playlist name
+     * @return Number for the next playlist
      */
     private int nextNumber(String str) {
         int number = 0;
@@ -88,14 +90,15 @@ public class AutoMode {
 
     /**
      * Reads the string till '#'. Which is encoded string of '/'
-     * @param str   Playlist description
-     * @return  Read number from description as string
+     *
+     * @param str Playlist description
+     * @return Read number from description as string
      */
     private String readString(String str) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if ((c == '&') && (str.charAt(i+1) == '#')) { // assuming '/' is encoded to '&#x2F;'
+            if ((c == '&') && (str.charAt(i + 1) == '#')) { // assuming '/' is encoded to '&#x2F;'
                 break;
             }
             sb.append(c);

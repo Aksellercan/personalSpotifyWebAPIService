@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.HTTP;
 import com.example.SpotifyWebAPI.HTTP.Enumerators.ContentType;
 import com.example.SpotifyWebAPI.HTTP.Enumerators.StatusCode;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,15 +25,16 @@ public class HTTPServer extends Thread {
     public static Thread thread;
     private final int port;
     private final int backlog;
-    private File sourceFolder = new File("Pages"+ File.separator + "Fallback");
+    private File sourceFolder = new File("Pages" + File.separator + "Fallback");
     private File indexFile = new File(sourceFolder + File.separator + "index.html");
     private ServerSocket socket;
     private final String serverName = "Spotify Web API HTTP Server";
 
     /**
      * Server constructor
-     * @param port  Set the port the server will run on
-     * @param backlog   Set the limit of connections for the socket
+     *
+     * @param port    Set the port the server will run on
+     * @param backlog Set the limit of connections for the socket
      */
     public HTTPServer(int port, int backlog) {
         this.port = port;
@@ -41,7 +43,8 @@ public class HTTPServer extends Thread {
 
     /**
      * Returns the Server status
-     * @return  Server Status
+     *
+     * @return Server Status
      */
     public boolean getServerStatus() {
         return serverStatus.isRunning;
@@ -53,7 +56,8 @@ public class HTTPServer extends Thread {
 
     /**
      * Stops the Server.
-     * @return  returns true if it succeeds
+     *
+     * @return returns true if it succeeds
      */
     public boolean StopServer() {
         try {
@@ -88,10 +92,11 @@ public class HTTPServer extends Thread {
 
     /**
      * Gets the file and encodes it with specified Charset encoding
-     * @param file  File to be encoded
-     * @param encoding  Encoding to use
-     * @return  Encoded file in string
-     * @throws IOException  If the file cannot be read
+     *
+     * @param file     File to be encoded
+     * @param encoding Encoding to use
+     * @return Encoded file in string
+     * @throws IOException If the file cannot be read
      */
     private String ResponseBody(File file, Charset encoding) throws IOException {
         if (!file.exists()) {
@@ -103,8 +108,9 @@ public class HTTPServer extends Thread {
 
     /**
      * Gets files in folders by building the String path as File object
+     *
      * @param requestedFile Requested file
-     * @return  Entire file path. If the string ends without any file extensions it returns index.html
+     * @return Entire file path. If the string ends without any file extensions it returns index.html
      */
     private File GetFolders(String requestedFile) {
         StringBuilder folders = new StringBuilder();
@@ -128,8 +134,9 @@ public class HTTPServer extends Thread {
 
     /**
      * Gets the requested file name with extension
-     * @param requestType   Requested file
-     * @return  Name of the file with extension
+     *
+     * @param requestType Requested file
+     * @return Name of the file with extension
      */
     private String GetFilename(String requestType) {
         StringBuilder requestedFile = new StringBuilder();
@@ -150,7 +157,8 @@ public class HTTPServer extends Thread {
 
     /**
      * Gets the index.html from parent directory
-     * @return  Returns index.html
+     *
+     * @return Returns index.html
      */
     private File GetIndexPage() {
         if (!indexFile.exists()) {
@@ -252,11 +260,12 @@ public class HTTPServer extends Thread {
 
     /**
      * Sends out the response body with headers
-     * @param out   BufferedWriter object
-     * @param body  Body of the response
-     * @param contentType   Content type of the response
-     * @param statusCode    Status code of the response
-     * @throws IOException  If the writer is unsuccessful
+     *
+     * @param out         BufferedWriter object
+     * @param body        Body of the response
+     * @param contentType Content type of the response
+     * @param statusCode  Status code of the response
+     * @throws IOException If the writer is unsuccessful
      */
     private void PostResponse(BufferedWriter out, String body, String contentType, String statusCode) throws IOException {
         int bodyLength = body.length();
@@ -266,7 +275,7 @@ public class HTTPServer extends Thread {
         Logger.DEBUG.Log("Server: " + serverName);
         Logger.DEBUG.Log("Content-type: " + contentType);
         Logger.DEBUG.Log("Content-Length: " + bodyLength);
-        out.write("HTTP/1.0 "+ statusCode +"\r\n");
+        out.write("HTTP/1.0 " + statusCode + "\r\n");
         out.write("Date: " + now + "\r\n");
         out.write("Server: " + serverName + "\r\n");
         out.write("Content-Type: " + contentType + "\r\n");

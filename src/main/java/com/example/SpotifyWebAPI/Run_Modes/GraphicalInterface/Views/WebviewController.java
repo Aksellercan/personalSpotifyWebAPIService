@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -23,6 +24,7 @@ public class WebviewController implements Initializable {
 
     /**
      * Changes scene to the previous scene
+     *
      * @param event ActionEvent
      */
     @FXML
@@ -39,6 +41,7 @@ public class WebviewController implements Initializable {
 
     /**
      * WebEngine setup
+     *
      * @param location  URL Location
      * @param resources ResourceBundle
      */
@@ -55,7 +58,7 @@ public class WebviewController implements Initializable {
         try {
             WebEngine e = webviewBox.getEngine();
             webviewBox.setContextMenuEnabled(true);
-            Logger.DEBUG.Log("Webkit, is Javascript enabled? " + (e.isJavaScriptEnabled() ? "Yes": "No"));
+            Logger.DEBUG.Log("Webkit, is Javascript enabled? " + (e.isJavaScriptEnabled() ? "Yes" : "No"));
             if (SaveHTTPState.ContainsServer("Fallback")) {
                 Logger.DEBUG.Log("Server link assigned: " + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort());
                 e.load("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort());

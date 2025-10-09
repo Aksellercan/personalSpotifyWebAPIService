@@ -7,6 +7,7 @@ import com.example.SpotifyWebAPI.Tools.Files.Parsers.BasicParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -211,6 +212,7 @@ public abstract class Configuration {
 
     /**
      * Find and set Token value, additionally mark it as seen to avoid duplicates
+     *
      * @param key   Key to modify
      * @param value Token value
      */
@@ -226,9 +228,10 @@ public abstract class Configuration {
 
     /**
      * Checks if directory exists, if it doesn't it creates it and returns the file path
+     *
      * @param fileNameWithExtension Name of file to check and create
-     * @return  Full path of the file
-     * @throws IOException  If creating folder fails throws IOException
+     * @return Full path of the file
+     * @throws IOException If creating folder fails throws IOException
      */
     protected File MkDirs(String fileNameWithExtension) throws IOException {
         if (!folderPath.exists()) {
@@ -251,16 +254,18 @@ public abstract class Configuration {
 
     /**
      * BooleanParse reimplementation but with default return value in case string is invalid
-     * @param value String value to parse as boolean
-     * @param returnValue   Default return value if string is invalid
-     * @return  default value or boolean parsed
+     *
+     * @param value       String value to parse as boolean
+     * @param returnValue Default return value if string is invalid
+     * @return default value or boolean parsed
      */
     private boolean BooleanParse(String value, boolean returnValue) {
         value = value.replace(" ", "");
         if (value.equals("true") || value.equals("false")) {
             return value.equals("true");
         }
-        if (!value.isEmpty()) Logger.ERROR.LogSilently("Key value \"" + value +"\" is not valid. Expected \"true\" or \"false\".");
+        if (!value.isEmpty())
+            Logger.ERROR.LogSilently("Key value \"" + value + "\" is not valid. Expected \"true\" or \"false\".");
         return returnValue;
     }
 }

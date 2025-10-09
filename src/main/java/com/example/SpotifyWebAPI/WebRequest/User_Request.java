@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 
@@ -29,11 +30,12 @@ public class User_Request {
 
     /**
      * Sets the details of the playlist with given ID. Requires playlist-modify-public scope
-     * @param playlist_id   Playlist to modify details of
-     * @param name  New name to set
-     * @param description   New description to set
-     * @param publicPlaylist    Set playlist as public (Appear on profile)
-     * @param collaborative     Set playlist as collaborative
+     *
+     * @param playlist_id    Playlist to modify details of
+     * @param name           New name to set
+     * @param description    New description to set
+     * @param publicPlaylist Set playlist as public (Appear on profile)
+     * @param collaborative  Set playlist as collaborative
      */
     public void setPlaylistDetails(String playlist_id, String name, String description, boolean publicPlaylist, boolean collaborative) {
         try {
@@ -64,10 +66,11 @@ public class User_Request {
 
     /**
      * Builds request URL
-     * @param fullURL   Base URL
-     * @param offset    Starting point. If not given "offset is greater or equal to 0" then it just appends limit
-     * @param limit     Limit of how many items to request
-     * @return  Built URL as string
+     *
+     * @param fullURL Base URL
+     * @param offset  Starting point. If not given "offset is greater or equal to 0" then it just appends limit
+     * @param limit   Limit of how many items to request
+     * @return Built URL as string
      */
     private String buildURL(String fullURL, int offset, int limit) {
         StringBuilder url = new StringBuilder(fullURL);
@@ -81,13 +84,14 @@ public class User_Request {
 
     /**
      * Gets items of the playlist with given starting point and limits. Requires playlist-read-private scope
-     * @param playlist_id   Playlist to modify details of
-     * @param offset    Starting point
-     * @param limit     Limit of how many items to request
+     *
+     * @param playlist_id Playlist to modify details of
+     * @param offset      Starting point
+     * @param limit       Limit of how many items to request
      */
     public void getPlaylistItems(String playlist_id, int offset, int limit) {
         try {
-            String fullURL = "https://api.spotify.com/v1/playlists/"+ playlist_id + "/tracks?";
+            String fullURL = "https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks?";
             fullURL = buildURL(fullURL, offset, limit);
             String Bearer = "Bearer " + spotifySession.getAccess_token();
             HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "GET", "Authorization", Bearer);
@@ -111,12 +115,13 @@ public class User_Request {
 
     /**
      * Adds items from Hashmap to JSON Array Node
-     * @param mapper    JSON ObjectMapper object
-     * @return      arrayNode for JSON POST body
+     *
+     * @param mapper JSON ObjectMapper object
+     * @return arrayNode for JSON POST body
      */
     private ArrayNode addFromPreviousPlaylist(ObjectMapper mapper) {
         ArrayNode arrayNode = mapper.createArrayNode();
-        for(String value : songs.values()) {
+        for (String value : songs.values()) {
             arrayNode.add(value);
         }
         return arrayNode;
@@ -124,10 +129,11 @@ public class User_Request {
 
     /**
      * Adds items to playlist with given ID
-     * @param playlist_id   Playlist to modify details of
-     * @param position  Starting position to add items
-     * @param track_uri     Track uri of items to be added
-     * @param addFromPreviousPlaylist   Whether to add items from previous playlist. Will add songs from Hashmap songs
+     *
+     * @param playlist_id             Playlist to modify details of
+     * @param position                Starting position to add items
+     * @param track_uri               Track uri of items to be added
+     * @param addFromPreviousPlaylist Whether to add items from previous playlist. Will add songs from Hashmap songs
      */
     public void addPlaylistItems(String playlist_id, int position, String track_uri, boolean addFromPreviousPlaylist) {
         try {
@@ -142,13 +148,13 @@ public class User_Request {
                 rootNode.set("uris", addFromPreviousPlaylist(mapper));
             } else {
                 ArrayNode arrayNode = mapper.createArrayNode();
-                arrayNode.add("spotify:track:"+track_uri);
+                arrayNode.add("spotify:track:" + track_uri);
                 rootNode.set("uris", arrayNode);
             }
             rootNode.put("position", position);
             String postBody = mapper.writeValueAsString(rootNode);
             HTTPConnection.postBody(http, postBody);
-            HTTPConnection.readErrorStream(http,400);
+            HTTPConnection.readErrorStream(http, 400);
         } catch (Exception e) {
             Logger.ERROR.LogException(e);
         }
@@ -157,9 +163,10 @@ public class User_Request {
 
     /**
      * Creates playlist with given name and description. Creates a public non-collaborative playlist
-     * @param user_id   ID for the user that playlist will be created for
-     * @param playlistName  Name of the playlist
-     * @param playlistDescription   Description for the playlist
+     *
+     * @param user_id             ID for the user that playlist will be created for
+     * @param playlistName        Name of the playlist
+     * @param playlistDescription Description for the playlist
      */
     public void createPlaylist(String user_id, String playlistName, String playlistDescription) {
         try {

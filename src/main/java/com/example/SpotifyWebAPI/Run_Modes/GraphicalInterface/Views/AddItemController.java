@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.fxml.Initializable;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -58,7 +59,7 @@ public class AddItemController implements Initializable {
         if (track_uri.isEmpty()) return "";
         StringBuilder stringBuilder = new StringBuilder();
         boolean copy = false;
-        for (int i = track_uri.length()-1; i >= 0; i--) {
+        for (int i = track_uri.length() - 1; i >= 0; i--) {
             if (track_uri.charAt(i) == '/') {
                 copy = false;
             }
@@ -71,7 +72,7 @@ public class AddItemController implements Initializable {
             }
         }
         StringBuilder reverse = new StringBuilder();
-        for (int i = stringBuilder.length()-1; i >= 0; i--) {
+        for (int i = stringBuilder.length() - 1; i >= 0; i--) {
             reverse.append(stringBuilder.charAt(i));
         }
         return reverse.toString();

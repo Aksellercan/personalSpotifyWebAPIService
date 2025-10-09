@@ -1,32 +1,35 @@
-body, html, * { padding: 0; margin: 0}
+body, html, * {
+    padding: 0;
+    margin: 0
+}
 
-.container{
+.container {
     display: grid;
     grid-template-columns: 16rem 1fr 16rem;
     grid-template-rows: auto 1fr auto;
-    grid-template-areas: 
+    grid-template-areas:
     "header header header"
     "main main main";
     min-height: 100vh;
 }
 
-header{
+header {
     grid-area: header;
     padding: 2rem;
     background-color: green;
 }
 
-main{
+main {
     grid-area: main;
     padding: 2rem;
     background-color: #212121;
 }
 
-@media(max-width: 1024px) {
+@media (max-width: 1024px) {
     .container {
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr; 
-        grid-template-areas: 
+        grid-template-rows: auto 1fr;
+        grid-template-areas:
         "header"
         "main";
     }
@@ -35,39 +38,39 @@ main{
 #headerTitle {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
-    font-size:x-large;
+    font-size: x-large;
     font-weight: bold;
 }
 
 #titleH2 {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
-    font-size:larger;
+    font-size: larger;
     padding-bottom: 20px;
 }
 
 #labelBtn {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
-    font-size:large;
+    font-size: large;
 }
 
 .buttonClass {
-    font-size:15px;
-    font-family:Arial;
-    width:80px;
-    height:30px;
-    border-width:1px;
-    color:#fff;
-    border-color:#4b8f29;
-    font-weight:bold;
-    border-top-left-radius:4px;
-    border-top-right-radius:4px;
-    border-bottom-left-radius:4px;
-    border-bottom-right-radius:4px;
+    font-size: 15px;
+    font-family: Arial;
+    width: 80px;
+    height: 30px;
+    border-width: 1px;
+    color: #fff;
+    border-color: #4b8f29;
+    font-weight: bold;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     box-shadow: 0px 10px 14px -7px #3e7327;
     text-shadow: 0px 1px 0px #5b8a3c;
-    background:linear-gradient(#77b55a, #72b352);
+    background: linear-gradient(#77b55a, #72b352);
 }
 
 .buttonClass:hover, .buttonClassWider:hover {
@@ -76,21 +79,21 @@ main{
 }
 
 .buttonClassWider {
-    font-size:15px;
-    font-family:Arial;
-    width:100px;
-    height:30px;
-    border-width:1px;
-    color:#fff;
-    border-color:#4b8f29;
-    font-weight:bold;
-    border-top-left-radius:4px;
-    border-top-right-radius:4px;
-    border-bottom-left-radius:4px;
-    border-bottom-right-radius:4px;
+    font-size: 15px;
+    font-family: Arial;
+    width: 100px;
+    height: 30px;
+    border-width: 1px;
+    color: #fff;
+    border-color: #4b8f29;
+    font-weight: bold;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
     box-shadow: 0px 10px 14px -7px #3e7327;
     text-shadow: 0px 1px 0px #5b8a3c;
-    background:linear-gradient(#77b55a, #72b352);
+    background: linear-gradient(#77b55a, #72b352);
 }
 
 
@@ -98,5 +101,5 @@ main{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 16px;
     color: white;
-    list-style-type:decimal;
+    list-style-type: decimal;
 }

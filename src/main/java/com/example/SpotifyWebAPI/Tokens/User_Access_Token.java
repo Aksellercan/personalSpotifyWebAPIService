@@ -5,6 +5,7 @@ import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
@@ -18,7 +19,8 @@ public class User_Access_Token {
 
     /**
      * Encodes Authorization Bearer with Base64
-     * @return  Base64 encoded Authorization Bearer
+     *
+     * @return Base64 encoded Authorization Bearer
      */
     private String getEncodedString() {
         return Base64.getEncoder().encodeToString((spotifySession.getClient_id() + ":" + spotifySession.getClient_secret()).getBytes());
@@ -49,7 +51,7 @@ public class User_Access_Token {
             Logger.INFO.Log("Refresh Token to take note: " + spotifySession.getRefresh_token(), false);
             Logger.INFO.Log("Refreshed token: " + spotifySession.getAccess_token(), false);
         } catch (Exception e) {
-            Logger.ERROR.LogException(e,"Failed to request refresh token", true);
+            Logger.ERROR.LogException(e, "Failed to request refresh token", true);
             return false;
         }
         if (spotifySession.getRefresh_token() == null) {

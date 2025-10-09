@@ -16,6 +16,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
 import java.net.HttpURLConnection;
 
 /**
@@ -33,7 +34,8 @@ public class GUI extends Application {
 
     /**
      * Sets up the primary stage
-     * @param primaryStage  JavaFX stage object
+     *
+     * @param primaryStage JavaFX stage object
      */
     @Override
     public void start(Stage primaryStage) {
@@ -89,7 +91,7 @@ public class GUI extends Application {
     @FXML
     protected void OnStartServerButtonClick(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        if(!SaveHTTPState.ContainsServer("Fallback")) {
+        if (!SaveHTTPState.ContainsServer("Fallback")) {
             httpServer = new HTTPServer(0, 10);
             httpServer.start();
             SaveHTTPState.addHTTPServerToHashMap("Fallback", httpServer);

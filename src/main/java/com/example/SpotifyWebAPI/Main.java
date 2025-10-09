@@ -16,7 +16,8 @@ import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 public class Main {
     /**
      * Checks if all values for Auto Mode are set
-     * @param spotifySession    session object
+     *
+     * @param spotifySession session object
      */
     private static void AutoModeRequirementCheck(SpotifySession spotifySession) {
         System.out.println("Auto Mode Requirement Check");
@@ -68,7 +69,8 @@ public class Main {
      * Takes commandline arguments.
      * If no arguments are given, reads from configuration to either launch into CLI, Auto Mode or JavaFX GUI.
      * If there is no configuration file or the values not set by default launches into JavaFX GUI.
-     * @param args  Commandline arguments, allows maximum of 14 with "set" argument and lowest no arguments.
+     *
+     * @param args Commandline arguments, allows maximum of 14 with "set" argument and lowest no arguments.
      */
     public static void main(String[] args) {
         if (args.length == 1) {
@@ -111,7 +113,7 @@ public class Main {
                 return;
             case "--auto-mode":
                 if (spotifySession.getPlaylist_id() == null || spotifySession.getRefresh_token() == null
-                        || spotifySession.getUser_id() == null ||  spotifySession.getClient_id() == null
+                        || spotifySession.getUser_id() == null || spotifySession.getClient_id() == null
                         || spotifySession.getClient_secret() == null || spotifySession.getRedirect_uri() == null) {
                     System.out.println("Required parameters not set!");
                     return;
@@ -136,22 +138,22 @@ public class Main {
                     }
                     for (int i = 0; i < args.length; i++) {
                         if (args[i].equals("--playlist-id")) {
-                            spotifySession.setPlaylist_id(args[i+1].trim());
+                            spotifySession.setPlaylist_id(args[i + 1].trim());
                         }
                         if (args[i].equals("--user-id")) {
-                            spotifySession.setUser_id(args[i+1].trim());
+                            spotifySession.setUser_id(args[i + 1].trim());
                         }
                         if (args[i].equals("--client-id")) {
-                            spotifySession.setClient_id(args[i+1].trim());
+                            spotifySession.setClient_id(args[i + 1].trim());
                         }
                         if (args[i].equals("--client-secret")) {
-                            spotifySession.setClient_secret(args[i+1].trim());
+                            spotifySession.setClient_secret(args[i + 1].trim());
                         }
                         if (args[i].equals("--redirect-uri")) {
-                            spotifySession.setRedirect_uri(args[i+1].trim());
+                            spotifySession.setRedirect_uri(args[i + 1].trim());
                         }
                         if (args[i].equals("--refresh-token")) {
-                            spotifySession.setRefresh_token(args[i+1].trim());
+                            spotifySession.setRefresh_token(args[i + 1].trim());
                         }
                     }
                     ProgramOptions.setChangesSaved(false);

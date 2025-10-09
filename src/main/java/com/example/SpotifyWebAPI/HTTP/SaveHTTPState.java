@@ -1,6 +1,7 @@
 package com.example.SpotifyWebAPI.HTTP;
 
 import com.example.SpotifyWebAPI.Objects.HTTPState;
+
 import java.util.ArrayList;
 
 public final class SaveHTTPState {
@@ -13,11 +14,13 @@ public final class SaveHTTPState {
     /**
      * Private Constructor
      */
-    private SaveHTTPState() {}
+    private SaveHTTPState() {
+    }
 
     /**
      * Returns the size of HashMap
-     * @return  Amount of servers registered on the HashMap
+     *
+     * @return Amount of servers registered on the HashMap
      */
     public static int getHashMapSize() {
         return serverList.size();
@@ -34,8 +37,9 @@ public final class SaveHTTPState {
 
     /**
      * Returns the server with the name given
-     * @param serverName    Name of the server to return
-     * @return  Found server
+     *
+     * @param serverName Name of the server to return
+     * @return Found server
      */
     public static HTTPServer getServer(String serverName) {
         for (HTTPState httpState : serverList) {
@@ -48,7 +52,8 @@ public final class SaveHTTPState {
 
     /**
      * Removes the server with given name from the HashMap
-     * @param serverName    Name of the server to remove
+     *
+     * @param serverName Name of the server to remove
      */
     public static void removeServer(String serverName) {
         for (int i = 0; i < serverList.size(); i++) {
@@ -61,8 +66,9 @@ public final class SaveHTTPState {
 
     /**
      * Adds Server to the HashMap with given name
-     * @param serverName    Name of the Server to add
-     * @param httpServer    Server to save state of
+     *
+     * @param serverName Name of the Server to add
+     * @param httpServer Server to save state of
      */
     public static void addHTTPServerToHashMap(String serverName, HTTPServer httpServer) {
         serverList.add(new HTTPState(serverName, httpServer));

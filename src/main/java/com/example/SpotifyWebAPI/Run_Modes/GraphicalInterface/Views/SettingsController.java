@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -71,7 +72,7 @@ public class SettingsController implements Initializable {
     protected void ToggleColouredOutput(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         Logger.setColouredOutput(!Logger.getColouredOutput());
-        Logger.INFO.Log("Logger: ColouredOutput="+Logger.getColouredOutput(), false);
+        Logger.INFO.Log("Logger: ColouredOutput=" + Logger.getColouredOutput(), false);
         ProgramOptions.setChangesSaved(false);
     }
 
@@ -87,7 +88,7 @@ public class SettingsController implements Initializable {
     protected void ToggleDebugOutput(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         Logger.setDebugOutput(!Logger.getDebugOutput());
-        Logger.INFO.Log("Logger: DebugOutput="+Logger.getDebugOutput(), false);
+        Logger.INFO.Log("Logger: DebugOutput=" + Logger.getDebugOutput(), false);
         ProgramOptions.setChangesSaved(false);
     }
 

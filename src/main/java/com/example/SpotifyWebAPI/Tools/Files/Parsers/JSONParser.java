@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.Tools.Files.Parsers;
 import com.example.SpotifyWebAPI.Tools.Files.Configuration;
 import com.example.SpotifyWebAPI.Tools.Files.Objects.Token;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +19,8 @@ public class JSONParser extends Configuration implements Parsers {
 
     /**
      * Formatting value getter
-     * @return  Formatting value
+     *
+     * @return Formatting value
      */
     public static boolean getUseFormatting() {
         return useFormatting;
@@ -26,6 +28,7 @@ public class JSONParser extends Configuration implements Parsers {
 
     /**
      * Formatting value setter
+     *
      * @param setFormatting Update formatting value
      */
     public static void setUseFormatting(boolean setFormatting) {
@@ -57,10 +60,8 @@ public class JSONParser extends Configuration implements Parsers {
             Logger.INFO.Log("Using JSON Writer with token type checker");
             jsonParser.MapKeys(true);
             jsonParser.SetTokenTypes();
-            if (JSONParser.getUseFormatting())
-                jsonParser.WriteConfig();
-            else
-                jsonParser.WriteAsSingleLine();
+            if (JSONParser.getUseFormatting()) jsonParser.WriteConfig();
+            else jsonParser.WriteAsSingleLine();
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Unable to write configuration to file");
         }
@@ -182,22 +183,23 @@ public class JSONParser extends Configuration implements Parsers {
     private void ApplyToken(String pair) throws Exception {
         String[] splitLine = SplitToken(pair);
         if (splitLine == null) return;
-        Logger.DEBUG.Log("Before check: key =" + splitLine[0].trim() + " value =" +splitLine[1].trim());
+        Logger.DEBUG.Log("Before check: key =" + splitLine[0].trim() + " value =" + splitLine[1].trim());
         FindAndSetToken(splitLine[0].trim(), splitLine[1].trim());
     }
 
     private String[] SplitToken(String tokenPair) throws Exception {
         Logger.DEBUG.Log("split line " + tokenPair);
-        String[] splitLine = tokenPair.split(JSONSymbols.SPLIT.toString(),2);
+        String[] splitLine = tokenPair.split(JSONSymbols.SPLIT.toString(), 2);
         Logger.DEBUG.Log((splitLine.length == 2) ? "go to remove quotes" : "null return");
         return (splitLine.length == 2) ? RemoveQuotes(splitLine[0], splitLine[1]) : null;
     }
 
     /**
      * Removes Quotes from Token's key and value
+     *
      * @param key   Token key
      * @param value Token Value
-     * @return  Key and value as array
+     * @return Key and value as array
      */
     private String[] RemoveQuotes(String key, String value) throws Exception {
         StringBuilder valueMutable = new StringBuilder();
@@ -226,13 +228,14 @@ public class JSONParser extends Configuration implements Parsers {
             }
             keyMutable.append(value.charAt(i));
         }
-        return new String[] {valueMutable.toString(), keyMutable.toString()};
+        return new String[]{valueMutable.toString(), keyMutable.toString()};
     }
 
     /**
      * Returns the correct line format
-     * @param current   Current line token
-     * @return  Correct print Format
+     *
+     * @param current Current line token
+     * @return Correct print Format
      */
     private String PrintCorrectType(Token current) {
         if (current.getIsNumber() || current.getIsBoolean()) {
@@ -245,27 +248,25 @@ public class JSONParser extends Configuration implements Parsers {
 
     /**
      * Checks if Token's value is boolean or not
+     *
      * @param value Token's value
-     * @return  True/False
+     * @return True/False
      */
     private boolean CheckBoolean(String value) {
-        return (
-                value.replace(" ", "").equalsIgnoreCase("true")
-                        ||
-                        value.replace(" ", "").equalsIgnoreCase("false")
-        );
+        return (value.replace(" ", "").equalsIgnoreCase("true") || value.replace(" ", "").equalsIgnoreCase("false"));
     }
 
     /**
      * Checks Token's type Number/boolean
-     * @param current   Current Token
-     * @return  Token with type set
+     *
+     * @param current Current Token
+     * @return Token with type set
      */
     private Token TokenTypeCheck(Token current) {
         if (CheckBoolean(current.getValue())) {
             current.setBoolean(true);
         }
-        Pattern pattern= Pattern.compile("^\\d+$");
+        Pattern pattern = Pattern.compile("^\\d+$");
         Matcher matcher = pattern.matcher(current.getValue());
         if (matcher.find()) {
             current.setNumber(true);

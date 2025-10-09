@@ -4,6 +4,7 @@ import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tools.Files.Objects.Token;
 import com.example.SpotifyWebAPI.Tools.Files.Configuration;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+
 import java.io.*;
 
 /**

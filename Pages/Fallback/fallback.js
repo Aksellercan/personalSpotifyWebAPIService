@@ -5,7 +5,7 @@ const redirect_uri = 'http://127.0.0.1:7277/Fallback/fallback.html';
 document.getElementById('setClient_id').value = '';
 addList()
 
-document.getElementById('redirectForm').addEventListener('submit',function(event) {
+document.getElementById('redirectForm').addEventListener('submit', function (event) {
     event.preventDefault();
     const client_id = document.getElementById('setClient_id').value;
     let scope = '';
@@ -17,31 +17,31 @@ document.getElementById('redirectForm').addEventListener('submit',function(event
     }
     for (let i = 0; i < scopesArray.length; i++) {
         if (i === 0) {
-        scope += scopesArray[i];
-        continue;
+            scope += scopesArray[i];
+            continue;
         }
-        scope += " " +scopesArray[i];
+        scope += " " + scopesArray[i];
     }
-    console.log(`DEBUG ${scopesArray.length} ` + (scopesArray.length === 1 ? `Scope: ${scope}` :`Scopes: ${scope}`));
+    console.log(`DEBUG ${scopesArray.length} ` + (scopesArray.length === 1 ? `Scope: ${scope}` : `Scopes: ${scope}`));
     let url = 'https://accounts.spotify.com/authorize?' +
         new URLSearchParams({
             response_type: 'code',
             client_id: client_id,
             scope: scope,
             redirect_uri: redirect_uri,
-            state:state
+            state: state
         })
     // window.location.href = url;
     window.open(url, '_blank').focus();
 });
 
-function addList(){
+function addList() {
     const addListBtn = document.createElement('button');
-        addListBtn.href = "#";
-        addListBtn.className = "buttonClassWider";
-        addListBtn.id = "submitBtn";
-        addListBtn.textContent = "Add Scope";
-    addListBtn.addEventListener('click', function(event){
+    addListBtn.href = "#";
+    addListBtn.className = "buttonClassWider";
+    addListBtn.id = "submitBtn";
+    addListBtn.textContent = "Add Scope";
+    addListBtn.addEventListener('click', function (event) {
         event.preventDefault();
         let setScope = document.getElementById('setScopes').value;
         if (typeof setScope === "string" && setScope.trim().length === 0) {
@@ -54,7 +54,7 @@ function addList(){
     mainContent.appendChild(addListBtn)
 }
 
-function loop(){
+function loop() {
     listContent.innerHTML = '';
     for (let i = 0; i < scopesArray.length; i++) {
         const listView = document.createElement('li');
