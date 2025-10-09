@@ -12,11 +12,7 @@ import java.time.format.DateTimeFormatter;
  */
 
 public enum Logger {
-    INFO(" [ INFO ] "),
-    WARN(" [ WARN ] "),
-    ERROR(" [ ERROR ] "),
-    DEBUG(" [ DEBUG ] "),
-    CRITICAL(" [ CRITICAL ] "),
+    INFO(" [ INFO ] "), WARN(" [ WARN ] "), ERROR(" [ ERROR ] "), DEBUG(" [ DEBUG ] "), CRITICAL(" [ CRITICAL ] "),
     ;
 
     /**
@@ -184,11 +180,80 @@ public enum Logger {
 
     public void Log(String message, boolean writeToFile, boolean force) {
         // (p -> q) implication
-        if (quiet) {
-            if (force) WriteLog(message, writeToFile);
+        if (quiet) if (force) WriteLog(message, writeToFile);
+        if (!quiet) WriteLog(message, writeToFile);
+    }
+
+    /**
+     * Logs if statement is true. Logs to log file by default
+     *
+     * @param statement Boolean statement
+     */
+    public void LogIfTrue(boolean statement) {
+        if (statement) if (!quiet) WriteLog("Statement is " + statement, true);
+    }
+
+    /**
+     * Logs if statement is true with a message in beginning, connecting with " is ". Logs to log file by default
+     *
+     * @param statement Boolean statement
+     */
+    public void LogIfTrue(String message, boolean statement) {
+        if (statement) if (!quiet) WriteLog(message + " is " + statement, true);
+    }
+
+
+    /**
+     * Logs if statement is true
+     *
+     * @param statement   Boolean statement
+     * @param writeToFile Whether to write to log file or not
+     */
+    public void LogIfTrue(boolean statement, boolean writeToFile) {
+        if (statement) if (!quiet) WriteLog("Statement is " + statement, writeToFile);
+    }
+
+    /**
+     * Logs if statement is true, for bypassing quiet flag
+     *
+     * @param statement   Boolean statement
+     * @param writeToFile Whether to write to log file or not
+     * @param force       Bypass quiet flag
+     */
+    public void LogIfTrue(boolean statement, boolean writeToFile, boolean force) {
+        if (statement) {
+            if (quiet) {
+                if (force) WriteLog("Statement is " + statement, writeToFile);
+            }
+            if (!quiet) WriteLog("Statement is " + statement, writeToFile);
         }
-        if (!quiet) {
-            WriteLog(message, writeToFile);
+    }
+
+    /**
+     * Logs if statement is true with a message in beginning, connecting with " is "
+     *
+     * @param message     Message to be logged
+     * @param statement   Boolean statement
+     * @param writeToFile Whether to write to log file or not
+     */
+    public void LogIfTrue(String message, boolean statement, boolean writeToFile) {
+        if (statement) if (!quiet) WriteLog(message + " is " + statement, writeToFile);
+    }
+
+    /**
+     * Logs if statement is true with a message in beginning, connecting with " is ". For bypassing quiet flag
+     *
+     * @param message     Message to be logged
+     * @param statement   Boolean statement
+     * @param writeToFile Whether to write to log file or not
+     * @param force       Bypass quiet flag
+     */
+    public void LogIfTrue(String message, boolean statement, boolean writeToFile, boolean force) {
+        if (statement) {
+            if (quiet) {
+                if (force) WriteLog(message + " is " + statement, writeToFile);
+            }
+            if (!quiet) WriteLog(message + " is " + statement, writeToFile);
         }
     }
 
