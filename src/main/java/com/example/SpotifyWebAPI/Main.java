@@ -1,6 +1,6 @@
 package com.example.SpotifyWebAPI;
 
-import com.example.SpotifyWebAPI.System.TimerThread;
+import com.example.SpotifyWebAPI.System.TimerWorker;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
@@ -10,6 +10,8 @@ import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+
+import java.util.Random;
 
 /**
  * Main Class and starting point
@@ -60,8 +62,18 @@ public class Main {
         System.out.println("  --get-refresh-token <code> <redirect uri>     get refresh token");
     }
 
-    private static SpotifySession Launch() {
-        YAMLParser.ReadConfigAndMap();
+    private static SpotifySession Launch(boolean concurrent) {
+        if (concurrent) {
+            Random rand = new Random();
+            long id = rand.nextLong();
+            Thread configReaderThread = new Thread(YAMLParser::ReadConfigAndMap);
+//            Thread configReaderThread = new Thread(JSONParser::ReadConfigAndMap);
+            configReaderThread.setName(configReaderThread.getName() + "_config-reader_" + (id > 0 ? id : -1*id));
+            Logger.THREAD_INFO.LogThread(configReaderThread, "Reading config on thread: " + configReaderThread.getName());
+            configReaderThread.start();
+        } else {
+            YAMLParser.ReadConfigAndMap();
+        }
         return SpotifySession.getInstance();
     }
 
@@ -74,13 +86,23 @@ public class Main {
      * @param args Commandline arguments, allows maximum of 14 with "set" argument and lowest no arguments.
      */
     public static void main(String[] args) {
+        SpotifySession spotifySession = null;
         if (args.length == 1) {
             if (args[0].equals("--help")) {
                 HelpMenu();
                 return;
             }
+            if (args[0].equals("--test")) {
+                long startTime = System.currentTimeMillis();
+                spotifySession = Launch(false);
+                long endTime = System.currentTimeMillis();
+                Logger.INFO.Log("Start time: " + startTime + ", End time: " + endTime + ". Total execution time: " + (endTime - startTime));
+            } else {
+                spotifySession = Launch(true);
+            }
+        } else {
+            spotifySession = Launch(true);
         }
-        SpotifySession spotifySession = Launch();
         if (args.length == 0) {
             if (ProgramOptions.LAUNCH_GUI()) {
                 GUI.launch(GUI.class, args);
@@ -107,9 +129,15 @@ public class Main {
                 Logger.DEBUG.Log("playlist_limit: " + ProgramOptions.getPlaylist_limit(), false);
                 return;
             case "--gui":
-                Thread t = new Thread(new TimerThread());
-                t.start();
-                GUI.launch(GUI.class, args);
+                try {
+                    Thread timer = new Thread(new TimerWorker());
+                    timer.start();
+                    Logger.THREAD_INFO.LogThread(timer, "test thread log");
+                    GUI.launch(GUI.class, args);
+                    timer.join();
+                } catch (InterruptedException e) {
+                    Logger.CRITICAL.LogException(e, "Timer thread couldn't be started");
+                }
                 return;
             case "--req":
                 AutoModeRequirementCheck(spotifySession);

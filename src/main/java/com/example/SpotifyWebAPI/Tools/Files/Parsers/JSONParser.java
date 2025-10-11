@@ -189,7 +189,7 @@ public class JSONParser extends Configuration implements Parsers {
 
     private String[] SplitToken(String tokenPair) throws Exception {
         Logger.DEBUG.Log("split line " + tokenPair);
-        String[] splitLine = tokenPair.split(JSONSymbols.SPLIT.toString(), 2);
+        String[] splitLine = tokenPair.split(":", 2);
         Logger.DEBUG.Log((splitLine.length == 2) ? "go to remove quotes" : "null return");
         return (splitLine.length == 2) ? RemoveQuotes(splitLine[0], splitLine[1]) : null;
     }

@@ -67,14 +67,14 @@ public class HTTPServer extends Thread {
             serverStatus.isRunning = false;
             thread.interrupt();
             if (thread.isInterrupted()) {
-                Logger.INFO.Log("Server Stopped.");
+                Logger.THREAD_INFO.Log("Server Stopped.");
             } else {
                 throw new InterruptedException("Failed to interrupt the thread.");
             }
-            Logger.INFO.Log("Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
+            Logger.THREAD_INFO.Log("Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
             return true;
         } catch (Exception ex) {
-            Logger.CRITICAL.LogException(ex, "Cannot close socket");
+            Logger.THREAD_CRITICAL.LogException(ex, "Cannot close socket");
             return false;
         }
     }
@@ -86,7 +86,7 @@ public class HTTPServer extends Thread {
     public void run() {
         thread = Thread.currentThread();
         thread.setName(thread.getName() + "-HTTPServer");
-        Logger.DEBUG.Log("Thread name = " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
+        Logger.THREAD_DEBUG.Log("Thread name = " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
         StartListening();
     }
 
@@ -170,30 +170,30 @@ public class HTTPServer extends Thread {
 
     /**
      * Starts listening on the specified socket.
-     * It reads HTTP requests and tries to get the requested files
+     * Reads HTTP requests and gets the requested files
      * Depending on the file extension sets the "Content-Type"
      */
     private void StartListening() {
         try {
-            Logger.INFO.Log("Starting Server on port " + port);
+            Logger.THREAD_INFO.Log("Starting Server on port " + port);
             socket = new ServerSocket(port, backlog);
             serverStatus.isRunning = true;
-            Logger.DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress() + " InetAddress: " + socket.getInetAddress());
-            Logger.DEBUG.Log("Socket local port: " + socket.getLocalPort());
+            Logger.THREAD_DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress() + " InetAddress: " + socket.getInetAddress());
+            Logger.THREAD_DEBUG.Log("Socket local port: " + socket.getLocalPort());
             while (serverStatus.isRunning) {
                 Socket clientSocket = socket.accept();
                 if (thread.isInterrupted() || !serverStatus.isRunning) {
                     thread = null;
                     break;
                 }
-                Logger.INFO.Log("Waiting for requests... Listening on Port: " + clientSocket.getLocalPort() + " at address: " + clientSocket.getLocalSocketAddress());
+                Logger.THREAD_INFO.Log("Waiting for requests... Listening on Port: " + clientSocket.getLocalPort() + " at address: " + clientSocket.getLocalSocketAddress());
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
                 String requestType = in.readLine();
-                Logger.INFO.Log("Request: " + requestType);
+                Logger.THREAD_INFO.Log("Request: " + requestType);
 
                 String body = "";
                 String requestedFile = null;
@@ -203,7 +203,7 @@ public class HTTPServer extends Thread {
                     }
                     requestedFile = GetFilename(requestType);
                     if (!(requestedFile.isEmpty())) {
-                        Logger.DEBUG.Log("Requested file: " + requestedFile);
+                        Logger.THREAD_DEBUG.Log("Requested file: " + requestedFile);
                         body = ResponseBody(GetFolders(requestType), StandardCharsets.UTF_8);
                     }
                 }
@@ -213,7 +213,7 @@ public class HTTPServer extends Thread {
                     if (clientInputLine.isEmpty()) {
                         break;
                     }
-                    Logger.INFO.Log("Request Headers: " + clientInputLine);
+                    Logger.THREAD_INFO.Log("Request Headers: " + clientInputLine);
                 }
 
                 if (requestedFile != null) {
@@ -244,16 +244,16 @@ public class HTTPServer extends Thread {
                 }
             }
         } catch (Exception ex) {
-            Logger.CRITICAL.LogException(ex, "Port " + port + " backlog limit: " + 10);
+            Logger.THREAD_CRITICAL.LogException(ex, "Port " + port + " backlog limit: " + 10);
         } finally {
             try {
                 if (socket == null) {
                     throw new NullPointerException("Socket Object is NULL");
                 }
                 socket.close();
-                Logger.INFO.Log("Closed Socket.");
+                Logger.THREAD_INFO.Log("Closed Socket.");
             } catch (Exception ex) {
-                Logger.CRITICAL.LogException(ex, "Cannot close socket");
+                Logger.THREAD_CRITICAL.LogException(ex, "Cannot close socket");
             }
         }
     }
@@ -270,11 +270,11 @@ public class HTTPServer extends Thread {
     private void PostResponse(BufferedWriter out, String body, String contentType, String statusCode) throws IOException {
         int bodyLength = body.length();
         LocalDateTime now = LocalDateTime.now();
-        Logger.DEBUG.Log("HTTP/1.0 " + statusCode);
-        Logger.DEBUG.Log("Date: " + now);
-        Logger.DEBUG.Log("Server: " + serverName);
-        Logger.DEBUG.Log("Content-type: " + contentType);
-        Logger.DEBUG.Log("Content-Length: " + bodyLength);
+        Logger.THREAD_DEBUG.Log("HTTP/1.0 " + statusCode);
+        Logger.THREAD_DEBUG.Log("Date: " + now);
+        Logger.THREAD_DEBUG.Log("Server: " + serverName);
+        Logger.THREAD_DEBUG.Log("Content-type: " + contentType);
+        Logger.THREAD_DEBUG.Log("Content-Length: " + bodyLength);
         out.write("HTTP/1.0 " + statusCode + "\r\n");
         out.write("Date: " + now + "\r\n");
         out.write("Server: " + serverName + "\r\n");

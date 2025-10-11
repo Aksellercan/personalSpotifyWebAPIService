@@ -8,17 +8,17 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Logger Tool
- * Logs in varying severity levels such as INFO, WARN, ERROR, DEBUG and CRITICAL
+ * Logs in varying severity levels such as INFO, WARN, ERROR, DEBUG, CRITICAL and Thread specific ones like: THREAD: INFO, THREAD: WARN, THREAD: DEBUG, THREAD: ERROR, THREAD: CRITICAL
  */
 
 public enum Logger {
-    INFO(" [ INFO ] "), WARN(" [ WARN ] "), ERROR(" [ ERROR ] "), DEBUG(" [ DEBUG ] "), CRITICAL(" [ CRITICAL ] "),
+    INFO(" [ INFO ] "), WARN(" [ WARN ] "), ERROR(" [ ERROR ] "), DEBUG(" [ DEBUG ] "), CRITICAL(" [ CRITICAL ] "), THREAD_INFO(" [ THREAD: INFO ] "), THREAD_DEBUG(" [ THREAD: DEBUG ] "), THREAD_WARN(" [ THREAD: WARN ] "), THREAD_ERROR(" [ THREAD: ERROR ] "), THREAD_CRITICAL(" [ THREAD: CRITICAL ] "),
     ;
 
     /**
      * Severity level of a log
      */
-    private final String severity;
+    private String severity;
     /**
      * Outputs DEBUG severity logs to console
      */
@@ -150,6 +150,21 @@ public enum Logger {
         return now.format(formatter) + severity;
     }
 
+    private String setThreadSeverity(Thread thread) {
+        StringBuilder sb = new StringBuilder();
+        boolean add = false;
+        for (int i = 0; i < this.severity.length(); i++) {
+            if (add) {
+                sb.append(severity.charAt(i));
+                continue;
+            }
+            if (severity.charAt(i) == ':') {
+                add = true;
+            }
+        }
+        return String.format(" [ %s:%s", thread.getName(), sb);
+    }
+
     /**
      * Logs message and writes it to logfile
      *
@@ -258,6 +273,45 @@ public enum Logger {
     }
 
     /**
+     * Logs message associated to the thread it's running on
+     * @param thread    Thread object
+     * @param message   Message to be logged
+     */
+    public void LogThread(Thread thread, String message) {
+        if (!quiet) {
+            this.severity = setThreadSeverity(thread);
+            WriteLog(message, true);
+        }
+    }
+
+    /**
+     * Logs message associated to the thread it's running on
+     * @param thread    Thread object
+     * @param message   Message to be logged
+     * @param writeToFile   Whether to write to logfile or not
+     */
+    public void LogThread(Thread thread, String message, boolean writeToFile) {
+        if (!quiet) {
+            this.severity = setThreadSeverity(thread);
+            WriteLog(message, writeToFile);
+        }
+    }
+
+    /**
+     * Logs message associated to the thread it's running on
+     * @param thread    Thread object
+     * @param message   Message to be logged
+     * @param writeToFile   Whether to write to logfile or not
+     * @param force Bypass quiet flag
+     */
+    public void LogThread(Thread thread, String message, boolean writeToFile, boolean force) {
+        // (p -> q) implication
+        this.severity = setThreadSeverity(thread);
+        if (quiet) if (force) WriteLog(message, writeToFile);
+        if (!quiet) WriteLog(message, writeToFile);
+    }
+
+    /**
      * Decides what to do with logs depending on settings.
      * If only "debugOutput" is set to false it won't display it and by default will not write to file.
      * If "debugOutput" is set to false but "verboseLogFile" is set to true, It will only write it to log file.
@@ -269,7 +323,7 @@ public enum Logger {
      */
     private void WriteLog(String message, boolean writeToFile) {
         String fullMessage = DateSeverityFormat() + message;
-        if (!debugOutput && this == DEBUG) {
+        if (!debugOutput && (this == DEBUG || this == THREAD_DEBUG)) {
             if (verboseLogFile && writeToFile) SaveLog(fullMessage);
             return;
         } else if (this == DEBUG) {
@@ -291,13 +345,30 @@ public enum Logger {
     private void ColourOutput(String fullMessage) {
         if (colouredOutput) {
             switch (this) {
+                case THREAD_INFO:
+                    System.out.println(ConsoleColours.GREEN_BOLD_BRIGHT + fullMessage + ConsoleColours.RESET);
+                    break;
+                case THREAD_DEBUG:
+                    System.out.println(ConsoleColours.BLUE_BOLD_BRIGHT + fullMessage + ConsoleColours.RESET);
+                    break;
+                case THREAD_WARN:
+                    System.out.println(ConsoleColours.YELLOW_BOLD + fullMessage + ConsoleColours.RESET);
+                    break;
+                case THREAD_ERROR:
+                    System.out.println(ConsoleColours.RED_BOLD + fullMessage + ConsoleColours.RESET);
+                    break;
+                case THREAD_CRITICAL:
+                    System.out.println(ConsoleColours.RED_BOLD_BRIGHT + fullMessage + ConsoleColours.RESET);
+                    break;
                 case WARN:
-                    System.out.println(ConsoleColours.YELLOW + fullMessage + ConsoleColours.RESET);
+                    System.out.println(ConsoleColours.YELLOW_BRIGHT + fullMessage + ConsoleColours.RESET);
                     break;
                 case DEBUG:
                     System.out.println(ConsoleColours.BLUE + fullMessage + ConsoleColours.RESET);
                     break;
                 case ERROR:
+                    System.out.println(ConsoleColours.RED_BRIGHT + fullMessage + ConsoleColours.RESET);
+                    break;
                 case CRITICAL:
                     System.out.println(ConsoleColours.RED + fullMessage + ConsoleColours.RESET);
                     break;
