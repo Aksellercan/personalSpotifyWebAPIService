@@ -92,11 +92,14 @@ public class Main {
                 HelpMenu();
                 return;
             }
+            if (args[0].equals("--settings")) {
+                Logger.setQuiet(true);
+            }
             if (args[0].equals("--test")) {
                 long startTime = System.currentTimeMillis();
                 spotifySession = Launch(false);
                 long endTime = System.currentTimeMillis();
-                Logger.INFO.Log("Start time: " + startTime + ", End time: " + endTime + ". Total execution time: " + (endTime - startTime));
+                Logger.INFO.Log("Start time: " + startTime + ", End time: " + endTime + ". Total execution time: " + (endTime - startTime) + "ms");
             } else {
                 spotifySession = Launch(true);
             }
@@ -120,19 +123,18 @@ public class Main {
         switch (args[0]) {
             case "--settings":
                 //Settings
-                Logger.DEBUG.Log("launch_gui: " + ProgramOptions.LAUNCH_GUI(), false);
-                Logger.DEBUG.Log("auto_mode: " + ProgramOptions.isAutoMode(), false);
-                Logger.DEBUG.Log("verbose_log_file: " + Logger.getVerboseLogFile(), false);
-                Logger.DEBUG.Log("debug_output: " + Logger.getDebugOutput(), false);
-                Logger.DEBUG.Log("coloured_output: " + Logger.getColouredOutput(), false);
-                Logger.DEBUG.Log("enable_stack_traces: " + Logger.getEnableStackTraces(), false);
-                Logger.DEBUG.Log("playlist_limit: " + ProgramOptions.getPlaylist_limit(), false);
+                System.out.println("launch_gui: " + ProgramOptions.LAUNCH_GUI());
+                System.out.println("auto_mode: " + ProgramOptions.isAutoMode());
+                System.out.println("verbose_log_file: " + Logger.getVerboseLogFile());
+                System.out.println("debug_output: " + Logger.getDebugOutput());
+                System.out.println("coloured_output: " + Logger.getColouredOutput());
+                System.out.println("enable_stack_traces: " + Logger.getEnableStackTraces());
+                System.out.println("playlist_limit: " + ProgramOptions.getPlaylist_limit());
                 return;
             case "--gui":
                 try {
                     Thread timer = new Thread(new TimerWorker());
                     timer.start();
-                    Logger.THREAD_INFO.LogThread(timer, "test thread log");
                     GUI.launch(GUI.class, args);
                     timer.join();
                 } catch (InterruptedException e) {

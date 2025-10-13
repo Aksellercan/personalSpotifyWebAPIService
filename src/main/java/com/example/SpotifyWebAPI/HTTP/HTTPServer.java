@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 /**
  * Starts and manages the HTTP Server
@@ -67,11 +68,11 @@ public class HTTPServer extends Thread {
             serverStatus.isRunning = false;
             thread.interrupt();
             if (thread.isInterrupted()) {
-                Logger.THREAD_INFO.Log("Server Stopped.");
+                Logger.THREAD_INFO.LogThread(thread,"Server Stopped.");
             } else {
                 throw new InterruptedException("Failed to interrupt the thread.");
             }
-            Logger.THREAD_INFO.Log("Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
+            Logger.THREAD_INFO.LogThread(thread,"Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
             return true;
         } catch (Exception ex) {
             Logger.THREAD_CRITICAL.LogException(ex, "Cannot close socket");
@@ -84,9 +85,11 @@ public class HTTPServer extends Thread {
      */
     @Override
     public void run() {
+        Random genID = new Random();
+        long id = genID.nextLong();
         thread = Thread.currentThread();
-        thread.setName(thread.getName() + "-HTTPServer");
-        Logger.THREAD_DEBUG.Log("Thread name = " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
+        thread.setName(thread.getName() + "_Http-Server_" + (id > 0 ? id : -1*id));
+        Logger.THREAD_DEBUG.LogThread(thread,"Thread name = " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
         StartListening();
     }
 
@@ -162,7 +165,7 @@ public class HTTPServer extends Thread {
      */
     private File GetIndexPage() {
         if (!indexFile.exists()) {
-            Logger.WARN.Log("File " + indexFile.getName() + " not found!");
+            Logger.WARN.LogThread(thread,"File " + indexFile.getName() + " not found!");
             return null;
         }
         return indexFile;
@@ -175,25 +178,25 @@ public class HTTPServer extends Thread {
      */
     private void StartListening() {
         try {
-            Logger.THREAD_INFO.Log("Starting Server on port " + port);
+            Logger.THREAD_INFO.LogThread(thread,"Starting Server on port " + port);
             socket = new ServerSocket(port, backlog);
             serverStatus.isRunning = true;
-            Logger.THREAD_DEBUG.Log("Socket local address: " + socket.getLocalSocketAddress() + " InetAddress: " + socket.getInetAddress());
-            Logger.THREAD_DEBUG.Log("Socket local port: " + socket.getLocalPort());
+            Logger.THREAD_DEBUG.LogThread(thread,"Socket local address: " + socket.getLocalSocketAddress() + " InetAddress: " + socket.getInetAddress());
+            Logger.THREAD_DEBUG.LogThread(thread,"Socket local port: " + socket.getLocalPort());
             while (serverStatus.isRunning) {
                 Socket clientSocket = socket.accept();
                 if (thread.isInterrupted() || !serverStatus.isRunning) {
                     thread = null;
                     break;
                 }
-                Logger.THREAD_INFO.Log("Waiting for requests... Listening on Port: " + clientSocket.getLocalPort() + " at address: " + clientSocket.getLocalSocketAddress());
+                Logger.THREAD_INFO.LogThread(thread,"Waiting for requests... Listening on Port: " + clientSocket.getLocalPort() + " at address: " + clientSocket.getLocalSocketAddress());
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
                 String requestType = in.readLine();
-                Logger.THREAD_INFO.Log("Request: " + requestType);
+                Logger.THREAD_INFO.LogThread(thread,"Request: " + requestType);
 
                 String body = "";
                 String requestedFile = null;
@@ -203,7 +206,7 @@ public class HTTPServer extends Thread {
                     }
                     requestedFile = GetFilename(requestType);
                     if (!(requestedFile.isEmpty())) {
-                        Logger.THREAD_DEBUG.Log("Requested file: " + requestedFile);
+                        Logger.THREAD_DEBUG.LogThread(thread,"Requested file: " + requestedFile);
                         body = ResponseBody(GetFolders(requestType), StandardCharsets.UTF_8);
                     }
                 }
@@ -213,7 +216,7 @@ public class HTTPServer extends Thread {
                     if (clientInputLine.isEmpty()) {
                         break;
                     }
-                    Logger.THREAD_INFO.Log("Request Headers: " + clientInputLine);
+                    Logger.THREAD_INFO.LogThread(thread,"Request Headers: " + clientInputLine);
                 }
 
                 if (requestedFile != null) {
@@ -270,11 +273,11 @@ public class HTTPServer extends Thread {
     private void PostResponse(BufferedWriter out, String body, String contentType, String statusCode) throws IOException {
         int bodyLength = body.length();
         LocalDateTime now = LocalDateTime.now();
-        Logger.THREAD_DEBUG.Log("HTTP/1.0 " + statusCode);
-        Logger.THREAD_DEBUG.Log("Date: " + now);
-        Logger.THREAD_DEBUG.Log("Server: " + serverName);
-        Logger.THREAD_DEBUG.Log("Content-type: " + contentType);
-        Logger.THREAD_DEBUG.Log("Content-Length: " + bodyLength);
+        Logger.THREAD_DEBUG.LogThread(thread,"HTTP/1.0 " + statusCode);
+        Logger.THREAD_DEBUG.LogThread(thread,"Date: " + now);
+        Logger.THREAD_DEBUG.LogThread(thread,"Server: " + serverName);
+        Logger.THREAD_DEBUG.LogThread(thread,"Content-type: " + contentType);
+        Logger.THREAD_DEBUG.LogThread(thread,"Content-Length: " + bodyLength);
         out.write("HTTP/1.0 " + statusCode + "\r\n");
         out.write("Date: " + now + "\r\n");
         out.write("Server: " + serverName + "\r\n");

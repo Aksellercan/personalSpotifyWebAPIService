@@ -41,6 +41,11 @@ public enum Logger {
     private static boolean quiet = false;
 
     /**
+     * Sets log path
+     */
+    private static String log_path = "logs";
+
+    /**
      * Constructor for logger takes severity level as input
      *
      * @param severity Sets the severity
@@ -94,6 +99,10 @@ public enum Logger {
         quiet = setQuiet;
     }
 
+    public static void setLog_path(String newLog_Path) {
+        log_path = newLog_Path;
+    }
+
     /**
      * Returns debugOutput value
      *
@@ -137,6 +146,10 @@ public enum Logger {
      */
     public static boolean getQuiet() {
         return quiet;
+    }
+
+    public static String getLog_path() {
+        return log_path;
     }
 
     /**
@@ -274,8 +287,9 @@ public enum Logger {
 
     /**
      * Logs message associated to the thread it's running on
-     * @param thread    Thread object
-     * @param message   Message to be logged
+     *
+     * @param thread  Thread object
+     * @param message Message to be logged
      */
     public void LogThread(Thread thread, String message) {
         if (!quiet) {
@@ -286,9 +300,10 @@ public enum Logger {
 
     /**
      * Logs message associated to the thread it's running on
-     * @param thread    Thread object
-     * @param message   Message to be logged
-     * @param writeToFile   Whether to write to logfile or not
+     *
+     * @param thread      Thread object
+     * @param message     Message to be logged
+     * @param writeToFile Whether to write to logfile or not
      */
     public void LogThread(Thread thread, String message, boolean writeToFile) {
         if (!quiet) {
@@ -299,10 +314,11 @@ public enum Logger {
 
     /**
      * Logs message associated to the thread it's running on
-     * @param thread    Thread object
-     * @param message   Message to be logged
-     * @param writeToFile   Whether to write to logfile or not
-     * @param force Bypass quiet flag
+     *
+     * @param thread      Thread object
+     * @param message     Message to be logged
+     * @param writeToFile Whether to write to logfile or not
+     * @param force       Bypass quiet flag
      */
     public void LogThread(Thread thread, String message, boolean writeToFile, boolean force) {
         // (p -> q) implication
@@ -352,7 +368,7 @@ public enum Logger {
                     System.out.println(ConsoleColours.BLUE_BOLD_BRIGHT + fullMessage + ConsoleColours.RESET);
                     break;
                 case THREAD_WARN:
-                    System.out.println(ConsoleColours.YELLOW_BOLD + fullMessage + ConsoleColours.RESET);
+                    System.out.println(ConsoleColours.YELLOW_BOLD_BRIGHT + fullMessage + ConsoleColours.RESET);
                     break;
                 case THREAD_ERROR:
                     System.out.println(ConsoleColours.RED_BOLD + fullMessage + ConsoleColours.RESET);
@@ -361,7 +377,7 @@ public enum Logger {
                     System.out.println(ConsoleColours.RED_BOLD_BRIGHT + fullMessage + ConsoleColours.RESET);
                     break;
                 case WARN:
-                    System.out.println(ConsoleColours.YELLOW_BRIGHT + fullMessage + ConsoleColours.RESET);
+                    System.out.println(ConsoleColours.YELLOW + fullMessage + ConsoleColours.RESET);
                     break;
                 case DEBUG:
                     System.out.println(ConsoleColours.BLUE + fullMessage + ConsoleColours.RESET);
@@ -533,7 +549,7 @@ public enum Logger {
      * @throws IOException If the file doesn't exist
      */
     private File getLogFile(String fileName) throws IOException {
-        File logPath = new File("logs");
+        File logPath = new File(log_path);
         if (!logPath.exists()) {
             boolean createDir = logPath.mkdirs();
             if (!createDir) {

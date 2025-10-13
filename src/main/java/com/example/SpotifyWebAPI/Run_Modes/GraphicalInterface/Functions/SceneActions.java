@@ -59,7 +59,6 @@ public final class SceneActions {
                 FXMLPages.add(new FileSearch(addToArray.getName(), addToArray.getPath()));
             }
             removeExtension();
-            Logger.DEBUG.Log("File: " + FXMLPages.toString());
         } catch (Exception e) {
             Logger.ERROR.LogException(e, "Can't read pages");
         }

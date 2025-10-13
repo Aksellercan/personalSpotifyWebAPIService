@@ -4,6 +4,7 @@ import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneAct
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.BasicParser;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;
@@ -115,6 +116,7 @@ public class SettingsController implements Initializable {
         Logger.DEBUG.Log("Event: " + event.toString());
         ProgramOptions.setChangesSaved(false);
         YAMLParser.MapAndWriteConfig();
+//        JSONParser.MapAndWriteConfig();
         SceneActions.ChangeScene("PrimaryPage");
     }
 

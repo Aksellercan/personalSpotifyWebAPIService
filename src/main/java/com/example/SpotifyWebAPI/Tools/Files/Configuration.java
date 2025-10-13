@@ -44,6 +44,7 @@ public abstract class Configuration {
                 "enable_stack_traces",
                 "verbose_log_file",
                 "quiet",
+                "log_path",
                 "use_formatting"
         };
         tokenConfig = new Token[keys.length];
@@ -138,6 +139,15 @@ public abstract class Configuration {
                         break;
                     }
                     Logger.setEnableStackTraces(BooleanParse(token.getValue(), false));
+                    break;
+                case "log_path":
+                    if (update) {
+                        token.setValue(Logger.getLog_path());
+                        token.setCategoryType("Logger Options");
+                        break;
+                    }
+                    if (token.getValue().isEmpty()) token.setValue(Logger.getLog_path());
+                    Logger.setLog_path(token.getValue());
                     break;
                 case "quiet":
                     if (update) {

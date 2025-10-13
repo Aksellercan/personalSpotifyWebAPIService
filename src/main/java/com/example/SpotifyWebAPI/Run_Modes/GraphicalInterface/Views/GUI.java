@@ -6,6 +6,7 @@ import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneAct
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
@@ -49,6 +50,7 @@ public class GUI extends Application {
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(event -> {
             YAMLParser.MapAndWriteConfig();
+//            JSONParser.MapAndWriteConfig();
             if (SceneActions.StopBackgroundHTTPThread()) {
                 Logger.INFO.Log("Closed Session. Reason: " + event.getEventType());
                 System.exit(0);
