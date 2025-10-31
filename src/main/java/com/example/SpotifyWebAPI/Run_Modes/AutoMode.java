@@ -46,11 +46,14 @@ public class AutoMode {
                 readDescCount = Integer.parseInt(stringDescCount);
             }
             if (playlistSize == ProgramOptions.getPlaylist_limit()) {
+                userRequest.setPlaylistDetails(spotify_session.getPlaylist_id(), clientCredentialsRequest.getPlaylist().getName(), playlistSize + "/" + ProgramOptions.getPlaylist_limit(), true, false);
                 String prevPlaylistName = clientCredentialsRequest.getPlaylist().getName();
                 int nextNumber = nextNumber(prevPlaylistName);
                 userRequest.createPlaylist(spotify_session.getUser_id(), "Favorites " + nextNumber, "0/" + ProgramOptions.getPlaylist_limit());
-                Logger.INFO.Log("New playlist created with playlist_id: " + spotify_session.getPlaylist_id() + " and Name: " + "Favorites " + nextNumber);
+                Logger.INFO.Log("New playlist created with playlist_id: " + userRequest.getPlaylist().getPlaylist_id() + " and name: " + "Favorites " + nextNumber);
                 ProgramOptions.setAutoMode(false);
+                spotify_session.setPlaylist_id(userRequest.getPlaylist().getPlaylist_id());
+                ProgramOptions.setChangesSaved(false);
                 YAMLParser.MapAndWriteConfig();
                 return;
             } else if (playlistSize == readDescCount) {

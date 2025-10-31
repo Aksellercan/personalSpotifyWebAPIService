@@ -13,6 +13,10 @@ public class TimerWorker implements Runnable {
     @Override
     public void run() {
         try {
+            Random rand = new Random();
+            long id = rand.nextLong();
+            Thread.currentThread().setName(Thread.currentThread().getName() + "_TimerWorker_" + (id > 0 ? id : -1*id));
+            Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Started Timer on thread: " + Thread.currentThread().getName());
             CheckValue();
         } catch (InterruptedException e) {
             Logger.THREAD_ERROR.LogException(e, Thread.currentThread().getName());
@@ -34,10 +38,6 @@ public class TimerWorker implements Runnable {
     private void CheckValue() throws InterruptedException {
         int i = 0;
         int skipCount = 0;
-        Random rand = new Random();
-        long id = rand.nextLong();
-        Thread.currentThread().setName(Thread.currentThread().getName() + "_TimerWorker_" + (id > 0 ? id : -1*id));
-        Logger.THREAD_INFO.LogThread(Thread.currentThread(),"Timer Thread name: " + Thread.currentThread().getName());
         while (!Thread.interrupted()) {
             if (spotifySession.getAccess_token() != null) {
                 if (i != 0) refreshAccessToken();

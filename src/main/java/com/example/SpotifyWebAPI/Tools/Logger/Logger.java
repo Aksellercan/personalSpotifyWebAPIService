@@ -12,7 +12,16 @@ import java.time.format.DateTimeFormatter;
  */
 
 public enum Logger {
-    INFO(" [ INFO ] "), WARN(" [ WARN ] "), ERROR(" [ ERROR ] "), DEBUG(" [ DEBUG ] "), CRITICAL(" [ CRITICAL ] "), THREAD_INFO(" [ THREAD: INFO ] "), THREAD_DEBUG(" [ THREAD: DEBUG ] "), THREAD_WARN(" [ THREAD: WARN ] "), THREAD_ERROR(" [ THREAD: ERROR ] "), THREAD_CRITICAL(" [ THREAD: CRITICAL ] "),
+    INFO(" [ INFO ] "),
+    WARN(" [ WARN ] "),
+    ERROR(" [ ERROR ] "),
+    DEBUG(" [ DEBUG ] "),
+    CRITICAL(" [ CRITICAL ] "),
+    THREAD_INFO(" [ THREAD: INFO ] "),
+    THREAD_DEBUG(" [ THREAD: DEBUG ] "),
+    THREAD_WARN(" [ THREAD: WARN ] "),
+    THREAD_ERROR(" [ THREAD: ERROR ] "),
+    THREAD_CRITICAL(" [ THREAD: CRITICAL ] "),
     ;
 
     /**
@@ -175,7 +184,11 @@ public enum Logger {
                 add = true;
             }
         }
-        return String.format(" [ %s:%s", thread.getName(), sb);
+        String threadName;
+        if (thread != null) threadName = thread.getName();
+        else
+            threadName = "lost-thread";
+        return String.format(" [ %s:%s", threadName, sb);
     }
 
     /**

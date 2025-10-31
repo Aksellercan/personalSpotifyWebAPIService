@@ -179,14 +179,18 @@ public class User_Request {
             playlist = new Playlist(playlistName, playlistDescription);
             playlist.setPublicPlaylist(true);
             playlist.setCollaborative(false);
+
             String postBody = mapper.writeValueAsString(playlist);
             HTTPConnection.postBody(http, postBody);
+            HTTPConnection.readErrorStream(http, 400);
+
             JsonNode node = mapper.readTree(http.getInputStream());
-            HTTPConnection.postBody(http, postBody);
+
             String snapshot_id = node.get("snapshot_id").asText();
             String playlist_id = node.get("id").asText();
             String external_urls = node.get("external_urls").get("spotify").asText();
             String href = node.get("href").asText();
+
             Logger.INFO.Log("Playlist created with ID: " + playlist_id);
             Logger.INFO.Log("Playlist snapshot ID: " + snapshot_id);
             Logger.INFO.Log("Playlist external URL: " + external_urls);

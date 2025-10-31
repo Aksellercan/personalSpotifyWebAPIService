@@ -18,6 +18,7 @@ public class YAMLParser extends Configuration implements Parsers {
         try {
             YAMLParser yamlParser = new YAMLParser();
             Logger.INFO.Log("Using YAML Reader, with no token type checker");
+            Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Reading config on thread: " + Thread.currentThread().getName());
             tokenConfig = yamlParser.LoadKeys();
             yamlParser.ReadConfig();
             yamlParser.MapKeys(tokenConfig.length == 0);
@@ -71,6 +72,12 @@ public class YAMLParser extends Configuration implements Parsers {
 
     /**
      * Reads configuration file and saves it to tokenConfig array
+     */
+    //TODO remove quotes at start and beginning of a string
+    //TODO read arrays name:[]
+    /*
+    instead of line by line formatting just like JSON reader put in a string but have 2 strings one for normal key:value other for arrays
+    so return String[] then format as follows name_entry: ["red", "blue", "green"]...
      */
     public void ReadConfig() {
         int lineCount = 0;

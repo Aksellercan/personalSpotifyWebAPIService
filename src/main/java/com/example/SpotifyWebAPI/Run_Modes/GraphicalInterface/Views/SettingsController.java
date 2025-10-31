@@ -3,8 +3,6 @@ package com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views;
 import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Files.Parsers.BasicParser;
-import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;

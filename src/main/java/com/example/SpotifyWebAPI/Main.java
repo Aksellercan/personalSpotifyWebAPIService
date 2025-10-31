@@ -69,7 +69,6 @@ public class Main {
             Thread configReaderThread = new Thread(YAMLParser::ReadConfigAndMap);
 //            Thread configReaderThread = new Thread(JSONParser::ReadConfigAndMap);
             configReaderThread.setName(configReaderThread.getName() + "_config-reader_" + (id > 0 ? id : -1*id));
-            Logger.THREAD_INFO.LogThread(configReaderThread, "Reading config on thread: " + configReaderThread.getName());
             configReaderThread.start();
         } else {
             YAMLParser.ReadConfigAndMap();
@@ -86,6 +85,7 @@ public class Main {
      * @param args Commandline arguments, allows maximum of 14 with "set" argument and lowest no arguments.
      */
     public static void main(String[] args) {
+        Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Main thread: " + Thread.currentThread().getName());
         SpotifySession spotifySession = null;
         if (args.length == 1) {
             if (args[0].equals("--help")) {
@@ -94,14 +94,6 @@ public class Main {
             }
             if (args[0].equals("--settings")) {
                 Logger.setQuiet(true);
-            }
-            if (args[0].equals("--test")) {
-                long startTime = System.currentTimeMillis();
-                spotifySession = Launch(false);
-                long endTime = System.currentTimeMillis();
-                Logger.INFO.Log("Start time: " + startTime + ", End time: " + endTime + ". Total execution time: " + (endTime - startTime) + "ms");
-            } else {
-                spotifySession = Launch(true);
             }
         } else {
             spotifySession = Launch(true);
@@ -112,6 +104,7 @@ public class Main {
                 return;
             }
             if (ProgramOptions.isAutoMode()) {
+                spotifySession = Launch(false);
                 AutoMode autoMode = new AutoMode();
                 autoMode.runFunctions();
             } else {
@@ -121,6 +114,7 @@ public class Main {
             return;
         }
         switch (args[0]) {
+            //TODO use sequential config reader to fix race condition
             case "--settings":
                 //Settings
                 System.out.println("launch_gui: " + ProgramOptions.LAUNCH_GUI());
@@ -145,6 +139,7 @@ public class Main {
                 AutoModeRequirementCheck(spotifySession);
                 return;
             case "--auto-mode":
+                spotifySession = Launch(false);
                 if (spotifySession.getPlaylist_id() == null || spotifySession.getRefresh_token() == null
                         || spotifySession.getUser_id() == null || spotifySession.getClient_id() == null
                         || spotifySession.getClient_secret() == null || spotifySession.getRedirect_uri() == null) {
