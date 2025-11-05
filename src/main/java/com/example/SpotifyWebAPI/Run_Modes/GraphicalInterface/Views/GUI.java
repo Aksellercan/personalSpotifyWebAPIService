@@ -130,7 +130,8 @@ public class GUI extends Application {
             httpServer = SaveHTTPState.getServer("Fallback");
             if (httpServer != null && httpServer.StopServer()) {
                 responseTextArea.setText("HTTP Server Stopped");
-                HttpURLConnection http = HTTPConnection.connectHTTP("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort(), "GET");
+                HTTPConnection httpConnection = new HTTPConnection();
+                HttpURLConnection http = httpConnection.connectHTTP("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort(), "GET");
                 http.connect();
                 SaveHTTPState.removeServer("Fallback");
             } else {

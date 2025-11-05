@@ -16,6 +16,7 @@ import java.util.Base64;
  */
 public class User_Access_Token {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
+    private final HTTPConnection httpConnection = new HTTPConnection();
 
     /**
      * Encodes Authorization Bearer with Base64
@@ -36,13 +37,13 @@ public class User_Access_Token {
             }
             String encodeString = getEncodedString(); //Base64 encoding as required by Spotify
             String Basic = "Basic " + encodeString;
-            HttpURLConnection http = HTTPConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
+            HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
             http.setDoOutput(true);
             http.connect();
             String postBody = "grant_type=authorization_code" + "&code=" + URLEncoder.encode(spotifySession.getCode(), "UTF-8")
                     + "&redirect_uri=" + URLEncoder.encode(spotifySession.getRedirect_uri(), "UTF-8");
             if (Logger.getDebugOutput()) System.out.println("Full PostBody: " + postBody);
-            HTTPConnection.postBody(http, postBody);
+            httpConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             spotifySession.setAccess_token(node.get("access_token").asText()); //exchange token
@@ -79,12 +80,12 @@ public class User_Access_Token {
         try {
             String encodeString = getEncodedString(); //Base64 encoding as required by Spotify
             String Basic = "Basic " + encodeString;
-            HttpURLConnection http = HTTPConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
+            HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded", "Authorization", Basic);
             http.setDoOutput(true);
             http.connect();
             String postBody = "grant_type=refresh_token" + "&refresh_token=" + spotifySession.getRefresh_token()
                     + "&client_id=" + spotifySession.getClient_id();
-            HTTPConnection.postBody(http, postBody);
+            httpConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             spotifySession.setAccess_token(node.get("access_token").asText()); //exchange token

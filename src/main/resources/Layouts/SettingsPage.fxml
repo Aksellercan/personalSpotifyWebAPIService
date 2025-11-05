@@ -5,50 +5,45 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.SettingsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.SettingsController">
     <top>
         <GridPane minHeight="33.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button mnemonicParsing="false" onAction="#GoToMainMenu" text="Main Menu" textAlignment="CENTER"
-                        GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+                <Button mnemonicParsing="false" onAction="#GoToMainMenu" text="Main Menu" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                     <font>
-                        <Font size="11.0"/>
+                        <Font size="11.0" />
                     </font>
                     <GridPane.margin>
-                        <Insets right="15.0"/>
+                        <Insets right="15.0" />
                     </GridPane.margin>
                 </Button>
-                <Button mnemonicParsing="false" onAction="#OnPageSearchButton" text="Search" textAlignment="CENTER"
-                        GridPane.columnIndex="2">
+                <Button mnemonicParsing="false" onAction="#OnPageSearchButton" text="Search" textAlignment="CENTER" GridPane.columnIndex="2">
                     <font>
-                        <Font size="11.0"/>
+                        <Font size="11.0" />
                     </font>
                     <GridPane.margin>
-                        <Insets left="5.0"/>
+                        <Insets left="5.0" />
                     </GridPane.margin>
                 </Button>
-                <TextField fx:id="pageSearchField" onAction="#OnPageSearchButton" promptText="search"
-                           GridPane.columnIndex="1">
+                <TextField fx:id="pageSearchField" onAction="#OnPageSearchButton" promptText="search" GridPane.columnIndex="1">
                     <font>
-                        <Font size="11.0"/>
+                        <Font size="11.0" />
                     </font>
                 </TextField>
                 <Label text="API JAVAFX Alpha">
                     <font>
-                        <Font size="11.0"/>
+                        <Font size="11.0" />
                     </font>
                     <GridPane.margin>
-                        <Insets left="15.0"/>
+                        <Insets left="15.0" />
                     </GridPane.margin>
                 </Label>
             </children>
@@ -59,108 +54,135 @@
             <children>
                 <VBox layoutX="14.0" layoutY="14.0" prefHeight="259.0" prefWidth="241.0">
                     <children>
-                        <Button mnemonicParsing="false" onAction="#ToggleColouredOutput" text="Toggle Coloured Output">
+                        <Button fx:id="colouredOutputBTN" mnemonicParsing="false" onAction="#ToggleColouredOutput" text="Toggle Coloured Output">
                             <VBox.margin>
-                                <Insets bottom="15.0"/>
+                                <Insets bottom="15.0" />
                             </VBox.margin>
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#ToggleDebugOutput" text="Toggle Debug Output">
+                        <Button fx:id="debugOutputBTN" mnemonicParsing="false" onAction="#ToggleDebugOutput" text="Toggle Debug Output">
                             <VBox.margin>
-                                <Insets bottom="15.0"/>
+                                <Insets bottom="15.0" />
                             </VBox.margin>
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#ToggleAutoMode" text="Toggle Auto Mode">
+                        <Button fx:id="autoModeBTN" mnemonicParsing="false" onAction="#ToggleAutoMode" text="Toggle Auto Mode">
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                             <VBox.margin>
-                                <Insets bottom="15.0"/>
+                                <Insets bottom="15.0" />
                             </VBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#ToggleVerboseLogFile"
-                                text="Toggle Verbose Log Files">
+                        <Button fx:id="verboseLogFilesBTN" mnemonicParsing="false" onAction="#ToggleVerboseLogFile" text="Toggle Verbose Log Files">
                             <VBox.margin>
-                                <Insets bottom="15.0"/>
+                                <Insets bottom="15.0" />
                             </VBox.margin>
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#ToggleCLI" text="Run CLI">
+                        <Button fx:id="launchGUIBTN" mnemonicParsing="false" onAction="#ToggleCLI" text="Run CLI">
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                             <VBox.margin>
-                                <Insets bottom="15.0"/>
+                                <Insets bottom="15.0" />
                             </VBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#ToggleStackTraces" text="Toggle Stack Traces">
+                        <Button fx:id="stackTracesBTN" mnemonicParsing="false" onAction="#ToggleStackTraces" text="Toggle Stack Traces">
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
                         </Button>
+                  <Button fx:id="quietBTN" mnemonicParsing="false" onAction="#ToggleQuiet" text="Toggle Quiet" textAlignment="CENTER">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
+                  </Button>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="logPathSFLD" maxWidth="-Infinity" onAction="#HandleLogPathField" prefHeight="26.0" prefWidth="115.0" promptText="Log path">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="setLogPathBTN" mnemonicParsing="false" onAction="#SetLogPath" text="OK" textAlignment="CENTER">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                     </children>
                 </VBox>
                 <VBox layoutX="288.0" layoutY="14.0" prefHeight="264.0" prefWidth="303.0">
                     <children>
-                        <Label text="Set User ID"/>
+                        <Label text="Set User ID" />
                         <TextField fx:id="inputUser_id" prefHeight="20.0" prefWidth="340.0" promptText="user_id">
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                             <VBox.margin>
-                                <Insets right="15.0"/>
+                                <Insets right="15.0" />
                             </VBox.margin>
                         </TextField>
-                        <Label text="Set Client ID"/>
+                        <Label text="Set Client ID" />
                         <TextField fx:id="inputClient_id" promptText="client_id">
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                             <VBox.margin>
-                                <Insets right="15.0"/>
+                                <Insets right="15.0" />
                             </VBox.margin>
                         </TextField>
-                        <Label text="Set Client Secret"/>
+                        <Label text="Set Client Secret" />
                         <TextField fx:id="inputClient_secret" promptText="client_secret">
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                             <VBox.margin>
-                                <Insets right="15.0"/>
+                                <Insets right="15.0" />
                             </VBox.margin>
                         </TextField>
-                        <Label text="Set Refresh Token"/>
+                        <Label text="Set Refresh Token" />
                         <TextField fx:id="inputRefresh_token" promptText="refresh_token">
                             <VBox.margin>
-                                <Insets right="15.0"/>
+                                <Insets right="15.0" />
                             </VBox.margin>
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                         </TextField>
-                        <Label text="Set Playlist ID"/>
+                        <Label text="Set Playlist ID" />
                         <TextField fx:id="inputPlaylist_id" promptText="playlist_id">
                             <VBox.margin>
-                                <Insets right="15.0"/>
+                                <Insets right="15.0" />
                             </VBox.margin>
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                         </TextField>
-                        <Label text="Set Redirect URI"/>
+                        <Label text="Set Redirect URI" />
                         <TextField fx:id="inputRedirect_uri" promptText="redirect_uri">
                             <font>
-                                <Font size="11.0"/>
+                                <Font size="11.0" />
                             </font>
                             <VBox.margin>
-                                <Insets right="15.0"/>
+                                <Insets right="15.0" />
                             </VBox.margin>
                         </TextField>
                     </children>
@@ -173,23 +195,23 @@
             <children>
                 <Button mnemonicParsing="false" onAction="#SaveConfig" text="Save Configuration" textAlignment="CENTER">
                     <font>
-                        <Font size="16.0"/>
+                        <Font size="16.0" />
                     </font>
                     <HBox.margin>
-                        <Insets left="15.0"/>
+                        <Insets left="15.0" />
                     </HBox.margin>
                 </Button>
                 <Button mnemonicParsing="false" onAction="#MigrateToYAML" text="Migrate to YAML">
                     <font>
-                        <Font size="16.0"/>
+                        <Font size="16.0" />
                     </font>
                     <HBox.margin>
-                        <Insets left="25.0" right="25.0"/>
+                        <Insets left="25.0" right="25.0" />
                     </HBox.margin>
                 </Button>
                 <ProgressBar fx:id="SaveConfigProgressBar" focusTraversable="false" prefWidth="200.0" progress="0.0">
                     <HBox.margin>
-                        <Insets/>
+                        <Insets />
                     </HBox.margin>
                 </ProgressBar>
             </children>

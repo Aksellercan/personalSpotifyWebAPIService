@@ -16,6 +16,7 @@ import java.net.HttpURLConnection;
 
 public class Client_Credentials_Request {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
+    private final HTTPConnection httpConnection = new HTTPConnection();
     private Track track;
     private Playlist playlist;
 
@@ -36,7 +37,7 @@ public class Client_Credentials_Request {
         try {
             String playlistURL = "https://api.spotify.com/v1/playlists/" + playlist_id;
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = HTTPConnection.connectHTTP(playlistURL, "GET", "Authorization", Bearer);
+            HttpURLConnection http = httpConnection.connectHTTP(playlistURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             playlist = new Playlist(node.get("name").asText(), node.get("description").asText());
@@ -51,7 +52,7 @@ public class Client_Credentials_Request {
         try {
             String postURL = "https://api.spotify.com/v1/tracks/" + track_uri;
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = HTTPConnection.connectHTTP(postURL, "GET", "Authorization", Bearer);
+            HttpURLConnection http = httpConnection.connectHTTP(postURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
             //TODO *Improve* status code 400 error handling
             if (http.getResponseCode() == 400)

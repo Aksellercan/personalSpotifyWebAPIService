@@ -3,7 +3,8 @@ package com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions;
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.HTTP.HTTPServer;
 import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
-import com.example.SpotifyWebAPI.Tools.Files.Objects.FileSearch;
+import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
+import com.example.SpotifyWebAPI.Tools.Files.Objects.SearchItem;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +38,7 @@ public final class SceneActions {
     /**
      * FXML Files list
      */
-    private static final ArrayList<FileSearch> FXMLPages = new ArrayList<>();
+    private static final ArrayList<SearchItem> FXMLPages = new ArrayList<>();
 
     private SceneActions() {
     }
@@ -56,12 +57,19 @@ public final class SceneActions {
             File getFilesInLayouts = new File(getFolder.getPath());
             Logger.INFO.Log("Reading file contents...");
             for (File addToArray : Objects.requireNonNull(getFilesInLayouts.listFiles())) {
-                FXMLPages.add(new FileSearch(addToArray.getName(), addToArray.getPath()));
+                FXMLPages.add(new SearchItem(addToArray.getName(), addToArray.getPath()));
             }
             removeExtension();
+            AddCommands();
         } catch (Exception e) {
             Logger.ERROR.LogException(e, "Can't read pages");
         }
+    }
+
+    private static void AddCommands() {
+        FXMLPages.add(new SearchItem("quit", true));
+        FXMLPages.add(new SearchItem("token", true));
+        FXMLPages.add(new SearchItem("loggerdebug", true));
     }
 
     /**
@@ -69,7 +77,7 @@ public final class SceneActions {
      */
     private static void removeExtension() {
         StringBuilder sb = new StringBuilder();
-        for (FileSearch file : FXMLPages) {
+        for (SearchItem file : FXMLPages) {
             String name = file.getFileName();
             for (int i = 0; i < name.length(); i++) {
                 if (name.charAt(i) == '.') {
@@ -184,7 +192,8 @@ public final class SceneActions {
         try {
             HTTPServer httpServer = SaveHTTPState.getServer("Fallback");
             if (httpServer != null && httpServer.StopServer()) {
-                HttpURLConnection http = HTTPConnection.connectHTTP("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort(), "GET");
+                HTTPConnection httpConnection = new HTTPConnection();
+                HttpURLConnection http = httpConnection.connectHTTP("http://127.0.0.1:" + SaveHTTPState.getServer("Fallback").GetServerSocket().getLocalPort(), "GET");
                 http.connect();
             }
             return true;
@@ -206,7 +215,7 @@ public final class SceneActions {
             Logger.DEBUG.Log("Search field is empty", false);
             return;
         }
-        String[] returnedList = SearchAlgorithm(searchTerm);
+        SearchItem[] returnedList = SearchAlgorithm(searchTerm);
         Logger.DEBUG.Log("Found " + returnedList.length + (returnedList.length > 1 ? " items" : " item"));
         AtomicInteger index = new AtomicInteger();
         AtomicBoolean ignoreFirstEnter = new AtomicBoolean();
@@ -224,13 +233,13 @@ public final class SceneActions {
                             if (index.get() == returnedList.length) index.set(0);
                             if (index.get() == 0) break;
                             index.set(index.get() - 1);
-                            pageSearchField.setText(returnedList[index.get()]);
+                            pageSearchField.setText(returnedList[index.get()].getFileName());
                             Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
                             break;
                         case DOWN:
                             if (index.get() == returnedList.length - 1) break;
                             index.set(index.get() + 1);
-                            pageSearchField.setText(returnedList[index.get()]);
+                            pageSearchField.setText(returnedList[index.get()].getFileName());
                             Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
                             break;
                         case BACK_SPACE:
@@ -243,13 +252,19 @@ public final class SceneActions {
                             Logger.DEBUG.Log("Enter pressed, leaving handler...");
                             if (!ignoreFirstEnter.get()) {
                                 Logger.DEBUG.Log("Chosen " + returnedList[index.get()]);
-                                ChangeScene(returnedList[index.get()]);
+                                if (!returnedList[index.get()].isCommand())
+                                    ChangeScene(returnedList[index.get()].getFileName());
+                                else
+                                    ExecuteCommands(returnedList[index.get()].getFileName());
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 ClearSearch();
                             }
                             if (returnedList.length == 1) {
                                 Logger.DEBUG.Log("Changing to " + returnedList[index.get()]);
-                                ChangeScene(returnedList[0]);
+                                if (!returnedList[index.get()].isCommand())
+                                    ChangeScene(returnedList[index.get()].getFileName());
+                                else
+                                    ExecuteCommands(returnedList[index.get()].getFileName());
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 ClearSearch();
                             }
@@ -261,26 +276,43 @@ public final class SceneActions {
         }
     }
 
-    /**
-     * Clears "correctChars" attribute from FileSearch object
-     */
-    private static void ClearSearch() {
-        Logger.DEBUG.Log("Clearing search ratings...");
-        for (FileSearch fileSearch : FXMLPages) {
-            fileSearch.setCorrectChars(0);
+    private static void ExecuteCommands(String command) {
+        switch (command) {
+            case "quit":
+                System.exit(0);
+                return;
+            case "token":
+                User_Access_Token userAccessToken = new User_Access_Token();
+                userAccessToken.refresh_token_with_User_Token();
+                return;
+            case "loggerdebug":
+                Logger.setDebugOutput(!Logger.getDebugOutput());
+                return;
+            default:
+                Logger.DEBUG.Log("Unknown command");
         }
     }
 
     /**
-     * Searches entered term in FileSearch type array by incrementing "correctChars" attribute for Strings that match the characters in search term
+     * Clears "correctChars" attribute from SearchItem object
+     */
+    private static void ClearSearch() {
+        Logger.DEBUG.Log("Clearing search ratings...");
+        for (SearchItem searchItem : FXMLPages) {
+            searchItem.setCorrectChars(0);
+        }
+    }
+
+    /**
+     * Searches entered term in SearchItem type array by incrementing "correctChars" attribute for Strings that match the characters in search term
      *
      * @param searchTerm Search term
      * @return String array of matching Files as Strings
      */
-    private static String[] SearchAlgorithm(String searchTerm) {
+    private static SearchItem[] SearchAlgorithm(String searchTerm) {
         searchTerm = searchTerm.toLowerCase();
-        List<FileSearch> results = new ArrayList<>();
-        for (FileSearch files : FXMLPages) {
+        List<SearchItem> results = new ArrayList<>();
+        for (SearchItem files : FXMLPages) {
             String pages = files.getFileName().toLowerCase();
             for (int i = 0; i < pages.length(); i++) {
                 if (i == searchTerm.length()) break;
@@ -290,37 +322,37 @@ public final class SceneActions {
                     break;
                 }
             }
-            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + ", File name: " + files.getFileName());
+            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + ", File name: " + files.getFileName() + (files.isCommand() ? ": COMMAND" : ""));
             if (files.getCorrectChars() != 0) {
                 Logger.DEBUG.Log("found " + files.getFileName());
                 results.add(files);
             }
         }
         if (results.size() == 2) {
-            FileSearch previous = null;
-            for (FileSearch found : results) {
+            SearchItem previous = null;
+            for (SearchItem found : results) {
                 if (previous != null) {
                     if (previous.getCorrectChars() == found.getCorrectChars()) {
                         Logger.DEBUG.Log("Two most likely results: " + previous.getFileName() + " and " + found.getFileName());
-                        return new String[]{previous.getFileName(), found.getFileName()};
+                        return new SearchItem[]{ previous, found };
                     }
-                    FileSearch mostLikely = (previous.getCorrectChars() > found.getCorrectChars()) ? previous : found;
+                    SearchItem mostLikely = (previous.getCorrectChars() > found.getCorrectChars()) ? previous : found;
                     Logger.DEBUG.Log("Most likely result: " + mostLikely.getFileName());
-                    return new String[]{mostLikely.getFileName()};
+                    return new SearchItem[]{ mostLikely };
                 } else {
                     previous = found;
                 }
             }
         }
         if (results.size() > 2) {
-            String[] returnArray = new String[results.size()];
+            SearchItem[] returnArray = new SearchItem[results.size()];
             int index = 0;
-            for (FileSearch file : results) {
-                returnArray[index] = file.getFileName();
+            for (SearchItem file : results) {
+                returnArray[index] = file;
                 index++;
             }
             return returnArray;
         }
-        return new String[]{results.get(0).getFileName()};
+        return new SearchItem[]{ results.get(0) };
     }
 }

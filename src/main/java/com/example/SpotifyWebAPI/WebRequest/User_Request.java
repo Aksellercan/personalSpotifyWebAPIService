@@ -17,6 +17,7 @@ import java.util.HashMap;
  */
 public class User_Request {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
+    private final HTTPConnection httpConnection = new HTTPConnection();
     private Playlist playlist;
     private final HashMap<String, String> songs = new HashMap<>();
 
@@ -41,7 +42,7 @@ public class User_Request {
         try {
             String fullURL = "https://api.spotify.com/v1/playlists/" + playlist_id;
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "PUT", "Authorization", Bearer, "Content-Type", "application/json");
+            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "PUT", "Authorization", Bearer, "Content-Type", "application/json");
             http.setDoOutput(true);
 
             ObjectMapper mapper = new ObjectMapper();
@@ -51,7 +52,7 @@ public class User_Request {
             playlist.setPlaylist_id(playlist_id);
             String postBody = mapper.writeValueAsString(playlist);
             Logger.DEBUG.Log("postBody: " + postBody);
-            HTTPConnection.postBody(http, postBody);
+            httpConnection.postBody(http, postBody);
             int responseCode = http.getResponseCode();
             if (responseCode == 200) {
                 Logger.INFO.Log("Updated playlist description to " + description + ". HTTP Response Code " + responseCode);
@@ -94,7 +95,7 @@ public class User_Request {
             String fullURL = "https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks?";
             fullURL = buildURL(fullURL, offset, limit);
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "GET", "Authorization", Bearer);
+            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "GET", "Authorization", Bearer);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             int duplicateCount = 0;
@@ -139,7 +140,7 @@ public class User_Request {
         try {
             String fullURL = "https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks";
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
+            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
             http.setDoOutput(true);
 
             ObjectMapper mapper = new ObjectMapper();
@@ -153,8 +154,8 @@ public class User_Request {
             }
             rootNode.put("position", position);
             String postBody = mapper.writeValueAsString(rootNode);
-            HTTPConnection.postBody(http, postBody);
-            HTTPConnection.readErrorStream(http, 400);
+            httpConnection.postBody(http, postBody);
+            httpConnection.readErrorStream(http, 400);
         } catch (Exception e) {
             Logger.ERROR.LogException(e);
         }
@@ -172,7 +173,7 @@ public class User_Request {
         try {
             String fullURL = "https://api.spotify.com/v1/users/" + user_id + "/playlists";
             String Bearer = "Bearer " + spotifySession.getAccess_token();
-            HttpURLConnection http = HTTPConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
+            HttpURLConnection http = httpConnection.connectHTTP(fullURL, "POST", "Authorization", Bearer, "Content-Type", "application/json");
             http.setDoOutput(true);
             ObjectMapper mapper = new ObjectMapper();
 
@@ -181,8 +182,8 @@ public class User_Request {
             playlist.setCollaborative(false);
 
             String postBody = mapper.writeValueAsString(playlist);
-            HTTPConnection.postBody(http, postBody);
-            HTTPConnection.readErrorStream(http, 400);
+            httpConnection.postBody(http, postBody);
+            httpConnection.readErrorStream(http, 400);
 
             JsonNode node = mapper.readTree(http.getInputStream());
 

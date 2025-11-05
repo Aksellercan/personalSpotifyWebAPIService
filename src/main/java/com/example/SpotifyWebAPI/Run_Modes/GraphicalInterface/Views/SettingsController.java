@@ -8,6 +8,7 @@ import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 
@@ -34,6 +35,23 @@ public class SettingsController implements Initializable {
     private ProgressBar SaveConfigProgressBar;
     @FXML
     private TextField pageSearchField;
+    @FXML
+    private TextField logPathSFLD;
+
+    @FXML
+    private Button launchGUIBTN;
+    @FXML
+    private Button debugOutputBTN;
+    @FXML
+    private Button verboseLogFilesBTN;
+    @FXML
+    private Button autoModeBTN;
+    @FXML
+    private Button colouredOutputBTN;
+    @FXML
+    private Button stackTracesBTN;
+    @FXML
+    private Button quietBTN;
 
     @FXML
     protected void MigrateToYAML(ActionEvent event) {
@@ -44,10 +62,42 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
+    protected void HandleLogPathField(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        setLogPathFunction();
+    }
+
+    @FXML
+    protected void SetLogPath(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        setLogPathFunction();
+    }
+
+    private void setLogPathFunction() {
+        if (!logPathSFLD.getText().isEmpty()) {
+            Logger.setLog_path(logPathSFLD.getText());
+            Logger.INFO.Log("Logger: log_path = " + Logger.getLog_path(), false);
+            logPathSFLD.setText("");
+            GetStates();
+            ProgramOptions.setChangesSaved(false);
+        }
+    }
+
+    @FXML
+    protected void ToggleQuiet(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        Logger.setQuiet(!Logger.getQuiet());
+        Logger.INFO.Log("Logger: quiet = " + Logger.getQuiet(), false);
+        GetStates();
+        ProgramOptions.setChangesSaved(false);
+    }
+
+    @FXML
     protected void ToggleVerboseLogFile(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         Logger.setVerboseLogFile(!Logger.getVerboseLogFile());
-        Logger.INFO.Log("Logger: verbose_log_file=" + Logger.getVerboseLogFile(), false);
+        Logger.INFO.Log("Logger: verbose_log_file = " + Logger.getVerboseLogFile(), false);
+        GetStates();
         ProgramOptions.setChangesSaved(false);
     }
 
@@ -55,7 +105,8 @@ public class SettingsController implements Initializable {
     protected void ToggleCLI(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         ProgramOptions.setLAUNCH_GUI(!ProgramOptions.LAUNCH_GUI());
-        Logger.INFO.Log("ProgramOptions: launch_gui=" + ProgramOptions.LAUNCH_GUI(), false);
+        Logger.INFO.Log("ProgramOptions: launch_gui = " + ProgramOptions.LAUNCH_GUI(), false);
+        GetStates();
         ProgramOptions.setChangesSaved(false);
     }
 
@@ -63,7 +114,8 @@ public class SettingsController implements Initializable {
     protected void ToggleAutoMode(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         ProgramOptions.setAutoMode(!ProgramOptions.isAutoMode());
-        Logger.INFO.Log("ProgramOptions: AutoMode=" + ProgramOptions.isAutoMode(), false);
+        Logger.INFO.Log("ProgramOptions: AutoMode = " + ProgramOptions.isAutoMode(), false);
+        GetStates();
         ProgramOptions.setChangesSaved(false);
     }
 
@@ -71,7 +123,8 @@ public class SettingsController implements Initializable {
     protected void ToggleColouredOutput(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         Logger.setColouredOutput(!Logger.getColouredOutput());
-        Logger.INFO.Log("Logger: ColouredOutput=" + Logger.getColouredOutput(), false);
+        Logger.INFO.Log("Logger: ColouredOutput = " + Logger.getColouredOutput(), false);
+        GetStates();
         ProgramOptions.setChangesSaved(false);
     }
 
@@ -79,7 +132,8 @@ public class SettingsController implements Initializable {
     protected void ToggleStackTraces(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         Logger.setEnableStackTraces(!Logger.getEnableStackTraces());
-        Logger.INFO.Log("Logger: enable_stack_traces=" + Logger.getEnableStackTraces(), false);
+        Logger.INFO.Log("Logger: enable_stack_traces = " + Logger.getEnableStackTraces(), false);
+        GetStates();
         ProgramOptions.setChangesSaved(false);
     }
 
@@ -87,7 +141,8 @@ public class SettingsController implements Initializable {
     protected void ToggleDebugOutput(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         Logger.setDebugOutput(!Logger.getDebugOutput());
-        Logger.INFO.Log("Logger: DebugOutput=" + Logger.getDebugOutput(), false);
+        Logger.INFO.Log("Logger: DebugOutput = " + Logger.getDebugOutput(), false);
+        GetStates();
         ProgramOptions.setChangesSaved(false);
     }
 
@@ -153,8 +208,25 @@ public class SettingsController implements Initializable {
         SceneActions.SearchTermSelector(pageSearchField, pageSearchField.getText());
     }
 
+    private void GetStates() {
+        SetButtonText(verboseLogFilesBTN, "Verbose Log File", Logger.getVerboseLogFile());
+        SetButtonText(stackTracesBTN, "Detailed Stacktraces", Logger.getEnableStackTraces());
+        SetButtonText(colouredOutputBTN, "Coloured Output", Logger.getColouredOutput());
+        SetButtonText(debugOutputBTN, "Debug Output", Logger.getDebugOutput());
+        SetButtonText(autoModeBTN, "Auto Mode", ProgramOptions.isAutoMode());
+        SetButtonText(launchGUIBTN, "Launch CLI", !ProgramOptions.LAUNCH_GUI());
+        SetButtonText(quietBTN, "Quiet", Logger.getQuiet());
+
+        logPathSFLD.setPromptText("Set Path: " + Logger.getLog_path());
+    }
+
+    private void SetButtonText(Button btn, String key, boolean state) {
+        btn.setText(String.format("%s: %s", key, (state ? "ON" : "OFF")));
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        GetStates();
         SceneActions.GetCurrentStage().setOnCloseRequest(e -> {
             ProgramOptions.setChangesSaved(false);
             YAMLParser.MapAndWriteConfig();

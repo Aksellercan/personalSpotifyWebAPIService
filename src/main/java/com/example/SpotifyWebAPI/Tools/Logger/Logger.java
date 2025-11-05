@@ -452,6 +452,26 @@ public enum Logger {
         WriteExceptions(e, writeToFile);
     }
 
+    public void LogThreadException(Thread thread, Exception e) {
+        this.severity = setThreadSeverity(thread);
+        WriteExceptions(e, true);
+    }
+
+    public void LogThreadException(Thread thread, Exception e, boolean writeToFile) {
+        this.severity = setThreadSeverity(thread);
+        WriteExceptions(e, writeToFile);
+    }
+
+    public void LogThreadException(Thread thread, Exception e, String message) {
+        this.severity = setThreadSeverity(thread);
+        WriteExceptionMessageLogs(e, message, true);
+    }
+
+    public void LogThreadException(Thread thread, Exception e, String message, boolean writeToFile) {
+        this.severity = setThreadSeverity(thread);
+        WriteExceptionMessageLogs(e, message, writeToFile);
+    }
+
     /**
      * Formats Exceptions with date and severity then writes them to file if "writeToFile" is set to true
      *

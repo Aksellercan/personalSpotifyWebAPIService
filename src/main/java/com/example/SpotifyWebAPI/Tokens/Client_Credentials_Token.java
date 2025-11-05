@@ -13,17 +13,18 @@ import java.net.HttpURLConnection;
  */
 public class Client_Credentials_Token {
     private final SpotifySession spotifySession = SpotifySession.getInstance();
+    private final HTTPConnection httpConnection = new HTTPConnection();
 
     /**
      * Posts request to get Access Token
      */
     public void post_Access_Request() {
         try {
-            HttpURLConnection http = HTTPConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded");
+            HttpURLConnection http = httpConnection.connectHTTP("https://accounts.spotify.com/api/token", "POST", "Content-Type", "application/x-www-form-urlencoded");
             http.setDoOutput(true);
             http.connect();
             String postBody = "grant_type=client_credentials&client_id=" + spotifySession.getClient_id() + "&client_secret=" + spotifySession.getClient_secret();
-            HTTPConnection.postBody(http, postBody);
+            httpConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
             spotifySession.setAccess_token(node.get("access_token").asText());

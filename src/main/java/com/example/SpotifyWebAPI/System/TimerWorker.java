@@ -19,7 +19,7 @@ public class TimerWorker implements Runnable {
             Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Started Timer on thread: " + Thread.currentThread().getName());
             CheckValue();
         } catch (InterruptedException e) {
-            Logger.THREAD_ERROR.LogException(e, Thread.currentThread().getName());
+            Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), e);
         }
     }
 
@@ -30,7 +30,7 @@ public class TimerWorker implements Runnable {
             clientCredentialsToken.post_Access_Request();
         } else {
             User_Access_Token userAccessToken = new User_Access_Token();
-            Logger.THREAD_INFO.Log("Refreshed user access token");
+            Logger.THREAD_INFO.Log("Refreshing user access token...");
             userAccessToken.refresh_token_with_User_Token();
         }
     }

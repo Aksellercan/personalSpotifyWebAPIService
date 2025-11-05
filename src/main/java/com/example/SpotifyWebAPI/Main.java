@@ -127,12 +127,13 @@ public class Main {
                 return;
             case "--gui":
                 try {
+                    spotifySession = Launch(true);
                     Thread timer = new Thread(new TimerWorker());
                     timer.start();
                     GUI.launch(GUI.class, args);
                     timer.join();
                 } catch (InterruptedException e) {
-                    Logger.CRITICAL.LogException(e, "Timer thread couldn't be started");
+                    Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), e, "Timer thread couldn't be started");
                 }
                 return;
             case "--req":

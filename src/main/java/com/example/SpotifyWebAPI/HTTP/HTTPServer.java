@@ -75,7 +75,7 @@ public class HTTPServer extends Thread {
             Logger.THREAD_INFO.LogThread(thread,"Stopped Thread name: " + thread.getName() + " | Status = " + thread.getState() + " | isAlive = " + thread.isAlive());
             return true;
         } catch (Exception ex) {
-            Logger.THREAD_CRITICAL.LogException(ex, "Cannot close socket");
+            Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), ex, "Cannot close socket");
             return false;
         }
     }
@@ -247,7 +247,7 @@ public class HTTPServer extends Thread {
                 }
             }
         } catch (Exception ex) {
-            Logger.THREAD_CRITICAL.LogException(ex, "Port " + port + " backlog limit: " + 10);
+            Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), ex, "Port " + port + " backlog limit: " + 10);
         } finally {
             try {
                 if (socket == null) {
@@ -256,7 +256,7 @@ public class HTTPServer extends Thread {
                 socket.close();
                 Logger.THREAD_INFO.Log("Closed Socket.");
             } catch (Exception ex) {
-                Logger.THREAD_CRITICAL.LogException(ex, "Cannot close socket");
+                Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), ex, "Cannot close socket");
             }
         }
     }

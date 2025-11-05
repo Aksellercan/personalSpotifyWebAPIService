@@ -1,17 +1,31 @@
 package com.example.SpotifyWebAPI.Tools.Files.Objects;
 
-public class FileSearch {
+public class SearchItem {
     private String fileName;
     private String filePath;
+    private boolean command;
     private int correctChars;
 
-    public FileSearch(String fileName, String filePath) {
+    public SearchItem(String fileName, String filePath) {
         this.fileName = fileName;
         this.filePath = filePath;
     }
 
+    public SearchItem(String fileName, boolean command) {
+        this.fileName = fileName;
+        this.command = command;
+    }
+
     public String getFileName() {
         return this.fileName;
+    }
+
+    public boolean isCommand() {
+        return command;
+    }
+
+    public void setCommand(boolean command) {
+        this.command = command;
     }
 
     public String getFilePath() {
