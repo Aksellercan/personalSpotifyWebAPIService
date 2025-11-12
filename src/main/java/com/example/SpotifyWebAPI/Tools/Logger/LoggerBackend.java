@@ -35,8 +35,18 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
         }
     }
 
+    private boolean getQuietDecision(Log log) {
+        if (LoggerSettings.getQuiet()) {
+            {
+                if (log.isForce()) return true;
+            }
+        }
+        return !LoggerSettings.getQuiet();
+    }
+
     private boolean SeverityController(Log log) {
         try {
+            if (!getQuietDecision(log)) return true;
             if (log.isSilent()) {
                 saveLog(DateSeverityFormat(log) + log.getMessage());
                 log.setLogged(true);
@@ -54,7 +64,7 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
             }
             writeLogController(log);
         } catch (Exception e) {
-            Logger.THREAD_CRITICAL.LogThread(Thread.currentThread() , "failed to log");
+            Logger.THREAD_CRITICAL.LogThread(Thread.currentThread() , "Failed to log for log with ID " + log.getId());
             return false;
         }
         return true;

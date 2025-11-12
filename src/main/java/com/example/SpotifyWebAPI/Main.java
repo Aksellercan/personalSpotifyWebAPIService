@@ -78,15 +78,10 @@ public class Main {
     }
 
     private static void startGUI(SpotifySession spotifySession, String[] args) {
-        try {
-            Thread timer = new Thread(new TimerWorker());
-            timer.setDaemon(true);
-            timer.start();
-            GUI.launch(GUI.class, args);
-            timer.join();
-        } catch (InterruptedException e) {
-            Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), e, "Timer thread couldn't be started");
-        }
+        Thread timer = new Thread(new TimerWorker());
+        timer.setDaemon(true);
+        timer.start();
+        GUI.launch(GUI.class, args);
     }
 
     /**
@@ -155,6 +150,7 @@ public class Main {
                 autoMode.runFunctions();
                 return;
             case "--cli":
+                spotifySession = Launch(false);
                 MainMenu mainMenu = new MainMenu();
                 mainMenu.userInterface();
                 return;
