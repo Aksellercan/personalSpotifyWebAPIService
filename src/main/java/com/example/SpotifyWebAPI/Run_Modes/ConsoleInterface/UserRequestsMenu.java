@@ -5,6 +5,7 @@ import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 
 /**
@@ -27,7 +28,7 @@ public class UserRequestsMenu extends HelperFunctions {
             System.out.println("0. Go Back");
             User_Access_Token userAccessToken = new User_Access_Token();
             User_Request userRequest = new User_Request();
-            if (Logger.getDebugOutput()) userAccessToken.printData();
+            if (LoggerSettings.getDebugOutput()) userAccessToken.printData();
             switch (scanner.nextLine()) {
                 case "1":
                     String code = null;

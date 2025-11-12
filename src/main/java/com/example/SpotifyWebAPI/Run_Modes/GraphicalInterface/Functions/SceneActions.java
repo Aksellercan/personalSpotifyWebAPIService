@@ -6,6 +6,7 @@ import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Tools.Files.Objects.SearchItem;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -69,7 +70,9 @@ public final class SceneActions {
     private static void AddCommands() {
         FXMLPages.add(new SearchItem("quit", true));
         FXMLPages.add(new SearchItem("token", true));
-        FXMLPages.add(new SearchItem("loggerdebug", true));
+        FXMLPages.add(new SearchItem("debug", true));
+        FXMLPages.add(new SearchItem("quiet", true));
+        FXMLPages.add(new SearchItem("main", true));
     }
 
     /**
@@ -285,8 +288,14 @@ public final class SceneActions {
                 User_Access_Token userAccessToken = new User_Access_Token();
                 userAccessToken.refresh_token_with_User_Token();
                 return;
-            case "loggerdebug":
-                Logger.setDebugOutput(!Logger.getDebugOutput());
+            case "debug":
+                LoggerSettings.setDebugOutput(!LoggerSettings.getDebugOutput());
+                return;
+            case "quiet":
+                LoggerSettings.setQuiet(!LoggerSettings.getQuiet());
+                return;
+            case "main":
+                ChangeScene("PrimaryPage");
                 return;
             default:
                 Logger.DEBUG.Log("Unknown command");

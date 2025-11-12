@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.Tokens;
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -42,7 +43,7 @@ public class User_Access_Token {
             http.connect();
             String postBody = "grant_type=authorization_code" + "&code=" + URLEncoder.encode(spotifySession.getCode(), "UTF-8")
                     + "&redirect_uri=" + URLEncoder.encode(spotifySession.getRedirect_uri(), "UTF-8");
-            if (Logger.getDebugOutput()) System.out.println("Full PostBody: " + postBody);
+            if (LoggerSettings.getDebugOutput()) System.out.println("Full PostBody: " + postBody);
             httpConnection.postBody(http, postBody);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(http.getInputStream());
@@ -66,7 +67,7 @@ public class User_Access_Token {
      * Prints the saved User data
      */
     public void printData() {
-        System.out.println("Debug Output: " + Logger.getDebugOutput());
+        System.out.println("Debug Output: " + LoggerSettings.getDebugOutput());
         System.out.println("Refresh Token: " + spotifySession.getRefresh_token());
         System.out.println("Client id: " + spotifySession.getClient_id());
         System.out.println("Client secret: " + spotifySession.getClient_secret());

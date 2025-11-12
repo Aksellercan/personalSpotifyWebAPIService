@@ -10,6 +10,8 @@ import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerBackend;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 
 import java.util.Random;
 
@@ -85,6 +87,8 @@ public class Main {
      * @param args Commandline arguments, allows maximum of 14 with "set" argument and lowest no arguments.
      */
     public static void main(String[] args) {
+        Thread loggerThread = new Thread(new LoggerBackend());
+        loggerThread.start();
         Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Main thread: " + Thread.currentThread().getName());
         SpotifySession spotifySession = null;
         if (args.length == 1) {
@@ -93,7 +97,7 @@ public class Main {
                 return;
             }
             if (args[0].equals("--settings")) {
-                Logger.setQuiet(true);
+                LoggerSettings.setQuiet(true);
             }
         } else {
             spotifySession = Launch(true);
@@ -119,10 +123,10 @@ public class Main {
                 //Settings
                 System.out.println("launch_gui: " + ProgramOptions.LAUNCH_GUI());
                 System.out.println("auto_mode: " + ProgramOptions.isAutoMode());
-                System.out.println("verbose_log_file: " + Logger.getVerboseLogFile());
-                System.out.println("debug_output: " + Logger.getDebugOutput());
-                System.out.println("coloured_output: " + Logger.getColouredOutput());
-                System.out.println("enable_stack_traces: " + Logger.getEnableStackTraces());
+                System.out.println("verbose_log_file: " + LoggerSettings.getVerboseLogFile());
+                System.out.println("debug_output: " + LoggerSettings.getDebugOutput());
+                System.out.println("coloured_output: " + LoggerSettings.getColouredOutput());
+                System.out.println("enable_stack_traces: " + LoggerSettings.getEnableStackTraces());
                 System.out.println("playlist_limit: " + ProgramOptions.getPlaylist_limit());
                 return;
             case "--gui":

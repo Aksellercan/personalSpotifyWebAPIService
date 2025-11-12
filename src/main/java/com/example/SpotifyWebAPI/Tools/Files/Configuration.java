@@ -7,6 +7,7 @@ import com.example.SpotifyWebAPI.Tools.Files.Parsers.BasicParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -118,45 +119,45 @@ public abstract class Configuration {
                     break;
                 case "output_debug":
                     if (update) {
-                        token.setValue(String.valueOf(Logger.getDebugOutput()));
+                        token.setValue(String.valueOf(LoggerSettings.getDebugOutput()));
                         token.setCategoryType("Logger Options");
                         break;
                     }
-                    Logger.setDebugOutput(BooleanParse(token.getValue(), false));
+                    LoggerSettings.setDebugOutput(BooleanParse(token.getValue(), false));
                     break;
                 case "verbose_log_file":
                     if (update) {
-                        token.setValue(String.valueOf(Logger.getVerboseLogFile()));
+                        token.setValue(String.valueOf(LoggerSettings.getVerboseLogFile()));
                         token.setCategoryType("Logger Options");
                         break;
                     }
-                    Logger.setVerboseLogFile(BooleanParse(token.getValue(), false));
+                    LoggerSettings.setVerboseLogFile(BooleanParse(token.getValue(), false));
                     break;
                 case "enable_stack_traces":
                     if (update) {
-                        token.setValue(String.valueOf(Logger.getEnableStackTraces()));
+                        token.setValue(String.valueOf(LoggerSettings.getEnableStackTraces()));
                         token.setCategoryType("Logger Options");
                         break;
                     }
-                    Logger.setEnableStackTraces(BooleanParse(token.getValue(), false));
+                    LoggerSettings.setEnableStackTraces(BooleanParse(token.getValue(), false));
                     break;
                 case "log_path":
                     if (update) {
-                        token.setValue(Logger.getLog_path());
+                        token.setValue(LoggerSettings.getLog_path());
                         token.setCategoryType("Logger Options");
                         break;
                     }
-                    if (token.getValue().isEmpty()) token.setValue(Logger.getLog_path());
-                    Logger.setLog_path(token.getValue());
+                    if (token.getValue().isEmpty()) token.setValue(LoggerSettings.getLog_path());
+                    LoggerSettings.setLog_path(token.getValue());
                     break;
                 case "quiet":
                     if (update) {
-                        token.setValue(String.valueOf(Logger.getQuiet()));
+                        token.setValue(String.valueOf(LoggerSettings.getQuiet()));
                         token.setCategoryType("Logger Options");
                         break;
                     }
-                    Logger.setQuiet(BooleanParse(token.getValue(), false));
-                    Logger.INFO.LogIfTrue("Logger quiet", Logger.getQuiet(), true, true);
+                    LoggerSettings.setQuiet(BooleanParse(token.getValue(), false));
+                    Logger.INFO.LogIfTrue("Logger quiet", LoggerSettings.getQuiet(), true, true);
                     break;
                 case "playlist_limit":
                     if (update) {
@@ -185,11 +186,11 @@ public abstract class Configuration {
                     break;
                 case "coloured_output":
                     if (update) {
-                        token.setValue(String.valueOf(Logger.getColouredOutput()));
+                        token.setValue(String.valueOf(LoggerSettings.getColouredOutput()));
                         token.setCategoryType("Logger Options");
                         break;
                     }
-                    Logger.setColouredOutput(BooleanParse(token.getValue(), false));
+                    LoggerSettings.setColouredOutput(BooleanParse(token.getValue(), false));
                     break;
                 case "use_formatting":
                     if (update) {

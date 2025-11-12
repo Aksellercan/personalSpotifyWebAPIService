@@ -5,6 +5,7 @@ import com.example.SpotifyWebAPI.Tools.Files.Configuration;
 import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 
 /**
  * CLI Interface Settings Menu
@@ -18,13 +19,13 @@ public class SettingsMenu extends HelperFunctions {
             clearScreen();
             System.out.println("Settings ");
             System.out.println("1. Set Http Debug Output" +
-                    (Logger.getDebugOutput() ? ConsoleColours.GREEN + " - Debug Output Enabled" + ConsoleColours.RESET : ""));
+                    (LoggerSettings.getDebugOutput() ? ConsoleColours.GREEN + " - Debug Output Enabled" + ConsoleColours.RESET : ""));
             System.out.println("2. Include Debugs in log file (More Verbose)" +
-                    (Logger.getVerboseLogFile() ? ConsoleColours.GREEN + " - Debugs will be included in log file" + ConsoleColours.RESET : ""));
+                    (LoggerSettings.getVerboseLogFile() ? ConsoleColours.GREEN + " - Debugs will be included in log file" + ConsoleColours.RESET : ""));
             System.out.println("3. Set Coloured Logger Output" +
-                    (Logger.getColouredOutput() ? ConsoleColours.GREEN + " - Logger will output ANSI Coloured lines" + ConsoleColours.RESET: ""));
+                    (LoggerSettings.getColouredOutput() ? ConsoleColours.GREEN + " - Logger will output ANSI Coloured lines" + ConsoleColours.RESET: ""));
             System.out.println("4. Enable Detailed Stack Traces" +
-                    (Logger.getEnableStackTraces() ? ConsoleColours.GREEN + " - Logger will include Detailed Stack Traces" + ConsoleColours.RESET: ""));
+                    (LoggerSettings.getEnableStackTraces() ? ConsoleColours.GREEN + " - Logger will include Detailed Stack Traces" + ConsoleColours.RESET: ""));
             System.out.println("5. Set Auto Mode" +
                     (ProgramOptions.isAutoMode() ? ConsoleColours.GREEN + " - Auto Mode Enabled, Program won't launch to CLI on next run" + ConsoleColours.RESET: ""));
             System.out.println("6. Set GUI Mode" +
@@ -35,70 +36,70 @@ public class SettingsMenu extends HelperFunctions {
             System.out.println("0. Go Back");
             switch (scanner.nextLine()) {
                 case "1":
-                    System.out.println("Set Http Debug Output:\nCurrent State is " + Logger.getDebugOutput() +
+                    System.out.println("Set Http Debug Output:\nCurrent State is " + LoggerSettings.getDebugOutput() +
                             "\nPress y to enable debug output\nPress n to disable debug output");
                     if (scanner.nextLine().equals("y")) {
-                        if (!Logger.getDebugOutput()) {
+                        if (!LoggerSettings.getDebugOutput()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setDebugOutput(true);
+                        LoggerSettings.setDebugOutput(true);
                         System.out.println("Http Debug Output set to true");
                     } else {
-                        if (Logger.getDebugOutput()) {
+                        if (LoggerSettings.getDebugOutput()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setDebugOutput(false);
+                        LoggerSettings.setDebugOutput(false);
                         System.out.println("Http Debug Output set to false");
                     }
                     break;
                 case "2":
-                    System.out.println((Logger.getVerboseLogFile() ? "Debugs will be included in log file" : "Debugs won't be included in log file") +
+                    System.out.println((LoggerSettings.getVerboseLogFile() ? "Debugs will be included in log file" : "Debugs won't be included in log file") +
                             "\nPress y to include them\nPress n to not include them");
                     if (scanner.nextLine().equals("y")) {
-                        if (!Logger.getVerboseLogFile()) {
+                        if (!LoggerSettings.getVerboseLogFile()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setVerboseLogFile(true);
+                        LoggerSettings.setVerboseLogFile(true);
                         System.out.println("Debugs will be included in log file");
                     } else {
-                        if (Logger.getVerboseLogFile()) {
+                        if (LoggerSettings.getVerboseLogFile()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setVerboseLogFile(false);
+                        LoggerSettings.setVerboseLogFile(false);
                         System.out.println("Debugs won't included in log file");
                     }
                     break;
                 case "3":
-                    System.out.println((Logger.getColouredOutput() ? "Logger will output ANSI coloured lines" : "Logger will not output ANSI coloured lines") +
+                    System.out.println((LoggerSettings.getColouredOutput() ? "Logger will output ANSI coloured lines" : "Logger will not output ANSI coloured lines") +
                             "\nPress y to enable\nPress n to disable");
                     if (scanner.nextLine().equals("y")) {
-                        if (!Logger.getColouredOutput()) {
+                        if (!LoggerSettings.getColouredOutput()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setColouredOutput(true);
+                        LoggerSettings.setColouredOutput(true);
                         System.out.println("Logger will output ANSI coloured lines");
                     } else {
-                        if (Logger.getColouredOutput()) {
+                        if (LoggerSettings.getColouredOutput()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setColouredOutput(false);
+                        LoggerSettings.setColouredOutput(false);
                         System.out.println("Logger will not output ANSI coloured lines");
                     }
                     break;
                 case "4":
-                    System.out.println((Logger.getEnableStackTraces() ? "Detailed Stack Traces will be included in log file" : "Detailed Stack Traces won't be included in log file") +
+                    System.out.println((LoggerSettings.getEnableStackTraces() ? "Detailed Stack Traces will be included in log file" : "Detailed Stack Traces won't be included in log file") +
                             "\nPress y to include them\nPress n to not include them");
                     if (scanner.nextLine().equals("y")) {
-                        if (!Logger.getEnableStackTraces()) {
+                        if (!LoggerSettings.getEnableStackTraces()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setEnableStackTraces(true);
+                        LoggerSettings.setEnableStackTraces(true);
                         System.out.println("Detailed Stack Traces will be included in log file");
                     } else {
-                        if (Logger.getEnableStackTraces()) {
+                        if (LoggerSettings.getEnableStackTraces()) {
                             ProgramOptions.setChangesSaved(false);
                         }
-                        Logger.setEnableStackTraces(false);
+                        LoggerSettings.setEnableStackTraces(false);
                         System.out.println("Detailed Stack Traces won't included in log file");
                     }
                     break;
