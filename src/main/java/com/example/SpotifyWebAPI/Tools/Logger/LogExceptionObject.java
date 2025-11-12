@@ -3,6 +3,7 @@ package com.example.SpotifyWebAPI.Tools.Logger;
 public class LogExceptionObject extends Log {
     private Thread thread;
     private Exception exception;
+    private boolean exceptionLog = true;
 
     // Threads & Exceptions
     public LogExceptionObject(long id, Thread thread, Exception exception, Logger severityEnum, String severity) {
@@ -38,6 +39,14 @@ public class LogExceptionObject extends Log {
     public LogExceptionObject(long id, Exception exception, Logger severityEnum, String severity, String message, boolean writeToFile) {
         super(id, severityEnum, severity, message, writeToFile);
         this.exception = exception;
+    }
+
+    public boolean isExceptionLog() {
+        return exceptionLog;
+    }
+
+    public void setExceptionLog(boolean exceptionLog) {
+        this.exceptionLog = exceptionLog;
     }
 
     public Thread getThread() {

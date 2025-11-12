@@ -27,17 +27,37 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
             if (!logQueue.isEmpty()) {
                 for (Log log : logQueue) {
                     if (!log.isLogged()) {
-                        if (log.isSilent()) {
-                            saveLog(DateSeverityFormat(log) + log.getMessage());
-                            log.setLogged(true);
-                            logQueue.remove(log);
-                            continue;
-                        }
-                        writeLogController(log);
+                        log.setLogged(SeverityController(log));
+                        logQueue.remove(log);
                     };
                 }
             }
         }
+    }
+
+    private boolean SeverityController(Log log) {
+        try {
+            if (log.isSilent()) {
+                saveLog(DateSeverityFormat(log) + log.getMessage());
+                log.setLogged(true);
+                return true;
+            }
+            if (log instanceof LogExceptionObject) {
+                LogExceptionObject logExceptionObject = (LogExceptionObject) log;
+                if (logExceptionObject.isExceptionLog()) {
+                    if (logExceptionObject.getMessage().isEmpty())
+                        WriteExceptions(logExceptionObject);
+                    else
+                        WriteExceptionMessageLogs(logExceptionObject);
+                    return true;
+                }
+            }
+            writeLogController(log);
+        } catch (Exception e) {
+            Logger.THREAD_CRITICAL.LogThread(Thread.currentThread() , "failed to log");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -54,13 +74,11 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
         if (!LoggerSettings.getDebugOutput() && (log.getSeverityEnum() == Logger.DEBUG || log.getSeverityEnum() == Logger.THREAD_DEBUG)) {
             if (LoggerSettings.getVerboseLogFile() && log.isWriteToFile()) saveLog(fullMessage);
             log.setLogged(true);
-            logQueue.remove(log);
             return;
         } else if (log.getSeverityEnum() == Logger.DEBUG) {
             if (LoggerSettings.getVerboseLogFile() && log.isWriteToFile()) saveLog(fullMessage);
             ColourOutput(log, fullMessage);
             log.setLogged(true);
-            logQueue.remove(log);
             return;
         }
         if (log.isWriteToFile()) {
@@ -68,7 +86,6 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
         }
         ColourOutput(log, fullMessage);
         log.setLogged(true);
-        logQueue.remove(log);
     }
 
     public void saveLog(String fullMessage) {

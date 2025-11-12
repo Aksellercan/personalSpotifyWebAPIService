@@ -29,22 +29,27 @@ public class LogThreadObject extends Log {
     }
 
     public String setThreadSeverity() {
-        StringBuilder sb = new StringBuilder();
-        boolean add = false;
-        for (int i = 0; i < this.getSeverity().length(); i++) {
-            if (add) {
-                sb.append(this.getSeverity().charAt(i));
-                continue;
+        if (severityEnum.equals(Logger.THREAD_CRITICAL) ||
+        severityEnum.equals(Logger.THREAD_INFO) || severityEnum.equals(Logger.THREAD_DEBUG) || severityEnum.equals(Logger.THREAD_ERROR) ||
+        severityEnum.equals(Logger.THREAD_WARN)) {
+            StringBuilder sb = new StringBuilder();
+            boolean add = false;
+            for (int i = 0; i < this.getSeverity().length(); i++) {
+                if (add) {
+                    sb.append(this.getSeverity().charAt(i));
+                    continue;
+                }
+                if (this.getSeverity().charAt(i) == ':') {
+                    add = true;
+                }
             }
-            if (this.getSeverity().charAt(i) == ':') {
-                add = true;
-            }
+            String threadName;
+            if (this.getThread() != null)
+                threadName = this.getThread().getName();
+            else
+                threadName = "lost-thread";
+            return String.format(" [ %s:%s", threadName, sb);
         }
-        String threadName;
-        if (this.getThread() != null)
-            threadName = this.getThread().getName();
-        else
-            threadName = "lost-thread";
-        return String.format(" [ %s:%s", threadName, sb);
+        return this.getSeverity();
     }
 }

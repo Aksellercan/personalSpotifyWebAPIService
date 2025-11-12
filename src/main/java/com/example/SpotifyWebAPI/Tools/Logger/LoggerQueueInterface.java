@@ -1,5 +1,6 @@
 package com.example.SpotifyWebAPI.Tools.Logger;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public interface LoggerQueueInterface {

@@ -69,13 +69,24 @@ public class Main {
             Random rand = new Random();
             long id = rand.nextLong();
             Thread configReaderThread = new Thread(YAMLParser::ReadConfigAndMap);
-//            Thread configReaderThread = new Thread(JSONParser::ReadConfigAndMap);
             configReaderThread.setName(configReaderThread.getName() + "_config-reader_" + (id > 0 ? id : -1*id));
             configReaderThread.start();
         } else {
             YAMLParser.ReadConfigAndMap();
         }
         return SpotifySession.getInstance();
+    }
+
+    private static void startGUI(SpotifySession spotifySession, String[] args) {
+        try {
+            Thread timer = new Thread(new TimerWorker());
+            timer.setDaemon(true);
+            timer.start();
+            GUI.launch(GUI.class, args);
+            timer.join();
+        } catch (InterruptedException e) {
+            Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), e, "Timer thread couldn't be started");
+        }
     }
 
     /**
@@ -87,25 +98,20 @@ public class Main {
      * @param args Commandline arguments, allows maximum of 14 with "set" argument and lowest no arguments.
      */
     public static void main(String[] args) {
-        Thread loggerThread = new Thread(new LoggerBackend());
-        loggerThread.setDaemon(true);
-        loggerThread.start();
-        Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Main thread: " + Thread.currentThread().getName());
-        SpotifySession spotifySession = null;
         if (args.length == 1) {
             if (args[0].equals("--help")) {
                 HelpMenu();
                 return;
             }
-            if (args[0].equals("--settings")) {
-                LoggerSettings.setQuiet(true);
-            }
-        } else {
-            spotifySession = Launch(true);
         }
+        Thread loggerThread = new Thread(new LoggerBackend());
+        loggerThread.setDaemon(true);
+        loggerThread.start();
+        Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Main thread: " + Thread.currentThread().getName());
+        SpotifySession spotifySession = null;
         if (args.length == 0) {
             if (ProgramOptions.LAUNCH_GUI()) {
-                GUI.launch(GUI.class, args);
+                startGUI(Launch(true), args);
                 return;
             }
             if (ProgramOptions.isAutoMode()) {
@@ -113,15 +119,16 @@ public class Main {
                 AutoMode autoMode = new AutoMode();
                 autoMode.runFunctions();
             } else {
+                spotifySession = Launch(false);
                 MainMenu mainMenu = new MainMenu();
                 mainMenu.userInterface();
             }
             return;
         }
         switch (args[0]) {
-            //TODO use sequential config reader to fix race condition
             case "--settings":
                 //Settings
+                LoggerSettings.setQuiet(true);
                 System.out.println("launch_gui: " + ProgramOptions.LAUNCH_GUI());
                 System.out.println("auto_mode: " + ProgramOptions.isAutoMode());
                 System.out.println("verbose_log_file: " + LoggerSettings.getVerboseLogFile());
@@ -131,18 +138,10 @@ public class Main {
                 System.out.println("playlist_limit: " + ProgramOptions.getPlaylist_limit());
                 return;
             case "--gui":
-                try {
-                    spotifySession = Launch(true);
-                    Thread timer = new Thread(new TimerWorker());
-                    timer.start();
-                    GUI.launch(GUI.class, args);
-                    timer.join();
-                } catch (InterruptedException e) {
-                    Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), e, "Timer thread couldn't be started");
-                }
+                startGUI(Launch(true), args);
                 return;
             case "--req":
-                AutoModeRequirementCheck(spotifySession);
+                AutoModeRequirementCheck(Launch(false));
                 return;
             case "--auto-mode":
                 spotifySession = Launch(false);
@@ -164,6 +163,7 @@ public class Main {
                 return;
             case "set":
                 if (args.length < 14) {
+                    spotifySession = Launch(false);
                     for (String str : args) {
                         if (str == null || str.isEmpty()) {
                             System.out.println("Empty value");
@@ -198,6 +198,7 @@ public class Main {
                 break;
             case "--get-refresh-token":
                 if (args.length == 3) {
+                    spotifySession = Launch(false);
                     if (!args[1].trim().isEmpty() || !args[2].trim().isEmpty()) {
                         User_Access_Token userAccessToken = new User_Access_Token();
                         spotifySession.setCode(args[1].trim());
