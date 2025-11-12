@@ -88,6 +88,7 @@ public class Main {
      */
     public static void main(String[] args) {
         Thread loggerThread = new Thread(new LoggerBackend());
+        loggerThread.setDaemon(true);
         loggerThread.start();
         Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Main thread: " + Thread.currentThread().getName());
         SpotifySession spotifySession = null;

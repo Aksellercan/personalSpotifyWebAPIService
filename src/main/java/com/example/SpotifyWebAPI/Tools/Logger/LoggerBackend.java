@@ -12,7 +12,7 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
     @Override
     public void run() {
         Thread.currentThread().setName(generateThreadName());
-        Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Started logger service on thread: " + Thread.currentThread().getName());
+        Logger.THREAD_INFO.LogThread(Thread.currentThread(), String.format("Started logger service on thread: %s :: Daemon = %s", Thread.currentThread().getName(), Thread.currentThread().isDaemon()));
         keepThreadAlive();
     }
 
