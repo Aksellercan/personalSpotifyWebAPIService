@@ -163,14 +163,14 @@ public class SettingsController implements Initializable {
         inputRedirect_uri.setText("");
         inputRefresh_token.setText("");
         inputPlaylist_id.setText("");
+        logPathSFLD.setText("");
     }
 
     @FXML
     protected void GoToMainMenu(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         ProgramOptions.setChangesSaved(false);
-        YAMLParser.MapAndWriteConfig();
-//        JSONParser.MapAndWriteConfig();
+        SaveConfig(event);
         SceneActions.ChangeScene("PrimaryPage");
     }
 
@@ -198,6 +198,10 @@ public class SettingsController implements Initializable {
         }
         if (!inputRedirect_uri.getText().isEmpty()) {
             SpotifySession.getInstance().setRedirect_uri(inputRedirect_uri.getText());
+            change = true;
+        }
+        if (!logPathSFLD.getText().isEmpty()) {
+            LoggerSettings.setLog_path(logPathSFLD.getText());
             change = true;
         }
         return change;
