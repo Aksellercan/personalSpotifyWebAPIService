@@ -112,7 +112,27 @@
                   </Button>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="logPathSFLD" maxWidth="-Infinity" onAction="#HandleLogPathField" prefHeight="26.0" prefWidth="115.0" promptText="Log path">
+                        <TextField fx:id="logResponseRateSFLD" maxWidth="-Infinity" onAction="#SetLogResponseRate" prefHeight="26.0" prefWidth="160.0" promptText="Set logger response rate">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="setLogResponseRateBTN" mnemonicParsing="false" onAction="#SetLogResponseRate" text="OK">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="15.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="logPathSFLD" maxWidth="-Infinity" onAction="#SetLogPath" prefHeight="26.0" prefWidth="160.0" promptText="Log path">
                            <font>
                               <Font size="11.0" />
                            </font>
@@ -191,7 +211,7 @@
         </AnchorPane>
     </center>
     <bottom>
-        <HBox prefHeight="51.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+        <HBox prefHeight="51.0" prefWidth="575.0" BorderPane.alignment="CENTER">
             <children>
                 <Button mnemonicParsing="false" onAction="#SaveConfig" text="Save Configuration" textAlignment="CENTER">
                     <font>

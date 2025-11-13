@@ -46,6 +46,7 @@ public abstract class Configuration {
                 "verbose_log_file",
                 "quiet",
                 "log_path",
+                "logger_check_every",
                 "use_formatting"
         };
         tokenConfig = new Token[keys.length];
@@ -191,6 +192,15 @@ public abstract class Configuration {
                         break;
                     }
                     LoggerSettings.setColouredOutput(BooleanParse(token.getValue(), false));
+                    break;
+                case "logger_check_every":
+                    if (update) {
+                        token.setValue(String.valueOf(LoggerSettings.getLoggerCheckEvery()));
+                        token.setCategoryType("Logger Options");
+                        break;
+                    }
+                    if (token.getValue().isEmpty()) token.setValue(String.valueOf(LoggerSettings.getLoggerCheckEvery()));
+                    LoggerSettings.setLoggerCheckEvery(Long.parseLong(token.getValue()));
                     break;
                 case "use_formatting":
                     if (update) {

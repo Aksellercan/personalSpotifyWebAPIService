@@ -1,5 +1,8 @@
 package com.example.SpotifyWebAPI.Tools.Logger;
 
+/**
+ * Front end of Logger, runs synchronously and adds logs to log queue for backend to handle
+ */
 public enum Logger implements LoggerInterface {
     INFO(" [ INFO ] "),
     WARN(" [ WARN ] "),
@@ -24,7 +27,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void Log(String message) {
-        logQueue.add(new Log(0,
+        logQueue.add(new LogObject(0,
                 this,
                 severity,
                 message));
@@ -32,7 +35,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void Log(String message, boolean writeToFile) {
-        logQueue.add(new Log(
+        logQueue.add(new LogObject(
                 (long) logQueue.size()+1,
                 this,severity,
                 message,
@@ -41,7 +44,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void Log(String message, boolean writeToFile, boolean force) {
-        logQueue.add(new Log((long) logQueue.size()+1,
+        logQueue.add(new LogObject((long) logQueue.size()+1,
                 this,
                 severity,
                 message,
@@ -51,7 +54,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void LogIfTrue(boolean statement) {
-        if (statement) logQueue.add(new Log((long) logQueue.size()+1,
+        if (statement) logQueue.add(new LogObject((long) logQueue.size()+1,
                 this,
                 severity,
                 String.format("Statement is %s", statement)));
@@ -59,7 +62,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void LogIfTrue(String message, boolean statement) {
-        if (statement) logQueue.add(new Log((long) logQueue.size()+1,
+        if (statement) logQueue.add(new LogObject((long) logQueue.size()+1,
                 this,
                 severity,
                 String.format("%s is %s", message, statement)));
@@ -67,7 +70,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void LogIfTrue(boolean statement, boolean writeToFile, boolean force) {
-        if (statement) logQueue.add(new Log((long) logQueue.size()+1,
+        if (statement) logQueue.add(new LogObject((long) logQueue.size()+1,
                 this,
                 severity,
                 String.format("Statement is %s", statement),
@@ -77,7 +80,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void LogIfTrue(String message, boolean statement, boolean writeToFile, boolean force) {
-        if (statement) logQueue.add(new Log((long) logQueue.size()+1,
+        if (statement) logQueue.add(new LogObject((long) logQueue.size()+1,
                 this,
                 severity,
                 message,
@@ -192,7 +195,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void LogSilently(String message) {
-        Log log = new Log((long) logQueue.size()+1,
+        LogObject log = new LogObject((long) logQueue.size()+1,
                 this,
                 severity,
                 message,
@@ -203,7 +206,7 @@ public enum Logger implements LoggerInterface {
 
     @Override
     public void LogExceptionSilently(Exception e, String message) {
-        Log log = new LogExceptionObject((long) logQueue.size()+1,
+        LogObject log = new LogExceptionObject((long) logQueue.size()+1,
                 e,
                 this,
                 severity,

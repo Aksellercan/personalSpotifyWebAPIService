@@ -40,6 +40,7 @@ public final class SceneActions {
      * FXML Files list
      */
     private static final ArrayList<SearchItem> FXMLPages = new ArrayList<>();
+    private static AtomicInteger handlerCount = new AtomicInteger(0);
 
     private SceneActions() {
     }
@@ -218,85 +219,91 @@ public final class SceneActions {
             Logger.DEBUG.Log("Search field is empty", false);
             return;
         }
-        SearchItem[] returnedList = SearchAlgorithm(searchTerm);
-        Logger.DEBUG.Log("Found " + returnedList.length + (returnedList.length > 1 ? " items" : " item"));
-        AtomicInteger index = new AtomicInteger();
-        AtomicBoolean ignoreFirstEnter = new AtomicBoolean();
-        ignoreFirstEnter.set(true);
-        index.set(0);
-        if (returnedList.length > 1) {
-            pageSearchField.setText(returnedList.length + " results - " + returnedList[0]);
-        }
-        if (returnedList.length != 0) {
-            EventHandler<KeyEvent> handler = new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent keyEvent) {
-                    switch (keyEvent.getCode()) {
-                        case UP:
-                            if (index.get() == returnedList.length) index.set(0);
-                            if (index.get() == 0) break;
-                            index.set(index.get() - 1);
-                            pageSearchField.setText(returnedList[index.get()].getFileName());
-                            Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
-                            break;
-                        case DOWN:
-                            if (index.get() == returnedList.length - 1) break;
-                            index.set(index.get() + 1);
-                            pageSearchField.setText(returnedList[index.get()].getFileName());
-                            Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
-                            break;
-                        case BACK_SPACE:
-                            Logger.DEBUG.Log("Backspace pressed, leaving handler...");
-                            pageSearchField.setText("");
-                            pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                            ClearSearch();
-                            return;
-                        case ENTER:
-                            Logger.DEBUG.Log("Enter pressed, leaving handler...");
-                            if (!ignoreFirstEnter.get()) {
-                                Logger.DEBUG.Log("Chosen " + returnedList[index.get()]);
-                                if (!returnedList[index.get()].isCommand())
-                                    ChangeScene(returnedList[index.get()].getFileName());
-                                else
-                                    ExecuteCommands(returnedList[index.get()].getFileName());
+        if (handlerCount.getAndIncrement() <= 1) {
+            SearchItem[] returnedList = SearchAlgorithm(searchTerm);
+            Logger.DEBUG.Log("Found " + returnedList.length + (returnedList.length > 1 ? " items" : " item"));
+            AtomicInteger index = new AtomicInteger();
+            AtomicBoolean ignoreFirstEnter = new AtomicBoolean();
+            ignoreFirstEnter.set(true);
+            index.set(0);
+            if (returnedList.length > 1) {
+                pageSearchField.setText(returnedList.length + " results - " + returnedList[0]);
+            }
+            if (returnedList.length != 0) {
+                EventHandler<KeyEvent> handler = new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent keyEvent) {
+                        switch (keyEvent.getCode()) {
+                            case UP:
+                                if (index.get() == returnedList.length) index.set(0);
+                                if (index.get() == 0) break;
+                                index.set(index.get() - 1);
+                                pageSearchField.setText(returnedList[index.get()].getFileName());
+                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
+                                break;
+                            case DOWN:
+                                if (index.get() == returnedList.length - 1) break;
+                                index.set(index.get() + 1);
+                                pageSearchField.setText(returnedList[index.get()].getFileName());
+                                Logger.DEBUG.Log("Index = " + index.get() + " Item = " + returnedList[index.get()]);
+                                break;
+                            case BACK_SPACE:
+                                Logger.DEBUG.Log("Backspace pressed, leaving handler...");
+                                pageSearchField.setText("");
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
                                 ClearSearch();
-                            }
-                            if (returnedList.length == 1) {
-                                Logger.DEBUG.Log("Changing to " + returnedList[index.get()]);
-                                if (!returnedList[index.get()].isCommand())
-                                    ChangeScene(returnedList[index.get()].getFileName());
-                                else
-                                    ExecuteCommands(returnedList[index.get()].getFileName());
-                                pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
-                                ClearSearch();
-                            }
-                            ignoreFirstEnter.set(!ignoreFirstEnter.get());
+                                return;
+                            case ENTER:
+                                Logger.DEBUG.Log("Enter pressed, leaving handler...");
+                                if (!ignoreFirstEnter.get()) {
+                                    Logger.DEBUG.Log("Chosen " + returnedList[index.get()]);
+                                    if (!returnedList[index.get()].isCommand())
+                                        ChangeScene(returnedList[index.get()].getFileName());
+                                    else
+                                        ExecuteCommands(returnedList[index.get()].getFileName());
+                                    pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                                    pageSearchField.setText("");
+                                    ClearSearch();
+                                }
+                                if (returnedList.length == 1) {
+                                    Logger.DEBUG.Log("Changing to " + returnedList[index.get()]);
+                                    if (!returnedList[index.get()].isCommand())
+                                        ChangeScene(returnedList[index.get()].getFileName());
+                                    else
+                                        ExecuteCommands(returnedList[index.get()].getFileName());
+                                    pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                                    pageSearchField.setText("");
+                                    ClearSearch();
+                                }
+                                ignoreFirstEnter.set(!ignoreFirstEnter.get());
+                        }
                     }
-                }
-            };
-            pageSearchField.addEventHandler(KeyEvent.KEY_PRESSED, handler);
+                };
+                pageSearchField.addEventHandler(KeyEvent.KEY_PRESSED, handler);
+            }
         }
     }
 
     private static void ExecuteCommands(String command) {
+        Logger.DEBUG.Log(String.format("execute called %d times", handlerCount.get()), false, true);
         switch (command) {
             case "quit":
                 System.exit(0);
-                return;
+                break;
             case "token":
                 User_Access_Token userAccessToken = new User_Access_Token();
                 userAccessToken.refresh_token_with_User_Token();
-                return;
+                break;
             case "debug":
                 LoggerSettings.setDebugOutput(!LoggerSettings.getDebugOutput());
-                return;
+                break;
             case "quiet":
                 LoggerSettings.setQuiet(!LoggerSettings.getQuiet());
-                return;
+                Logger.INFO.Log("quiet set to " + LoggerSettings.getQuiet(), false, true);
+                break;
             case "main":
                 ChangeScene("PrimaryPage");
-                return;
+                break;
             default:
                 Logger.DEBUG.Log("Unknown command");
         }
@@ -331,7 +338,7 @@ public final class SceneActions {
                     break;
                 }
             }
-            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + ", File name: " + files.getFileName() + (files.isCommand() ? ": COMMAND" : ""));
+            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + " :: " + files);
             if (files.getCorrectChars() != 0) {
                 Logger.DEBUG.Log("found " + files.getFileName());
                 results.add(files);

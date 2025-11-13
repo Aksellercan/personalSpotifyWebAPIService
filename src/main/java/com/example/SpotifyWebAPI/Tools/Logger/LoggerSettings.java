@@ -25,6 +25,15 @@ public class LoggerSettings {
      * Disables all logging except Exceptions. Can be bypassed with force boolean
      */
     private static boolean quiet = false;
+    private static long loggerCheckEvery = 3600;
+
+    public static long getLoggerCheckEvery() {
+        return loggerCheckEvery;
+    }
+
+    public static void setLoggerCheckEvery(long loggerCheckEvery) {
+        LoggerSettings.loggerCheckEvery = loggerCheckEvery;
+    }
 
     public static String getLog_path() {
         return log_path;

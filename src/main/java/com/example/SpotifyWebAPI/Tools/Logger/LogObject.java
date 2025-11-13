@@ -1,6 +1,6 @@
 package com.example.SpotifyWebAPI.Tools.Logger;
 
-public class Log {
+public class LogObject {
     protected long id;
     protected Logger severityEnum;
     protected String severity;
@@ -11,25 +11,25 @@ public class Log {
     protected boolean logged = false;
 
     // Basic
-    public Log(long id, Logger severityEnum, String severity) {
+    public LogObject(long id, Logger severityEnum, String severity) {
         this.id = id;
         this.severityEnum = severityEnum;
         this.severity = severity;
     }
-    public Log(long id, Logger severityEnum, String severity, String message) {
+    public LogObject(long id, Logger severityEnum, String severity, String message) {
         this.id = id;
         this.severityEnum = severityEnum;
         this.severity = severity;
         this.message = message;
     }
-    public Log(long id, Logger severityEnum, String severity, String message, boolean writeToFile) {
+    public LogObject(long id, Logger severityEnum, String severity, String message, boolean writeToFile) {
         this.id = id;
         this.severityEnum = severityEnum;
         this.severity = severity;
         this.message = message;
         this.writeToFile = writeToFile;
     }
-    public Log(long id, Logger severityEnum, String severity, String message, boolean writeToFile, boolean force) {
+    public LogObject(long id, Logger severityEnum, String severity, String message, boolean writeToFile, boolean force) {
         this.id = id;
         this.severityEnum = severityEnum;
         this.severity = severity;

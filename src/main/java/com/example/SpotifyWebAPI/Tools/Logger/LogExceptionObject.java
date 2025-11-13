@@ -1,6 +1,6 @@
 package com.example.SpotifyWebAPI.Tools.Logger;
 
-public class LogExceptionObject extends Log {
+public class LogExceptionObject extends LogObject {
     private Thread thread;
     private Exception exception;
     private boolean exceptionLog = true;
@@ -8,16 +8,19 @@ public class LogExceptionObject extends Log {
     // Threads & Exceptions
     public LogExceptionObject(long id, Thread thread, Exception exception, Logger severityEnum, String severity) {
         super(id, severityEnum, severity);
+        this.force = true;
         this.thread = thread;
         this.exception = exception;
     }
     public LogExceptionObject(long id, Thread thread, Exception exception, Logger severityEnum, String severity, String message) {
         super(id, severityEnum, severity, message);
+        this.force = true;
         this.thread = thread;
         this.exception = exception;
     }
     public LogExceptionObject(long id, Thread thread, Exception exception, Logger severityEnum, String severity, String message, boolean writeToFile) {
         super(id, severityEnum, severity, message, writeToFile);
+        this.force = true;
         this.thread = thread;
         this.exception = exception;
     }
@@ -25,19 +28,23 @@ public class LogExceptionObject extends Log {
     // Exceptions
     public LogExceptionObject(long id, Exception exception, Logger severityEnum, String severity) {
         super(id, severityEnum, severity);
+        this.force = true;
         this.exception = exception;
     }
     public LogExceptionObject(long id, Exception exception, Logger severityEnum, String severity, String message) {
         super(id, severityEnum, severity, message);
+        this.force = true;
         this.exception = exception;
     }
     public LogExceptionObject(long id, Exception exception, Logger severityEnum, String severity, boolean writeToFile) {
         super(id, severityEnum, severity);
+        this.force = true;
         this.exception = exception;
         this.writeToFile = writeToFile;
     }
     public LogExceptionObject(long id, Exception exception, Logger severityEnum, String severity, String message, boolean writeToFile) {
         super(id, severityEnum, severity, message, writeToFile);
+        this.force = true;
         this.exception = exception;
     }
 

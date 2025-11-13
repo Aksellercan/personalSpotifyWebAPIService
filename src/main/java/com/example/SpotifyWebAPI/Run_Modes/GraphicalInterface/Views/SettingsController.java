@@ -38,6 +38,8 @@ public class SettingsController implements Initializable {
     private TextField pageSearchField;
     @FXML
     private TextField logPathSFLD;
+    @FXML
+    private TextField logResponseRateSFLD;
 
     @FXML
     private Button launchGUIBTN;
@@ -63,15 +65,25 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
-    protected void HandleLogPathField(ActionEvent event) {
+    protected void SetLogPath(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         setLogPathFunction();
     }
 
     @FXML
-    protected void SetLogPath(ActionEvent event) {
+    protected void SetLogResponseRate(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        setLogPathFunction();
+        setLogResponseRateFunction();
+    }
+
+    private void setLogResponseRateFunction() {
+        if (!logResponseRateSFLD.getText().isEmpty()) {
+            LoggerSettings.setLoggerCheckEvery(Long.parseLong(logResponseRateSFLD.getText()));
+            Logger.INFO.Log("Logger: log_path = " + LoggerSettings.getLoggerCheckEvery(), false);
+            logResponseRateSFLD.setText("");
+            GetStates();
+            ProgramOptions.setChangesSaved(false);
+        }
     }
 
     private void setLogPathFunction() {
@@ -88,7 +100,7 @@ public class SettingsController implements Initializable {
     protected void ToggleQuiet(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         LoggerSettings.setQuiet(!LoggerSettings.getQuiet());
-        Logger.INFO.Log("Logger: quiet = " + LoggerSettings.getQuiet(), false);
+        Logger.INFO.Log("Logger: quiet = " + LoggerSettings.getQuiet(), false, true);
         GetStates();
         ProgramOptions.setChangesSaved(false);
     }
@@ -164,6 +176,7 @@ public class SettingsController implements Initializable {
         inputRefresh_token.setText("");
         inputPlaylist_id.setText("");
         logPathSFLD.setText("");
+        logResponseRateSFLD.setText("");
     }
 
     @FXML
@@ -204,6 +217,15 @@ public class SettingsController implements Initializable {
             LoggerSettings.setLog_path(logPathSFLD.getText());
             change = true;
         }
+        if (!logResponseRateSFLD.getText().isEmpty()) {
+            try {
+                LoggerSettings.setLoggerCheckEvery(Long.parseLong(logResponseRateSFLD.getText()));
+                change = true;
+            } catch (Exception e) {
+                change = false;
+                Logger.ERROR.LogException(e);
+            }
+        }
         return change;
     }
 
@@ -223,6 +245,7 @@ public class SettingsController implements Initializable {
         SetButtonText(quietBTN, "Quiet", LoggerSettings.getQuiet());
 
         logPathSFLD.setPromptText("Set Path: " + LoggerSettings.getLog_path());
+        logResponseRateSFLD.setPromptText("Set response rate: " + LoggerSettings.getLoggerCheckEvery());
     }
 
     private void SetButtonText(Button btn, String key, boolean state) {
