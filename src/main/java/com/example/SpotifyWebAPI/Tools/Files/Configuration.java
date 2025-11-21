@@ -257,7 +257,7 @@ public abstract class Configuration {
     protected File MkDirs(String fileNameWithExtension) throws IOException {
         if (!folderPath.exists()) {
             boolean status = folderPath.mkdir();
-            if (status) {
+            if (!status) {
                 throw new IOException("Failed to create config directory");
             }
             Logger.INFO.LogSilently("Created config directory");

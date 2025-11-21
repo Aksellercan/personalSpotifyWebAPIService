@@ -1,8 +1,11 @@
 package com.example.SpotifyWebAPI.Tools.Logger;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -132,9 +135,9 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
      * Writes log to file
      * @param fullMessage   Full log message with date/severity/message/exception/threadName
      */
-    public void saveLog(String fullMessage) {
-        try (FileWriter writer = new FileWriter(getLogFile(generateFilename()), true)) {
-            writer.write(fullMessage + "\n");
+    public synchronized void saveLog(String fullMessage) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(getLogFile(generateFilename()), true))) {
+            bufferedWriter.write(fullMessage + "\n");
         } catch (IOException e) {
             Logger.CRITICAL.LogException(e, "Error while writing logs", false);
         }
@@ -160,16 +163,16 @@ public class LoggerBackend implements LoggerBackendInterface, Runnable {
      */
     public File getLogFile(String fileName) throws IOException {
         File logPath = new File(LoggerSettings.getLog_path());
-        if (!logPath.exists()) {
-            boolean createDir = logPath.mkdirs();
-            if (!createDir) {
+        if (!Files.exists(logPath.toPath())) {
+            Path createdLogPath = Files.createDirectories(logPath.toPath());
+            if (!Files.exists(createdLogPath)) {
                 throw new IOException("Could not create log directory");
             }
         }
         File logFile = new File(logPath + File.separator + fileName + ".log");
-        if (!logFile.exists()) {
-            boolean createFile = logFile.createNewFile();
-            if (!createFile) {
+        if (!Files.exists(logFile.toPath())) {
+            Path createdLogFile = Files.createFile(logFile.toPath());
+            if (!Files.exists(createdLogFile)) {
                 throw new IOException("Could not create log file");
             }
         }

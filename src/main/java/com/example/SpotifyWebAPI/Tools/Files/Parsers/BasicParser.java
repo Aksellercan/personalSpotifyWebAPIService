@@ -69,7 +69,7 @@ public class BasicParser extends Configuration implements Parsers {
     public void WriteConfig() {
         try (FileWriter fw = new FileWriter(MkDirs("config.txt"), false)) {
             for (Token current : tokenConfig) {
-                Logger.DEBUG.Log("Writing key: value " + current.getKey() + "=" + current.getValue());
+                Logger.DEBUG.Log("Writing key: value " + current.getKey() + "=" + (current.isSensitiveInfo() ? "<SensitiveInfo>" : current.getValue()));
                 fw.write(current.getKey() + "=" + current.getValue() + "\n");
             }
             ProgramOptions.setChangesSaved(true);
