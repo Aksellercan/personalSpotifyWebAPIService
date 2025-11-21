@@ -16,7 +16,7 @@ public class TimerWorker implements Runnable {
             Random rand = new Random();
             long id = rand.nextLong();
             Thread.currentThread().setName(Thread.currentThread().getName() + "_TimerWorker_" + (id > 0 ? id : -1*id));
-            Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Started Timer on thread: " + Thread.currentThread().getName());
+            Logger.THREAD_INFO.LogThread(Thread.currentThread(), String.format("Started Timer on thread: %s :: Daemon = %s", Thread.currentThread().getName(), Thread.currentThread().isDaemon()));
             CheckValue();
         } catch (InterruptedException e) {
             Logger.THREAD_CRITICAL.LogThreadException(Thread.currentThread(), e);

@@ -6,6 +6,7 @@ import com.example.SpotifyWebAPI.HTTP.SaveHTTPState;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Tools.Files.Objects.SearchItem;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -69,7 +70,9 @@ public final class SceneActions {
     private static void AddCommands() {
         FXMLPages.add(new SearchItem("quit", true));
         FXMLPages.add(new SearchItem("token", true));
-        FXMLPages.add(new SearchItem("loggerdebug", true));
+        FXMLPages.add(new SearchItem("debug", true));
+        FXMLPages.add(new SearchItem("quiet", true));
+        FXMLPages.add(new SearchItem("main", true));
     }
 
     /**
@@ -257,6 +260,7 @@ public final class SceneActions {
                                 else
                                     ExecuteCommands(returnedList[index.get()].getFileName());
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                                pageSearchField.setText("");
                                 ClearSearch();
                             }
                             if (returnedList.length == 1) {
@@ -266,6 +270,7 @@ public final class SceneActions {
                                 else
                                     ExecuteCommands(returnedList[index.get()].getFileName());
                                 pageSearchField.removeEventHandler(KeyEvent.KEY_PRESSED, this);
+                                pageSearchField.setText("");
                                 ClearSearch();
                             }
                             ignoreFirstEnter.set(!ignoreFirstEnter.get());
@@ -280,14 +285,21 @@ public final class SceneActions {
         switch (command) {
             case "quit":
                 System.exit(0);
-                return;
+                break;
             case "token":
                 User_Access_Token userAccessToken = new User_Access_Token();
                 userAccessToken.refresh_token_with_User_Token();
-                return;
-            case "loggerdebug":
-                Logger.setDebugOutput(!Logger.getDebugOutput());
-                return;
+                break;
+            case "debug":
+                LoggerSettings.setDebugOutput(!LoggerSettings.getDebugOutput());
+                break;
+            case "quiet":
+                LoggerSettings.setQuiet(!LoggerSettings.getQuiet());
+                Logger.INFO.Log("quiet set to " + LoggerSettings.getQuiet(), false, true);
+                break;
+            case "main":
+                ChangeScene("PrimaryPage");
+                break;
             default:
                 Logger.DEBUG.Log("Unknown command");
         }
@@ -322,7 +334,7 @@ public final class SceneActions {
                     break;
                 }
             }
-            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + ", File name: " + files.getFileName() + (files.isCommand() ? ": COMMAND" : ""));
+            Logger.DEBUG.Log("Correct char count: " + files.getCorrectChars() + " :: " + files);
             if (files.getCorrectChars() != 0) {
                 Logger.DEBUG.Log("found " + files.getFileName());
                 results.add(files);

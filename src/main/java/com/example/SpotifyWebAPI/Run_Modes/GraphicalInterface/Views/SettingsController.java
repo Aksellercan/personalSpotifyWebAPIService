@@ -5,6 +5,7 @@ import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
+import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,6 +38,8 @@ public class SettingsController implements Initializable {
     private TextField pageSearchField;
     @FXML
     private TextField logPathSFLD;
+    @FXML
+    private TextField logResponseRateSFLD;
 
     @FXML
     private Button launchGUIBTN;
@@ -62,21 +65,31 @@ public class SettingsController implements Initializable {
     }
 
     @FXML
-    protected void HandleLogPathField(ActionEvent event) {
-        Logger.DEBUG.Log("Event: " + event.toString());
-        setLogPathFunction();
-    }
-
-    @FXML
     protected void SetLogPath(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         setLogPathFunction();
     }
 
+    @FXML
+    protected void SetLogResponseRate(ActionEvent event) {
+        Logger.DEBUG.Log("Event: " + event.toString());
+        setLogResponseRateFunction();
+    }
+
+    private void setLogResponseRateFunction() {
+        if (!logResponseRateSFLD.getText().isEmpty()) {
+            LoggerSettings.setLoggerCheckEvery(Long.parseLong(logResponseRateSFLD.getText()));
+            Logger.INFO.Log("Logger: log_path = " + LoggerSettings.getLoggerCheckEvery(), false);
+            logResponseRateSFLD.setText("");
+            GetStates();
+            ProgramOptions.setChangesSaved(false);
+        }
+    }
+
     private void setLogPathFunction() {
         if (!logPathSFLD.getText().isEmpty()) {
-            Logger.setLog_path(logPathSFLD.getText());
-            Logger.INFO.Log("Logger: log_path = " + Logger.getLog_path(), false);
+            LoggerSettings.setLog_path(logPathSFLD.getText());
+            Logger.INFO.Log("Logger: log_path = " + LoggerSettings.getLog_path(), false);
             logPathSFLD.setText("");
             GetStates();
             ProgramOptions.setChangesSaved(false);
@@ -86,8 +99,8 @@ public class SettingsController implements Initializable {
     @FXML
     protected void ToggleQuiet(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        Logger.setQuiet(!Logger.getQuiet());
-        Logger.INFO.Log("Logger: quiet = " + Logger.getQuiet(), false);
+        LoggerSettings.setQuiet(!LoggerSettings.getQuiet());
+        Logger.INFO.Log("Logger: quiet = " + LoggerSettings.getQuiet(), false, true);
         GetStates();
         ProgramOptions.setChangesSaved(false);
     }
@@ -95,8 +108,8 @@ public class SettingsController implements Initializable {
     @FXML
     protected void ToggleVerboseLogFile(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        Logger.setVerboseLogFile(!Logger.getVerboseLogFile());
-        Logger.INFO.Log("Logger: verbose_log_file = " + Logger.getVerboseLogFile(), false);
+        LoggerSettings.setVerboseLogFile(!LoggerSettings.getVerboseLogFile());
+        Logger.INFO.Log("Logger: verbose_log_file = " + LoggerSettings.getVerboseLogFile(), false);
         GetStates();
         ProgramOptions.setChangesSaved(false);
     }
@@ -122,8 +135,8 @@ public class SettingsController implements Initializable {
     @FXML
     protected void ToggleColouredOutput(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        Logger.setColouredOutput(!Logger.getColouredOutput());
-        Logger.INFO.Log("Logger: ColouredOutput = " + Logger.getColouredOutput(), false);
+        LoggerSettings.setColouredOutput(!LoggerSettings.getColouredOutput());
+        Logger.INFO.Log("Logger: ColouredOutput = " + LoggerSettings.getColouredOutput(), false);
         GetStates();
         ProgramOptions.setChangesSaved(false);
     }
@@ -131,8 +144,8 @@ public class SettingsController implements Initializable {
     @FXML
     protected void ToggleStackTraces(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        Logger.setEnableStackTraces(!Logger.getEnableStackTraces());
-        Logger.INFO.Log("Logger: enable_stack_traces = " + Logger.getEnableStackTraces(), false);
+        LoggerSettings.setEnableStackTraces(!LoggerSettings.getEnableStackTraces());
+        Logger.INFO.Log("Logger: enable_stack_traces = " + LoggerSettings.getEnableStackTraces(), false);
         GetStates();
         ProgramOptions.setChangesSaved(false);
     }
@@ -140,8 +153,8 @@ public class SettingsController implements Initializable {
     @FXML
     protected void ToggleDebugOutput(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
-        Logger.setDebugOutput(!Logger.getDebugOutput());
-        Logger.INFO.Log("Logger: DebugOutput = " + Logger.getDebugOutput(), false);
+        LoggerSettings.setDebugOutput(!LoggerSettings.getDebugOutput());
+        Logger.INFO.Log("Logger: DebugOutput = " + LoggerSettings.getDebugOutput(), false);
         GetStates();
         ProgramOptions.setChangesSaved(false);
     }
@@ -162,14 +175,15 @@ public class SettingsController implements Initializable {
         inputRedirect_uri.setText("");
         inputRefresh_token.setText("");
         inputPlaylist_id.setText("");
+        logPathSFLD.setText("");
+        logResponseRateSFLD.setText("");
     }
 
     @FXML
     protected void GoToMainMenu(ActionEvent event) {
         Logger.DEBUG.Log("Event: " + event.toString());
         ProgramOptions.setChangesSaved(false);
-        YAMLParser.MapAndWriteConfig();
-//        JSONParser.MapAndWriteConfig();
+        SaveConfig(event);
         SceneActions.ChangeScene("PrimaryPage");
     }
 
@@ -199,6 +213,19 @@ public class SettingsController implements Initializable {
             SpotifySession.getInstance().setRedirect_uri(inputRedirect_uri.getText());
             change = true;
         }
+        if (!logPathSFLD.getText().isEmpty()) {
+            LoggerSettings.setLog_path(logPathSFLD.getText());
+            change = true;
+        }
+        if (!logResponseRateSFLD.getText().isEmpty()) {
+            try {
+                LoggerSettings.setLoggerCheckEvery(Long.parseLong(logResponseRateSFLD.getText()));
+                change = true;
+            } catch (Exception e) {
+                change = false;
+                Logger.ERROR.LogException(e);
+            }
+        }
         return change;
     }
 
@@ -209,15 +236,16 @@ public class SettingsController implements Initializable {
     }
 
     private void GetStates() {
-        SetButtonText(verboseLogFilesBTN, "Verbose Log File", Logger.getVerboseLogFile());
-        SetButtonText(stackTracesBTN, "Detailed Stacktraces", Logger.getEnableStackTraces());
-        SetButtonText(colouredOutputBTN, "Coloured Output", Logger.getColouredOutput());
-        SetButtonText(debugOutputBTN, "Debug Output", Logger.getDebugOutput());
+        SetButtonText(verboseLogFilesBTN, "Verbose Log File", LoggerSettings.getVerboseLogFile());
+        SetButtonText(stackTracesBTN, "Detailed Stacktraces", LoggerSettings.getEnableStackTraces());
+        SetButtonText(colouredOutputBTN, "Coloured Output", LoggerSettings.getColouredOutput());
+        SetButtonText(debugOutputBTN, "Debug Output", LoggerSettings.getDebugOutput());
         SetButtonText(autoModeBTN, "Auto Mode", ProgramOptions.isAutoMode());
         SetButtonText(launchGUIBTN, "Launch CLI", !ProgramOptions.LAUNCH_GUI());
-        SetButtonText(quietBTN, "Quiet", Logger.getQuiet());
+        SetButtonText(quietBTN, "Quiet", LoggerSettings.getQuiet());
 
-        logPathSFLD.setPromptText("Set Path: " + Logger.getLog_path());
+        logPathSFLD.setPromptText("Set Path: " + LoggerSettings.getLog_path());
+        logResponseRateSFLD.setPromptText("Set response rate: " + LoggerSettings.getLoggerCheckEvery());
     }
 
     private void SetButtonText(Button btn, String key, boolean state) {
