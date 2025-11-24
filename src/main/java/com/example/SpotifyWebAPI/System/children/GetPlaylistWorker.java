@@ -12,7 +12,7 @@ public class GetPlaylistWorker extends HTTPWorker {
     protected class PlaylistObj {
         public volatile Playlist playlist;
     }
-    private PlaylistObj playlistObj = new PlaylistObj();
+    private PlaylistObj playlistObj;
 
     @Override
     public void run() {

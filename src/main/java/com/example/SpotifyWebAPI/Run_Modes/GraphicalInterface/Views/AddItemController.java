@@ -2,11 +2,11 @@ package com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views;
 
 import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Functions.SceneActions;
 import com.example.SpotifyWebAPI.System.HTTPWorker;
-import com.example.SpotifyWebAPI.System.children.GetPlaylistWorker;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -108,31 +108,38 @@ public class AddItemController implements Initializable {
             Logger.ERROR.Log("Failed to close session.");
             System.exit(1);
         });
-//        if (SpotifySession.getInstance().getAccess_token() == null) {
-//            Logger.INFO.Log((SpotifySession.getInstance().getRefresh_token() == null ? "Refresh token is null." : "All OK!"));
-//            if (SpotifySession.getInstance().getRefresh_token() != null) {
-//                User_Access_Token userAccessToken = new User_Access_Token();
-//                userAccessToken.refresh_token_with_User_Token();
-//            }
-//        }
-//        if (SpotifySession.getInstance().getPlaylist_id() != null) {
-//            clientCredentialsRequest.getPlaylist(SpotifySession.getInstance().getPlaylist_id());
-//            showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() +
-//                    "\n" + clientCredentialsRequest.getPlaylist().getDescription() +
-//                    "\nSize: " + clientCredentialsRequest.getPlaylist().getTotalItems());
-//        }
         try {
             Thread token = new Thread(new HTTPWorker());
             token.start();
-            GetPlaylistWorker getPlaylistWorker = new GetPlaylistWorker();
-            Thread playlistThread = new Thread(getPlaylistWorker);
-            playlistThread.start();
-            //TODO avoid join instead use notification service to update text
-//            playlistThread.join();
+            Task<Void> playlistTask = new Task<Void>() {
+                @Override
+                protected Void call() throws InterruptedException {
+                    int loopCount = 0;
+                    int count = 0;
+                    do {
+                        if (SpotifySession.getInstance().getAccess_token() != null) {
+                            if (count == 1) continue;
+                            clientCredentialsRequest.getPlaylist(SpotifySession.getInstance().getPlaylist_id());
+                            count++;
+                        }
+                        Thread.sleep(200);
+                        if (loopCount == 10) count = 0;
+                        if (loopCount == 20) break;
+                        loopCount++;
+                    } while (clientCredentialsRequest.getPlaylist() == null);
+                    return null;
+                }
 
-            showPlaylistDetails.setText("Current Playlist\n" + getPlaylistWorker.getPlaylist().getName() +
-                    "\n" + getPlaylistWorker.getPlaylist().getDescription() +
-                    "\nSize: " + getPlaylistWorker.getPlaylist().getTotalItems());
+                @Override
+                protected void succeeded() {
+                    super.succeeded();
+                    showPlaylistDetails.setText("Current Playlist\n" + clientCredentialsRequest.getPlaylist().getName() +
+                            "\n" + clientCredentialsRequest.getPlaylist().getDescription() +
+                            "\nSize: " + clientCredentialsRequest.getPlaylist().getTotalItems());
+                }
+            };
+            new Thread(playlistTask).start();
+
         } catch (Exception e) {
             Logger.ERROR.LogException(e);
         }
