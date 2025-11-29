@@ -5,48 +5,44 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.AddItemController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.AddItemController">
     <top>
         <GridPane minHeight="33.0" prefWidth="600.0" BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <Button mnemonicParsing="false" text="Search" textAlignment="CENTER" GridPane.columnIndex="2">
                 <font>
-                    <Font size="11.0"/>
+                    <Font size="11.0" />
                 </font>
                 <GridPane.margin>
-                    <Insets left="5.0"/>
+                    <Insets left="5.0" />
                 </GridPane.margin>
             </Button>
-            <TextField fx:id="pageSearchField" onAction="#OnPageSearchButton" promptText="Search"
-                       GridPane.columnIndex="1">
+            <TextField fx:id="pageSearchField" onAction="#OnPageSearchButton" promptText="Search" GridPane.columnIndex="1">
                 <font>
-                    <Font size="11.0"/>
+                    <Font size="11.0" />
                 </font>
             </TextField>
             <Label text="API JAVAFX Alpha">
                 <font>
-                    <Font size="11.0"/>
+                    <Font size="11.0" />
                 </font>
                 <GridPane.margin>
-                    <Insets left="15.0"/>
+                    <Insets left="15.0" />
                 </GridPane.margin>
             </Label>
-            <Button mnemonicParsing="false" onAction="#GoToMainMenu" text="Main Menu" textAlignment="CENTER"
-                    GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+            <Button mnemonicParsing="false" onAction="#GoToMainMenu" text="Main Menu" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                 <GridPane.margin>
-                    <Insets right="15.0"/>
+                    <Insets right="15.0" />
                 </GridPane.margin>
                 <font>
-                    <Font size="11.0"/>
+                    <Font size="11.0" />
                 </font>
             </Button>
         </GridPane>
@@ -54,46 +50,41 @@
     <center>
         <GridPane BorderPane.alignment="CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints maxHeight="178.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES"/>
-                <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="283.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="178.0" minHeight="10.0" prefHeight="84.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="284.0" minHeight="10.0" prefHeight="283.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <TextField fx:id="searchTrackField" maxWidth="-Infinity" onAction="#SearchItem" prefHeight="26.0"
-                       prefWidth="188.0" promptText="Search using Track_Uri">
+            <TextField fx:id="searchTrackField" maxWidth="-Infinity" onAction="#SearchItem" prefHeight="26.0" prefWidth="188.0" promptText="Search using Track_Uri">
                 <font>
-                    <Font size="11.0"/>
+                    <Font size="11.0" />
                 </font>
                 <GridPane.margin>
-                    <Insets left="5.0"/>
+                    <Insets left="5.0" />
                 </GridPane.margin>
             </TextField>
-            <Button mnemonicParsing="false" onAction="#SearchItem" text="Search" textAlignment="CENTER"
-                    GridPane.halignment="CENTER">
+            <Button mnemonicParsing="false" onAction="#SearchItem" text="Search" textAlignment="CENTER" GridPane.halignment="CENTER">
                 <font>
-                    <Font size="11.0"/>
+                    <Font size="11.0" />
                 </font>
                 <GridPane.margin>
-                    <Insets left="140.0"/>
+                    <Insets left="140.0" />
                 </GridPane.margin>
             </Button>
             <TextArea fx:id="foundTrackArea" editable="false" wrapText="true" GridPane.rowIndex="1">
                 <GridPane.margin>
-                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                 </GridPane.margin>
             </TextArea>
-            <Label fx:id="showPlaylistDetails" text="testStringCurrently" GridPane.columnIndex="1"
-                   GridPane.halignment="CENTER"/>
-            <Button mnemonicParsing="false" onAction="#AddItemToPlaylist" text="Add to Playlist" textAlignment="CENTER"
-                    GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-                    GridPane.valignment="TOP">
+            <Label fx:id="showPlaylistDetails" text="testStringCurrently" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#AddItemToPlaylist" text="Add to Playlist" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                 <GridPane.margin>
-                    <Insets top="25.0"/>
+                    <Insets top="25.0" />
                 </GridPane.margin>
                 <font>
-                    <Font size="15.0"/>
+                    <Font size="15.0" />
                 </font>
             </Button>
         </GridPane>

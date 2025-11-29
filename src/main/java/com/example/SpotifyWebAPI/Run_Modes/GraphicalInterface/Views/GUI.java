@@ -62,7 +62,7 @@ public class GUI extends Application {
             /*
             Sets the icon of the program, commented out because icon is not available
              */
-            primaryStage.getIcons().add(new Image("/Icons/appicon.jpg"));
+            //primaryStage.getIcons().add(new Image("/Icons/appicon.jpg"));
             SceneActions.SetDefaultStylesheet("PrimaryPage");
             SceneActions.SetCurrentStage(primaryStage);
             SceneActions.ChangeScene("PrimaryPage");
