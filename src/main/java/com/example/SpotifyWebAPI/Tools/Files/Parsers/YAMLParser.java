@@ -21,7 +21,8 @@ public class YAMLParser extends Configuration implements Parsers {
             Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Reading config on thread: " + Thread.currentThread().getName());
             tokenConfig = yamlParser.LoadKeys();
             yamlParser.ReadConfig();
-            yamlParser.MapKeys(tokenConfig.length == 0);
+            yamlParser.MapKeys(false);
+            Logger.THREAD_INFO.LogThread(Thread.currentThread(), "Completed reading configuration with no errors.");
         } catch (Exception e) {
             Logger.CRITICAL.LogException(e, "Unable to read configuration");
         }
@@ -58,6 +59,10 @@ public class YAMLParser extends Configuration implements Parsers {
                         }
                     }
                     Logger.DEBUG.Log("Writing key: value " + current.getKey() + ": " + (current.isSensitiveInfo() ? "<SensitiveInfo>" : current.getValue()));
+                    if (current.getKey().equals("logger_check_every")) {
+                        fw.write(current.getKey() + ": " + current.getValue() + "ms\n");
+                        continue;
+                    }
                     fw.write(current.getKey() + ": " + current.getValue() + "\n");
                 }
                 ProgramOptions.setChangesSaved(true);

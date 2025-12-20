@@ -200,7 +200,7 @@ public abstract class Configuration {
                         break;
                     }
                     if (token.getValue().isEmpty()) token.setValue(String.valueOf(LoggerSettings.getLoggerCheckEvery()));
-                    LoggerSettings.setLoggerCheckEvery(Long.parseLong(token.getValue()));
+                    LoggerSettings.setLoggerCheckEvery(Long.parseLong(token.getValue().replaceAll("ms", "")));
                     break;
                 case "use_formatting":
                     if (update) {

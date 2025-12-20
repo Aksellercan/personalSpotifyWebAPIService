@@ -71,13 +71,13 @@ public class Track {
     }
 
     public String PopularitytoString() {
-        if (this.popularity < 25) {
+        if (this.popularity < 15) {
             return "Unpopular";
         }
-        if (this.popularity < 50) {
+        if (this.popularity < 25) {
             return "Somewhat Popular";
         }
-        if (this.popularity < 75) {
+        if (this.popularity < 50) {
             return "Quite Popular";
         }
         if (this.popularity < 100) {

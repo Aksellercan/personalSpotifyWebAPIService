@@ -78,7 +78,7 @@
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                 </GridPane.margin>
             </TextArea>
-            <Label fx:id="showPlaylistDetails" text="testStringCurrently" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <Label fx:id="showPlaylistDetails" text="Loading..." GridPane.columnIndex="1" GridPane.halignment="CENTER" />
             <Button mnemonicParsing="false" onAction="#AddItemToPlaylist" text="Add to Playlist" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                 <GridPane.margin>
                     <Insets top="25.0" />

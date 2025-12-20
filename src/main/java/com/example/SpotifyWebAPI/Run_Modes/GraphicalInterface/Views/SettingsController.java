@@ -79,7 +79,7 @@ public class SettingsController implements Initializable {
     private void setLogResponseRateFunction() {
         if (!logResponseRateSFLD.getText().isEmpty()) {
             LoggerSettings.setLoggerCheckEvery(Long.parseLong(logResponseRateSFLD.getText()));
-            Logger.INFO.Log("Logger: log_path = " + LoggerSettings.getLoggerCheckEvery(), false);
+            Logger.INFO.Log("Logger: logger_check_every = " + LoggerSettings.getLoggerCheckEvery(), false);
             logResponseRateSFLD.setText("");
             GetStates();
             ProgramOptions.setChangesSaved(false);
@@ -245,7 +245,7 @@ public class SettingsController implements Initializable {
         SetButtonText(quietBTN, "Quiet", LoggerSettings.getQuiet());
 
         logPathSFLD.setPromptText("Set Path: " + LoggerSettings.getLog_path());
-        logResponseRateSFLD.setPromptText("Set response rate: " + LoggerSettings.getLoggerCheckEvery());
+        logResponseRateSFLD.setPromptText("Set response rate: " + LoggerSettings.getLoggerCheckEvery() + "ms");
     }
 
     private void SetButtonText(Button btn, String key, boolean state) {
