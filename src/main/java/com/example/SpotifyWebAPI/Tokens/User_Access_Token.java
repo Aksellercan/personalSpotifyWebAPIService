@@ -3,7 +3,7 @@ package com.example.SpotifyWebAPI.Tokens;
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
-import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.LoggerSettings;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

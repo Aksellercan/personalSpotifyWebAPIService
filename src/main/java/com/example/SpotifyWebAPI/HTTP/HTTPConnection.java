@@ -46,7 +46,6 @@ public class HTTPConnection {
      * @param postBody The body of the request
      * @throws IOException http.getOutputStream() throws IOException when It can't read output stream
      */
-
     public void postBody(HttpURLConnection http, String postBody) throws IOException {
         OutputStream os = http.getOutputStream();
         Logger.DEBUG.Log("Full PostBody: " + postBody, false);

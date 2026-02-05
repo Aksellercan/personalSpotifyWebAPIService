@@ -17,7 +17,7 @@ public class BasicParser extends Configuration implements Parsers {
     public static void ReadConfigAndMap() {
         try {
             BasicParser basicParser = new BasicParser();
-            Logger.INFO.Log("Using YAML Reader, with no token type checker");
+            Logger.INFO.Log("Using Basic Reader, with no token type checker");
             tokenConfig = basicParser.LoadKeys();
             basicParser.ReadConfig();
             basicParser.MapKeys(tokenConfig.length == 0);
@@ -70,6 +70,10 @@ public class BasicParser extends Configuration implements Parsers {
         try (FileWriter fw = new FileWriter(MkDirs("config.txt"), false)) {
             for (Token current : tokenConfig) {
                 Logger.DEBUG.Log("Writing key: value " + current.getKey() + "=" + (current.isSensitiveInfo() ? "<SensitiveInfo>" : current.getValue()));
+                if (current.getKey().equals("logger_check_every")) {
+                    fw.write(current.getKey() + "=" + current.getValue() + "ms\n");
+                    continue;
+                }
                 fw.write(current.getKey() + "=" + current.getValue() + "\n");
             }
             ProgramOptions.setChangesSaved(true);

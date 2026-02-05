@@ -1,7 +1,7 @@
 package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
-import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.ConsoleColours;
 
 /**
  * CLI Interface Main Menu

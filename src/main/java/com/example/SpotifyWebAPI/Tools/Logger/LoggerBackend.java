@@ -1,5 +1,11 @@
 package com.example.SpotifyWebAPI.Tools.Logger;
 
+import com.example.SpotifyWebAPI.Tools.Logger.Interfaces.LoggerBackendInterface;
+import com.example.SpotifyWebAPI.Tools.Logger.Objects.LogExceptionObject;
+import com.example.SpotifyWebAPI.Tools.Logger.Objects.LogObject;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.LoggerSettings;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

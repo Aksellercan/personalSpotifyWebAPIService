@@ -5,7 +5,7 @@ import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
-import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.LoggerSettings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

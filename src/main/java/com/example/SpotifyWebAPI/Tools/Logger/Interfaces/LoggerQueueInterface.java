@@ -1,4 +1,6 @@
-package com.example.SpotifyWebAPI.Tools.Logger;
+package com.example.SpotifyWebAPI.Tools.Logger.Interfaces;
+
+import com.example.SpotifyWebAPI.Tools.Logger.Objects.LogObject;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 

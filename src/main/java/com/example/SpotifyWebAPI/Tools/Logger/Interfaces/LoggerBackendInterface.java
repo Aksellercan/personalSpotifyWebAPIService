@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Tools.Logger;
+package com.example.SpotifyWebAPI.Tools.Logger.Interfaces;
 
 import java.io.File;
 import java.io.IOException;

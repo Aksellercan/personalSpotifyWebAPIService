@@ -3,9 +3,9 @@ package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Tokens.User_Access_Token;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
-import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.ConsoleColours;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
-import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.LoggerSettings;
 import com.example.SpotifyWebAPI.WebRequest.User_Request;
 
 /**

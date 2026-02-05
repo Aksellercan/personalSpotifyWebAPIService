@@ -1,7 +1,7 @@
 package com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface;
 
 import com.example.SpotifyWebAPI.Tokens.Client_Credentials_Token;
-import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.ConsoleColours;
 import com.example.SpotifyWebAPI.WebRequest.Client_Credentials_Request;
 
 /**

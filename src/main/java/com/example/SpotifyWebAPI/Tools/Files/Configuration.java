@@ -7,7 +7,7 @@ import com.example.SpotifyWebAPI.Tools.Files.Parsers.BasicParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.JSONParser;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
-import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.LoggerSettings;
 
 import java.io.File;
 import java.io.IOException;

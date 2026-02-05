@@ -1,4 +1,6 @@
-package com.example.SpotifyWebAPI.Tools.Logger;
+package com.example.SpotifyWebAPI.Tools.Logger.Objects;
+
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 
 public class LogThreadObject extends LogObject {
     private Thread thread;
@@ -34,23 +36,12 @@ public class LogThreadObject extends LogObject {
 
     public String setThreadSeverity() {
         if (isThreadSeverity()) {
-            StringBuilder sb = new StringBuilder();
-            boolean add = false;
-            for (int i = 0; i < this.getSeverity().length(); i++) {
-                if (add) {
-                    sb.append(this.getSeverity().charAt(i));
-                    continue;
-                }
-                if (this.getSeverity().charAt(i) == ':') {
-                    add = true;
-                }
-            }
             String threadName;
             if (this.getThread() != null)
                 threadName = this.getThread().getName();
             else
                 threadName = "lost-thread";
-            return String.format(" [ %s:%s", threadName, sb);
+            return String.format(" [ %s%s", threadName, this.getSeverity().substring(this.getSeverity().indexOf(':')));
         }
         return this.getSeverity();
     }

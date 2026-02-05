@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Tools.Logger;
+package com.example.SpotifyWebAPI.Tools.Logger.Utility;
 
 public class LoggerSettings {
     /**

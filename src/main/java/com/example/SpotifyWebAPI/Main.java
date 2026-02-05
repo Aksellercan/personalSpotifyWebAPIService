@@ -6,12 +6,12 @@ import com.example.SpotifyWebAPI.Run_Modes.GraphicalInterface.Views.GUI;
 import com.example.SpotifyWebAPI.Objects.ProgramOptions;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Run_Modes.AutoMode;
-import com.example.SpotifyWebAPI.Tools.Logger.ConsoleColours;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.ConsoleColours;
 import com.example.SpotifyWebAPI.Run_Modes.ConsoleInterface.*;
 import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.Tools.Logger.LoggerBackend;
-import com.example.SpotifyWebAPI.Tools.Logger.LoggerSettings;
+import com.example.SpotifyWebAPI.Tools.Logger.Utility.LoggerSettings;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package com.example.SpotifyWebAPI.Tools.Logger;
+package com.example.SpotifyWebAPI.Tools.Logger.Interfaces;
 
 public interface LoggerInterface extends LoggerQueueInterface {
     //Logger methods

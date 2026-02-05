@@ -1,4 +1,6 @@
-package com.example.SpotifyWebAPI.Tools.Logger;
+package com.example.SpotifyWebAPI.Tools.Logger.Objects;
+
+import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 
 public class LogExceptionObject extends LogObject {
     private Thread thread;

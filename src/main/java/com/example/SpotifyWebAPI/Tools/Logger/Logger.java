@@ -1,5 +1,10 @@
 package com.example.SpotifyWebAPI.Tools.Logger;
 
+import com.example.SpotifyWebAPI.Tools.Logger.Interfaces.LoggerInterface;
+import com.example.SpotifyWebAPI.Tools.Logger.Objects.LogExceptionObject;
+import com.example.SpotifyWebAPI.Tools.Logger.Objects.LogObject;
+import com.example.SpotifyWebAPI.Tools.Logger.Objects.LogThreadObject;
+
 /**
  * Front end of Logger, runs synchronously and adds logs to log queue for backend to handle
  */
