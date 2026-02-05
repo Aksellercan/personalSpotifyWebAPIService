@@ -81,7 +81,5 @@ Logger Example Output:
 14/09/2025 16:50:40 [ DEBUG ] Using YAML Reader, with no token type checker
 14/09/2025 16:50:40 [ INFO ] Everything is set up correctly, client_id and client_secret are not null or empty.
 ```
-## Issues
-1. HTTP requests are single threaded and hold the program when switching scenes
 
-2. UI cleanup
+[NEXT](NEXT.md)
