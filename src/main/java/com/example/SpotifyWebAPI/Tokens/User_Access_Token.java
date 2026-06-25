@@ -1,6 +1,8 @@
 package com.example.SpotifyWebAPI.Tokens;
 
 import com.example.SpotifyWebAPI.HTTP.HTTPConnection;
+import com.example.SpotifyWebAPI.Objects.ProgramOptions;
+import com.example.SpotifyWebAPI.Tools.Files.Parsers.YAMLParser;
 import com.example.SpotifyWebAPI.Tools.Logger.Logger;
 import com.example.SpotifyWebAPI.Objects.Spotify.SpotifySession;
 import com.example.SpotifyWebAPI.Tools.Logger.Utility.LoggerSettings;
@@ -63,6 +65,15 @@ public class User_Access_Token {
         return true;
     }
 
+    private void handleInvalidGrant(String message) {
+        Logger.WARN.Log(message, false);
+        ProgramOptions.setAutoMode(false);
+        spotifySession.setRefresh_token(null);
+        Logger.WARN.Log("Refresh token was removed due to changes.", true);
+        ProgramOptions.setChangesSaved(false);
+        YAMLParser.MapAndWriteConfig();
+    }
+
     /**
      * Prints the saved User data
      */
@@ -94,6 +105,10 @@ public class User_Access_Token {
             if (node.get("refresh_token") == null) {
                 Logger.INFO.Log("No refresh Token returned");
             } else {
+                if (http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    handleInvalidGrant(node.get("error").asText());
+                    return;
+                }
                 spotifySession.setRefresh_token(node.get("refresh_token").asText()); //debug
                 Logger.INFO.Log("Refresh Token to take note: " + spotifySession.getRefresh_token(), false);
             }
